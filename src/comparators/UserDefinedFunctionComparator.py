@@ -22,3 +22,9 @@ class UserDefinedFunctionComparator:
 
     def is_user_defined_function(self, structure):
         return isinstance(structure.func, UndefinedFunction)
+
+    def contains_user_defined_function(self, expression):
+        for arg in expression.args:
+            if self.is_user_defined_function(arg):
+                return True
+        return False

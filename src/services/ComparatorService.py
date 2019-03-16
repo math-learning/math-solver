@@ -27,6 +27,12 @@ class ComparatorService:
             else:
                 for arg in current_step.args:
                     children_history = self.get_solution_if_possible(arg, theorems)
+                    for history_item in children_history:
+                        equalities = [[arg,history_item.expression]]
+                        new_step = self.expression_transformer.transform(current_step, equalities)
+                        history.append(HistoryItem(new_step, history_item.theorem_applied))
+                    if len(history) != 0:
+                        current_step = history[-1].expression
                 break
         return history
 
@@ -43,21 +49,19 @@ class ComparatorService:
         return self.compare_rec(structure, expression, [])
 
     def compare_rec(self, structure, expression, equalities):
-        # compare types
-        # number of arguments
-        # if passes compare children in case that is commutative then do cross comparisons
-        # else handle
         if self.comparator_utils.both_nodes_are_leaves(structure, expression):
             return ComparisonResult(structure == expression, equalities)
 
         if self.user_defined_func_comparator.is_user_defined_function(structure):
             return self.user_defined_func_comparator.compare(structure, expression, equalities)
-        else:
+
+        if len(structure.args) == len(expression.args):
             return self.compare_sympy_expression(structure, expression, equalities)
+
+        return self.compare_non_equal_lengths(structure, expression, equalities)
 
     def compare_sympy_expression(self, structure, expression, equalities):
         if structure.func == expression.func:
-            if len(structure.args) == len(expression.args):
                 if structure.is_commutative:
                     print("is cummulative")
                     pairs_to_compare = self.comparator_utils.get_children_pairs(structure.args, expression.args)
@@ -71,7 +75,6 @@ class ComparatorService:
                     return self.compare_children_combinations(pairs_to_compare, equalities)
         return ComparisonResult(False, [])
 
-
     def compare_children_combinations(self, children_pairs, equalities):
         result = ComparisonResult(True, [])
         for pair in children_pairs:
@@ -80,6 +83,17 @@ class ComparatorService:
             result.equalities += children_comparison_result.equalities
         return result
 
+
+    def compare_non_equal_lengths(self, structure, expression, equalities):
+        # if at least one is a user defined function we have to group arguments to see if matches
+        contains_user_defined_function = self.user_defined_func_comparator.contains_user_defined_function(structure)
+        if len(structure.args) < len(expression.args) and contains_user_defined_function:
+            if structure.func.is_commutative:
+                # TODO: complex logic
+                print(expression.func(*expression.args))
+
+            return ComparisonResult(False, [])
+        return ComparisonResult(False, [])
 
 
 

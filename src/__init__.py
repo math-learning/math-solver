@@ -7,7 +7,7 @@ from src.utils.PrintUtils import PrintUtils
 
 
 
-input = parse_expr("Derivative((((x + x) / (x**2) ) * x ) + x, x)", evaluate=False)
+input = parse_expr("Derivative(x + x * x, x)", evaluate=False)
 theorems = [
     Theorem("derivada de la suma", parse_expr("Derivative(f(x) + g(x) , x)"),
             parse_expr("Derivative(f(x), x) + Derivative(g(x), x)")),
