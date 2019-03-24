@@ -36,6 +36,15 @@ class ComparatorService:
                 break
         return history
 
+    def compare_equality(self, old_expression, new_expression, theorems):
+        for theo in theorems:
+            comparison = self.compare(theo.left, old_expression)
+            if comparison.structures_match:
+                new_step = self.expression_transformer.transform(theo.right, comparison.equalities)
+                if new_step == new_expression:
+                    return True
+        return False
+
     def get_possible_new_step(self, expression, theorems, history):
         for theo in theorems:
             comparison = self.compare(theo.left, expression)
@@ -63,14 +72,14 @@ class ComparatorService:
     def compare_sympy_expression(self, structure, expression, equalities):
         if structure.func == expression.func:
                 if structure.is_commutative:
-                    print("is cummulative")
+                    # print("is cummulative")
                     pairs_to_compare = self.comparator_utils.get_children_pairs(structure.args, expression.args)
                     for children_pairs in pairs_to_compare:
                         comparison = self.compare_children_combinations(children_pairs, equalities)
                         if comparison.structures_match:
                             return comparison
                 else:
-                    print("comparing non commutative")
+                    # print("comparing non commutative")
                     pairs_to_compare = self.comparator_utils.get_equivalent_children_pairs(len(structure), structure.args, expression.args)
                     return self.compare_children_combinations(pairs_to_compare, equalities)
         return ComparisonResult(False, [])

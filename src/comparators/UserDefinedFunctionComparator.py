@@ -7,7 +7,7 @@ from src.comparators.ComparisonResult import ComparisonResult
 class UserDefinedFunctionComparator:
 
     def compare(self, structure, expression, equalities):
-        print("comparing user defined function")
+        # print("comparing user defined function")
         if self.user_defined_function_match(structure, expression):
             return ComparisonResult(True, equalities + [[structure, expression]])
         else:
