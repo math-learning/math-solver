@@ -5,7 +5,6 @@ class ComparisonPair:
 
 
 class ComparatorUtils:
-
     def get_equivalent_children_pairs(self, length, structure_children, expression_children):
         comparison_pairs = []
         for i in range(0, length):

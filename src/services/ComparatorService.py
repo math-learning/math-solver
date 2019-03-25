@@ -5,6 +5,7 @@ from src.comparators.UserDefinedFunctionComparator import UserDefinedFunctionCom
 from src.model.HistoryItem import HistoryItem
 from src.model.TransformationResult import TransformationResult
 from src.transformers.ExpressionTransformer import ExpressionTransformer
+from sympy import simplify
 
 
 class ComparatorService:
@@ -41,7 +42,7 @@ class ComparatorService:
             comparison = self.compare(theo.left, old_expression)
             if comparison.structures_match:
                 new_step = self.expression_transformer.transform(theo.right, comparison.equalities)
-                if new_step == new_expression:
+                if new_step == simplify(new_expression):
                     return True
         return False
 

@@ -28,11 +28,11 @@ def parse_validate_input(request_data):
     theorems = request_data['theorems']
     new_expression = request_data['new_expression']
     old_expression = request_data['old_expression']
-    sympy_old_expr = parse_expr(old_expression)
+    sympy_old_expr = parse_expr(old_expression, evaluate=False)
     parsed_theorems = create_theorems(theorems)
     sympy_new_expr = None
     try:
-        sympy_new_expr = parse_expr("new_expression")
+        sympy_new_expr = parse_expr(new_expression, evaluate=False)
     except:
         print("Invalid new expression")
     finally:
