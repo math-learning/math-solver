@@ -1,47 +1,46 @@
 from flask import Flask, request, send_from_directory
+
 from src.services.ValidatorService import ValidatorService
-import logging
 import json
+import logging
 from sympy import *
 from sympy.parsing.sympy_parser import parse_expr
 from collections import namedtuple
 from src.model.Theorem import Theorem
+import sys
+from src.mappers.TheoremMapper import TheoremMapper
 
-app = Flask(__name__, static_folder="static/static", template_folder="static")
+import pprint
+
+
+app = Flask(__name__)
+
+app.logger.setLevel(logging.INFO)
 
 validatorService = ValidatorService()
-
-
-@app.route('/')
-def index():
-    logging.info('Index')
-    return send_from_directory('static', 'index.html')
-
-def create_theorems(theorems):
-    parsed_theorems = []
-    for theo in theorems:
-        theo_object = Theorem(theo.get("name"), parse_expr(theo.get("left")), parse_expr(theo.get("right")))
-        parsed_theorems.append(theo_object)
-    return parsed_theorems
+theoremMapper = TheoremMapper()
+    
 
 def parse_validate_input(request_data):
     theorems = request_data['theorems']
     new_expression = request_data['new_expression']
     old_expression = request_data['old_expression']
     sympy_old_expr = parse_expr(old_expression, evaluate=False)
-    parsed_theorems = create_theorems(theorems)
+    parsed_theorems = theoremMapper.from_json_to_theorems(theorems)
     sympy_new_expr = None
     try:
         sympy_new_expr = parse_expr(new_expression, evaluate=False)
     except:
-        print("Invalid new expression")
+        app.logger.error("Invalid new expression")
     finally:
         return (sympy_new_expr, sympy_old_expr, parsed_theorems)
 
 
 @app.route('/validate', methods=['POST']) 
 def validate():
-    logging.info(request.form)
+    
+    app.logger.info("json string: " + json.dumps(request.get_json()))
+
     request_data = request.get_json()
     (new_expression, old_expression, theorems) = parse_validate_input(request_data)
     if new_expression == None:
