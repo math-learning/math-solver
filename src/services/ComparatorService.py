@@ -3,6 +3,7 @@ from src.comparators.ComparisonResult import ComparisonResult
 from src.comparators.SympyComparator import SympyComparator
 from src.comparators.UserDefinedFunctionComparator import UserDefinedFunctionComparator
 from src.model.HistoryItem import HistoryItem
+from src.services.DerivativesService import DerivativeApplier
 from src.model.TransformationResult import TransformationResult
 from src.transformers.ExpressionTransformer import ExpressionTransformer
 from sympy import simplify
@@ -15,6 +16,7 @@ class ComparatorService:
         self.expression_transformer = ExpressionTransformer()
         self.comparator_utils = ComparatorUtils()
         self.user_defined_func_comparator = UserDefinedFunctionComparator()
+        self.derivatives_applier = DerivativeApplier()
 
     def get_solution_if_possible(self, input, theorems):
         solved = False
@@ -38,12 +40,24 @@ class ComparatorService:
         return history
 
     def compare_equality(self, old_expression, new_expression, theorems):
+        # Try with theorems
         for theo in theorems:
             comparison = self.compare(theo.left, old_expression)
             if comparison.structures_match:
                 new_step = self.expression_transformer.transform(theo.right, comparison.equalities)
                 if new_step == simplify(new_expression):
                     return True
+
+        if new_expression != old_expression:
+            # Try applying derivatives:
+            new_step = self.derivatives_applier.apply_derivatives(old_expression)
+            if new_step == simplify(new_expression):
+                return True
+            
+            # Try simplifying
+            if simplify(new_expression) == simplify(old_expression):
+                return True
+
         return False
 
     def get_possible_new_step(self, expression, theorems, history):
