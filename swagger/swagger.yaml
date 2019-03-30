@@ -1,0 +1,27 @@
+openapi: 3.0.0
+info:
+  title: Math Learning - Math Solver
+  description: Math Learning
+  version: 0.1.9
+servers:
+  - url: http://localhost:500/v1
+    description: To test local
+paths:
+  /steps/validate:
+    post:
+      summary: Returns a boolean if a following step of an expression is valid
+      description: Optional extended description in CommonMark or HTML.
+      responses:
+        '200':    # status code
+          description: A JSON with a boolean indicating if the step is valid
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  validation_result:
+                    type: boolean
+                    example: false
+        '400':
+          description: Bad request
+                

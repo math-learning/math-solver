@@ -1,10 +1,10 @@
 from src.services.ComparatorService import ComparatorService
-import logging
+from src.utils.Logger import Logger
 
 class ValidatorService:
     def __init__(self):
         self.comparatorService = ComparatorService()
-        self.logger = logging.getLogger("flask.app")
+        self.logger = Logger.getLogger()
 
     def validate_transition(self, old_expression, new_expression, theorems):
         self.logger.info("Validate")
