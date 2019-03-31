@@ -28,6 +28,7 @@ class ValidateMapper:
             self.logger.error("Error while parsing validate new step input: {}".format(e))
             raise ValidateMapperException(e)
 
+
     def parse_validate_result_input(self, request_data):
         self.logger.info("Parsing validate result request data: {}".format(request_data))
         try:
@@ -40,6 +41,22 @@ class ValidateMapper:
             sympy_input_data = parse_expr(input_data, evaluate=False)
             
             return (sympy_result, sympy_input_data, parsed_theorems)
+        except Exception as e:
+            self.logger.error("Error while parsing validate result input: {}".format(e))
+            raise ValidateMapperException(e)
+
+    def parse_validate_not_in_history_input(self, request_data):
+        self.logger.info("Parsing validate not in history request data: {}".format(request_data))
+        try:
+            new_expression = request_data['new_expression']
+            history = request_data['history']
+
+            sympy_new_expr = parse_expr(new_expression, evaluate=False)
+            sympy_history = []
+            for history_item in history: 
+                sympy_history.append(parse_expr(history_item, evaluate=False))
+    
+            return (sympy_new_expr, sympy_history)
         except Exception as e:
             self.logger.error("Error while parsing validate result input: {}".format(e))
             raise ValidateMapperException(e)

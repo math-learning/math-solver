@@ -19,6 +19,8 @@ class ValidatorService:
     def is_a_valid_next_step(self, old_expression, new_expression, theorems):
         self.logger.info("Starting transition validation")
 
+        theorem_can_be_applied = False
+
         # Try with theorems
         self.logger.info("Trying with theorems")
         for theo in theorems:
@@ -26,12 +28,13 @@ class ValidatorService:
             comparison = self.comparator_service.compare(theo.left, old_expression)
             self.logger.info("Result: {}".format(comparison.structures_match))
             if comparison.structures_match:
+                theorem_can_be_applied = True
                 new_step = self.expression_transformer.transform(theo.right, comparison.equalities)
                 if new_step == simplify(new_expression):
                     self.logger.info(RESULT_FOUND_TEMPLATE.format(new_expression, theo.name, old_expression))
                     return True
 
-        if new_expression != old_expression:
+        if new_expression != old_expression and not theorem_can_be_applied:
             self.logger.info("New expression wont match theorems")
             self.logger.info("Try to apply derivatives")
             # Try applying derivatives:
@@ -50,3 +53,9 @@ class ValidatorService:
     def validate_result(self, result, input_expression, theorems):
         solution = self.comparator_service.get_solution_if_possible(input_expression, theorems)
         return result == solution[-1].expression
+    
+    def validate_not_in_history(self, expr, history):
+        for item in history:
+            if expr == item:
+                return False
+        return True
