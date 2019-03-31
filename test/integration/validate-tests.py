@@ -7,7 +7,7 @@ SERVER_URL = "http://localhost:5000/v1"
 
 
 def validate(data):
-    return requests.post(SERVER_URL + "/validate",json=data)
+    return requests.post(SERVER_URL + "/validations/new-step",json=data)
 
 
 def testValidateTrue(json_data):

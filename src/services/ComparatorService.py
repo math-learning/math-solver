@@ -9,7 +9,6 @@ from src.transformers.ExpressionTransformer import ExpressionTransformer
 from sympy import simplify
 from src.utils.Logger import Logger
 
-RESULT_FOUND_TEMPLATE = "The new expression {} was the result of applying {} theorem to {}"
 
 class ComparatorService:
 
@@ -41,35 +40,6 @@ class ComparatorService:
                         current_step = history[-1].expression
                 break
         return history
-
-    def compare_equality(self, old_expression, new_expression, theorems):
-        # Try with theorems
-        self.logger.info("Trying with theorems")
-        for theo in theorems:
-            self.logger.info("Checking if theorem: {} applies to {}".format(theo.name, new_expression))
-            comparison = self.compare(theo.left, old_expression)
-            self.logger.info("Result: {}".format(comparison.structures_match))
-            if comparison.structures_match:
-                new_step = self.expression_transformer.transform(theo.right, comparison.equalities)
-                if new_step == simplify(new_expression):
-                    self.logger.info(RESULT_FOUND_TEMPLATE.format(new_expression, theo.name, old_expression))
-                    return True
-
-        if new_expression != old_expression:
-            self.logger.info("New expression wont match theorems")
-            self.logger.info("Try to apply derivatives")
-            # Try applying derivatives:
-            new_step = self.derivatives_applier.apply_derivatives(old_expression)
-            if new_step == simplify(new_expression):
-                self.logger.info(RESULT_FOUND_TEMPLATE.format(new_expression, "derivatives", old_expression))
-                return True
-            
-            # Try simplifying
-            if simplify(new_expression) == simplify(old_expression):
-                self.logger.info(RESULT_FOUND_TEMPLATE.format(new_expression, "simplifications", old_expression))
-                return True
-        self.logger.info("The new expression {} is not a valid next step of {}".format(new_expression,old_expression))
-        return False
 
     def get_possible_new_step(self, expression, theorems, history):
         for theo in theorems:
