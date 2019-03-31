@@ -2,6 +2,7 @@ from sympy import *
 from src.model.Theorem import Theorem
 from sympy.parsing.sympy_parser import parse_expr
 from src.mappers.TheoremMapper import TheoremMapper
+from src.utils.Logger import Logger
 
 class ValidateMapperException(Exception):
     pass
@@ -9,9 +10,10 @@ class ValidateMapperException(Exception):
 class ValidateMapper:
     def __init__(self):
         self.theoremMapper = TheoremMapper()
-
+        self.logger = Logger.getLogger()
     
     def parse_validate_new_step_input(self, request_data):
+        self.logger.info("Parsing request data: {}".format(request_data))
         try:
             theorems = request_data['theorems']
             new_expression = request_data['new_expression']
@@ -22,5 +24,6 @@ class ValidateMapper:
             sympy_new_expr = parse_expr(new_expression, evaluate=False)
             
             return (sympy_new_expr, sympy_old_expr, parsed_theorems)
-        except:
-            raise ValidateMapperException
+        except Exception as e:
+            self.logger.error("Error validatin input: {}".format(e))
+            raise ValidateMapperException(e)

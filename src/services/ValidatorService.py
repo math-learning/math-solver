@@ -7,5 +7,5 @@ class ValidatorService:
         self.logger = Logger.getLogger()
 
     def validate_transition(self, old_expression, new_expression, theorems):
-        self.logger.info("Validate transition")
+        self.logger.info("Starting transition validation")
         return self.comparatorService.compare_equality(old_expression,new_expression, theorems)
