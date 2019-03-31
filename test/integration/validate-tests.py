@@ -1,8 +1,9 @@
 import requests
 import json
+import os
+import webbrowser
 
-SERVER_URL = "http://localhost:5000"
-
+SERVER_URL = "http://localhost:5000/v1"
 
 
 def validate(data):
@@ -11,7 +12,16 @@ def validate(data):
 
 def testValidateTrue(json_data):
     response = validate(json.loads(json_data))
-    print(response.content)
+    
+    if response.status_code == 200:
+        print(response.content)
+    # else:
+    #     path = os.path.abspath('temp.html')
+    #     url = 'file://' + path
+
+    #     with open(path, 'w') as f:
+    #         f.write(str(response.content))
+    #     webbrowser.open(url)
     assert(response.status_code == 200)
     is_valid = json.loads(response.content)
     assert(is_valid)

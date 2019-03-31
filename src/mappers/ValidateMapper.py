@@ -18,7 +18,7 @@ class ValidateMapper:
             old_expression = request_data['old_expression']
 
             sympy_old_expr = parse_expr(old_expression, evaluate=False)
-            parsed_theorems = theoremMapper.from_json_to_theorems(theorems)
+            parsed_theorems = self.theoremMapper.from_json_to_theorems(theorems)
             sympy_new_expr = parse_expr(new_expression, evaluate=False)
             
             return (sympy_new_expr, sympy_old_expr, parsed_theorems)
