@@ -1,7 +1,7 @@
 from sympy import Symbol
 from sympy.core.function import UndefinedFunction
 
-from src.comparators.ComparisonResult import ComparisonResult
+from src.comparators.comparison_result import ComparisonResult
 
 
 class UserDefinedFunctionComparator:

@@ -1,44 +1,72 @@
-from src.comparators.ComparatorUtils import ComparatorUtils
-from src.comparators.ComparisonResult import ComparisonResult
-from src.comparators.SympyComparator import SympyComparator
-from src.comparators.UserDefinedFunctionComparator import UserDefinedFunctionComparator
-from src.model.HistoryItem import HistoryItem
-from src.services.DerivativesService import DerivativeApplier
-from src.model.TransformationResult import TransformationResult
-from src.transformers.ExpressionTransformer import ExpressionTransformer
 from sympy import simplify
-from src.utils.Logger import Logger
+
+from src.comparators.comparator_utils import ComparatorUtils
+from src.comparators.comparison_result import ComparisonResult
+from src.comparators.user_defined_function_comparator import UserDefinedFunctionComparator
+from src.model.theorem import Theorem
+from src.model.history_item import HistoryItem
+from src.model.transformation_result import TransformationResult
+from src.services.derivative_service import DerivativeApplier
+from src.transformers.expression_transformer import ExpressionTransformer
+from src.utils.logger import Logger
 
 
 class ComparatorService:
 
     def __init__(self):
-        self.sympy_comparator = SympyComparator()
         self.expression_transformer = ExpressionTransformer()
         self.comparator_utils = ComparatorUtils()
         self.user_defined_func_comparator = UserDefinedFunctionComparator()
         self.derivatives_applier = DerivativeApplier()
         self.logger = Logger.getLogger()
 
-    def get_solution_if_possible(self, input, theorems):
+    def get_solution_if_possible(self, input_data, theorems):
+        self.logger.info("Trying to solve the problem of input {} using the following theorems {}".format(input_data, theorems))
         solved = False
         history = []
-        current_step = input
+        current_step = input_data
         while not solved:
+            # Try to apply theorems to the expression
             next_possible_step = self.get_possible_new_step(current_step, theorems, history)
             if current_step != next_possible_step.expression:
+                self.logger.info("Applying theorem to the general structure. Applying {} to {} getting {}".format(next_possible_step.theorem_used.name, current_step, next_possible_step.expression))
                 history.append(HistoryItem(next_possible_step.expression, next_possible_step.theorem_used))
                 current_step = next_possible_step.expression
             else:
+                # Try to apply theorems to children nodes
+                expression_changed = False
                 for arg in current_step.args:
                     children_history = self.get_solution_if_possible(arg, theorems)
                     for history_item in children_history:
                         equalities = [[arg,history_item.expression]]
                         new_step = self.expression_transformer.transform(current_step, equalities)
+                        self.logger.info("Applying theorem to the children nodes. Applying {} to {} getting {}".format(history_item.theorem_applied.name, current_step, new_step))
                         history.append(HistoryItem(new_step, history_item.theorem_applied))
                     if len(history) != 0:
                         current_step = history[-1].expression
-                break
+                        expression_changed = True
+
+                # Try applying derivatives
+                if not expression_changed:
+                    new_step = self.derivatives_applier.apply_derivatives(current_step)
+                    if new_step != current_step:
+                        expression_changed = True
+                        self.logger.info("Applying theorem to the children nodes. Applying {} to {} getting {}".format("Aplicacion de derivadas", current_step, new_step))
+                        history.append(HistoryItem(new_step, Theorem("Aplicacion de derivadas", "-", "-")))
+                        current_step = new_step
+                
+                # Try with simplifications
+                if not expression_changed:
+                    new_step = simplify(current_step)
+                    if new_step != current_step:
+                        expression_changed = True
+                        self.logger.info("Applying theorem to the children nodes. Applying {} to {} getting {}".format("Simplificaciones", current_step, new_step))
+                        history.append(HistoryItem(new_step, Theorem("Simplificacion", "-", "-")))
+                        current_step = new_step
+                
+                if not expression_changed:
+                    solved = True
+
         return history
 
     def get_possible_new_step(self, expression, theorems, history):
@@ -99,13 +127,3 @@ class ComparatorService:
 
             return ComparisonResult(False, [])
         return ComparisonResult(False, [])
-
-
-
-
-
-
-
-
-
-

@@ -1,6 +1,6 @@
-from src.mappers.TheoremMapper import TheoremMapper
+from src.mappers.theorem_mapper import TheoremMapper
 from sympy.parsing.sympy_parser import parse_expr
-from src.utils.Logger import Logger
+from src.utils.logger import Logger
 
 class HintsMapper:
 

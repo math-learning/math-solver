@@ -1,4 +1,4 @@
-from src.model.Theorem import Theorem
+from src.model.theorem import Theorem
 from sympy.parsing.sympy_parser import parse_expr
 
 class TheoremMapper:

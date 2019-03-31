@@ -1,4 +1,4 @@
-from src.model.TransformationResult import TransformationResult
+from src.model.transformation_result import TransformationResult
 
 
 class ExpressionTransformer:
