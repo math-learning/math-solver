@@ -14,7 +14,9 @@ class HintsMapper:
             expression = parse_expr(expression_json, evaluate=False)
             theorems_json = request_data['theorems']
             theorems = self.theorem_mapper.from_json_to_theorems(theorems_json)
+
         except Exception as e:
             self.logger.error("Error while trying to map theorems that apply input: {}".format(e))
             raise e
+            
         return (expression, theorems)

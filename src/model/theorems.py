@@ -8,4 +8,7 @@ class Theorem:
         return {'name': self.name, 'right': str(self.right), 'left': str(self.left)}
 
 
+class Theorems:
     
+    def that_can_be_applied(self, expression, theorems):
+        
