@@ -1,4 +1,4 @@
-from src.model.expressions import Expression
+from src.model.expression import Expression
 
 class Theorem:
     def __init__(self, name, left, right):

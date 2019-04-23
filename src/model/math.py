@@ -2,9 +2,6 @@
 
 class MathWrapper:
 
-    def __init__(self):
-        self.derivatives = Derivatives()
-
     # Returns the result of applying the theorem to the expression
     # or None if the theorem cant be applied
     def apply_theorem(self, expression, theorem):

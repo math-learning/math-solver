@@ -1,5 +1,5 @@
 import unittest
-from src.model.expressions import Expression
+from src.model.expression import Expression
 
 class TestExpression(unittest.TestCase):
     

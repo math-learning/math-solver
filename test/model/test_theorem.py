@@ -1,7 +1,7 @@
 import unittest
 
 from src.model.theorems import Theorem
-from src.model.expressions import Expression
+from src.model.expression import Expression
 
 
 class TestTheorem(unittest.TestCase):
