@@ -16,22 +16,41 @@ class ListUtils:
     # and then the function is recursively called with the lists without those elements
     # until the solution is found
     @staticmethod
-    def combinations_rec(lista, listb, combination, combinations):
-        if len(lista) == 1 and len(listb) == 1:
-            combination.append([lista[0], listb[0]])
+    def combinations_rec(listone, listtwo, combination, combinations):
+        if len(listone) == 1 and len(listtwo) == 1:
+            combination.append([listone[0], listtwo[0]])
             combinations.append(combination)
             return combinations
 
-        for elem in listb:
+        for elem in listtwo:
             combination_bifurcation = combination[:]
-            combination_bifurcation.append([lista[0], elem])
+            combination_bifurcation.append([listone[0], elem])
             
-            lista_without_first = lista[1:]
+            listone_without_first = listone[1:]
 
-            listb_without_elem = list(listb[:])
-            listb_without_elem.remove(elem)
-            listb_without_elem = tuple(listb_without_elem)
+            listtwo_without_elem = list(listtwo[:])
+            listtwo_without_elem.remove(elem)
+            listtwo_without_elem = tuple(listtwo_without_elem)
 
-            combinations = ListUtils.combinations_rec(lista_without_first, listb_without_elem, combination_bifurcation, combinations)
+            combinations = ListUtils.combinations_rec(listone_without_first, listb_without_elem, combination_bifurcation, combinations)
 
         return combinations
+
+
+    # TODO: Later
+    # @staticmethod
+    # def combinations_diferent_sizes(listone, listtwo):
+    #     if len(listone) > len(listtwo):
+    #         larger = listone
+    #         smaller = listtwo
+    #     else:
+    #         larger = listtwo
+    #         smaller = listone
+
+    #     return ListUtils.combinations_diferent_sizes_rec(larger, smaller)
+
+    # @staticmethod
+    # def combinations_diferent_sizes_rec(larger, smaller):
+    #     diff = len(larger) - len(smaller)
+    #     for i in range(2,diff):
+    #         for 

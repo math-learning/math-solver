@@ -11,6 +11,7 @@ class JsonParser:
     @staticmethod
     def dumps(object):
         return  json.dumps(object, cls=ComplexEncoder)
+        
     @staticmethod
     def dumps_pretty( object):
         return  json.dumps(object, cls=ComplexEncoder, 

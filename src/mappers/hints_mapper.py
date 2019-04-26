@@ -1,6 +1,7 @@
 from src.mappers.theorem_mapper import TheoremMapper
-from sympy.parsing.sympy_parser import parse_expr
+from src.model.expression import Expression
 from src.utils.logger import Logger
+
 
 class HintsMapper:
 
@@ -10,8 +11,8 @@ class HintsMapper:
 
     def map_theorems_that_apply_input(self, request_data):
         try:
-            expression_json = request_data['expression']
-            expression = parse_expr(expression_json, evaluate=False)
+            formula = request_data['expression']
+            expression = Expression(formula)
             theorems_json = request_data['theorems']
             theorems = self.theorem_mapper.from_json_to_theorems(theorems_json)
 
