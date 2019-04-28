@@ -12,7 +12,7 @@ class TestExpression(unittest.TestCase):
         self.assertFalse(non_leaf.is_leaf())
 
     def test_solve_derivatives(self):
-        exp = Expression("Derivative(x, x)")
+        exp = Expression("d(x, x)")
         exp.solve_derivatives()
         self.assertEqual(exp.to_string(), '1')
 
@@ -26,7 +26,7 @@ class TestExpression(unittest.TestCase):
         exp_one = Expression("x + x")
         exp_two = Expression("x + x")
 
-        self.assertTrue(exp_one.compare(exp_two))
+        self.assertTrue(exp_one == exp_two)
 
     def test_get_children(self):
         exp = Expression("x + x**2")

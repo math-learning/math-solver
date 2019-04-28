@@ -1,7 +1,6 @@
-from sqlalchemy.sql import expression
 from sympy.core.relational import Equality
 
-from server.src.utils.list_utils import ListUtils
+from src.utils.list_utils import ListUtils
 
 class Equality:
     def __init__(self, left, right):
@@ -18,7 +17,7 @@ class MatchAnalysisReport:
 class TemplateMatchAnalyzer:
 
     def analyze(self, template, expression):
-        analysis = MatchAnalysisReport(template, expression, None, [])
+        analysis = MatchAnalysisReport(template, expression, True, [])
         return self.analyze_rec(template, expression, analysis)
 
     def analyze_rec(self, template, expression, analysis):
@@ -26,7 +25,7 @@ class TemplateMatchAnalyzer:
             return analysis
 
         if not template.contains_user_defined_funct() and not expression.contains_user_defined_funct():
-            match = template.compare(expression)
+            match = template.is_equivalent_to(expression)
         elif template.is_user_defined_func():
             match = template.free_symbols_match(expression)
         elif template.children_amount() == expression.children_amount():

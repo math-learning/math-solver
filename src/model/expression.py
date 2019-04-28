@@ -38,13 +38,14 @@ class Expression:
             exp = Expression(exp)
             if exp.is_derivative():
                 derivative_applied = self.wrap_expression(exp.apply_derivative())
-                self.sympy_expr = self.sympy_expr.subs({exp: derivative_applied})
+                self.sympy_expr = self.sympy_expr.subs({exp.sympy_expr: derivative_applied})
     
     def is_derivative(self):
-        return self.is_user_defined_func and self.compare_func(Expression("d"))
+        return self.is_user_defined_func and self.compare_func(Expression("d()"))
 
     def apply_derivative(self):
-        return Derivative(self.args).doit()
+        deriv = Derivative(self.sympy_expr.args[0],self.sympy_expr.args[1])
+        return deriv.doit()
 
     def wrap_expression(self, exp):
         if self.__evaluate:

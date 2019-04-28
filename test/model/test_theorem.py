@@ -1,6 +1,6 @@
 import unittest
 
-from src.model.theorems import Theorem
+from src.model.theorem import Theorem
 from src.model.expression import Expression
 
 

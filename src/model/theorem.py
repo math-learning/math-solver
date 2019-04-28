@@ -1,4 +1,4 @@
-from server.src.model.template_match_analyzer import TemplateMatchAnalyzer
+from src.model.template_match_analyzer import TemplateMatchAnalyzer
 from src.model.expression import Expression
 
 
