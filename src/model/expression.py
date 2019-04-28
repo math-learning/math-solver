@@ -1,5 +1,6 @@
-import sympy
 import inspect
+
+import sympy
 from cffi.setuptools_ext import basestring
 from sympy import Symbol
 from sympy.core.basic import preorder_traversal
@@ -7,6 +8,7 @@ from sympy.core.expr import UnevaluatedExpr
 from sympy.core.function import Derivative, UndefinedFunction
 from sympy.parsing.sympy_parser import parse_expr
 from sympy.simplify import simplify
+
 
 def is_sympy_exp(formula):
     sympy_classes = tuple(x[1] for x in inspect.getmembers(sympy,inspect.isclass))
@@ -31,21 +33,24 @@ class Expression:
     def is_leaf(self):
         return len(self.sympy_expr.args) == 0
 
+    def is_commutative(self):
+        return self.sympy_expr.is_commutative
+
     # Search and derivate expressions
     def solve_derivatives(self):
         for exp in preorder_traversal(self.sympy_expr):
             # TODO
             exp = Expression(exp)
             if exp.is_derivative():
-                derivative_applied = self.wrap_expression(exp.apply_derivative())
-                self.sympy_expr = self.sympy_expr.subs({exp.sympy_expr: derivative_applied})
+                derivative_applied = exp.apply_derivative()
+                self.replace(exp, derivative_applied)
     
     def is_derivative(self):
         return self.is_user_defined_func and self.compare_func(Expression("d()"))
 
     def apply_derivative(self):
         deriv = Derivative(self.sympy_expr.args[0],self.sympy_expr.args[1])
-        return deriv.doit()
+        return Expression(deriv.doit())
 
     def wrap_expression(self, exp):
         if self.__evaluate:
@@ -56,7 +61,7 @@ class Expression:
         self.sympy_expr = simplify(self.sympy_expr)
 
     def is_user_defined_func(self):
-        return isinstance(self.sympy_expr.func, UndefinedFunction)
+        return isinstance(self.sympy_expr.func, UndefinedFunction) and not self.is_derivative() 
     
     def to_string(self):
         return str(self.sympy_expr)
@@ -65,10 +70,17 @@ class Expression:
         return simplify(self.sympy_expr) == simplify(expression.sympy_expr)
 
     def contains_user_defined_funct(self):
-        for children in self.sympy_expr.preorder_traversal():
-            if isinstance(self.sympy_expr.func, UndefinedFunction):
-                return True
-        return False
+        if self.is_user_defined_func():
+            return True
+
+        if len(self.get_children()) == 0:
+            return False
+
+        result = False
+
+        for child in self.get_children():
+            result = result or child.contains_user_defined_funct()
+        return result
 
     def compare_func(self, expression):
         return self.sympy_expr.func == expression.sympy_expr.func
@@ -87,6 +99,11 @@ class Expression:
         for child in self.sympy_expr.args:
             children.append(Expression(child))
         return children
+
+    def replace(self, to_replace, replacement):
+        to_replace_sympy = to_replace.sympy_expr
+        replacement_sympy = replacement.sympy_expr
+        self.sympy_expr = self.sympy_expr.subs({to_replace_sympy: replacement_sympy})
     
     def __eq__(self, other):
         """Overrides the default implementation"""

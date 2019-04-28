@@ -15,5 +15,9 @@ class Theorem:
     def apply_to(self, expression):
         template = self.left
         analysis = self.analyzer.analyze(template, expression)
-        
+        result = self.right
+        if analysis.expression_match_template:
+            for equality in analysis.equalities:
+                result.replace(equality.template, equality.expression)
+            return result
         return None
