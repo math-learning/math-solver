@@ -22,6 +22,12 @@ class TestExpression(unittest.TestCase):
 
         self.assertTrue(exp_one.is_equivalent_to(exp_two))
     
+    def test_some(self):
+        exp_one = Expression("x + x")
+        exp_two = Expression("x + x")
+
+        self.assertTrue(exp_one.compare(exp_two))
+
     def test_get_children(self):
         exp = Expression("x + x**2")
         children = exp.get_children()

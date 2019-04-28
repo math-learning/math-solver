@@ -32,7 +32,7 @@ class ListUtils:
             listtwo_without_elem.remove(elem)
             listtwo_without_elem = tuple(listtwo_without_elem)
 
-            combinations = ListUtils.combinations_rec(listone_without_first, listb_without_elem, combination_bifurcation, combinations)
+            combinations = ListUtils.combinations_rec(listone_without_first, listtwo_without_elem, combination_bifurcation, combinations)
 
         return combinations
 

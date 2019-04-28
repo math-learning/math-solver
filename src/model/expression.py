@@ -34,10 +34,18 @@ class Expression:
     # Search and derivate expressions
     def solve_derivatives(self):
         for exp in preorder_traversal(self.sympy_expr):
-            if exp:
-                derivative_applied = self.wrap_expression(exp.doit())
+            # TODO
+            exp = Expression(exp)
+            if exp.is_derivative():
+                derivative_applied = self.wrap_expression(exp.apply_derivative())
                 self.sympy_expr = self.sympy_expr.subs({exp: derivative_applied})
     
+    def is_derivative(self):
+        return self.is_user_defined_func and self.compare_func(Expression("d"))
+
+    def apply_derivative(self):
+        return Derivative(self.args).doit()
+
     def wrap_expression(self, exp):
         if self.__evaluate:
             return UnevaluatedExpr(exp)
@@ -62,7 +70,7 @@ class Expression:
         return False
 
     def compare_func(self, expression):
-        return self.sympy_expr.func == expression.func
+        return self.sympy_expr.func == expression.sympy_expr.func
     
     def free_symbols_match(self, expression):
         for free_symbol in expression.sympy_expr.expr_free_symbols:
