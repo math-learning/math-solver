@@ -9,12 +9,29 @@ class Equality:
     def to_string(self):
         return "Equality template: " + self.template.to_string() + " . expression: " + self.expression.to_string()
 
+    def __eq__(self, other):
+        if isinstance(other, Equality):
+            return self.template == other.template and self.expression == other.expression
+        return False
+    
 class MatchAnalysisReport:
     def __init__(self, template, expression, match, equalities):
         self.template = template
         self.expression = expression
         self.expression_match_template = match
         self.equalities = equalities
+    
+    def __eq__(self, other):
+        """Overrides the default implementation"""
+        if isinstance(other, MatchAnalysisReport):
+            if len(self.equalities) != len(other.equalities):
+                return False
+            for i in range(0,len(self.equalities)):
+                if not self.equalities[i] in other.equalities:
+                    return False
+            return self.template == other.template and self.expression == other.expression and self.expression_match_template == other.expression_match_template and self.equalities == other.equalities
+
+        return False
 
 class TemplateMatchAnalyzer:
 
@@ -29,6 +46,7 @@ class TemplateMatchAnalyzer:
         if not analysis.expression_match_template:
             return analysis
 
+        # Handle two simpy expressions
         if not template.contains_user_defined_funct() and not expression.contains_user_defined_funct():
             match = template.is_equivalent_to(expression)
             analysis = self.build_match_analysis_report(match, analysis, template, expression)
@@ -37,6 +55,7 @@ class TemplateMatchAnalyzer:
             match = template.free_symbols_match(expression)
             analysis = self.build_match_analysis_report(match, analysis, template, expression)
 
+        # Handle non leaves with at least one user defined function
         elif template.children_amount() == expression.children_amount():
             analysis = self.analyze_exp_with_user_def_func_eq_sizes(template, expression, analysis)
         else:
@@ -100,4 +119,13 @@ class TemplateMatchAnalyzer:
 
     # TODO
     def analyze_exp_with_user_def_func_diff_sizes(self, template, expression, analysis):
-        raise Exception("not implemented yet")
+        if len(template.get_children()) > len(expression.get_children()):
+            return self.build_match_analysis_report(False, analysis, template, expression)
+        
+        # TODO:
+        # 1. Get Index combinations to reduce expression children length to equal template children length
+        # For example [1,2,3] to equal length 2 [[1,2] , 3] ; [1 , [2,3]] (if is commutative) or [2, [1,3]]
+        # 1.1 Commutative case
+        # 1.2 Non commutative case
+        # 2. Join children as arguments of the function
+        # 3. analyze each case with eq_len funct defined above
