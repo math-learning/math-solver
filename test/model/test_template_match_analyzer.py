@@ -30,3 +30,5 @@ class TestTemplateMatchAnalyzer(unittest.TestCase):
         result = analyzer.analyze_exp_with_user_def_func_diff_sizes(template, expression, analysis)
 
         self.assertTrue(result.expression_match_template)
+
+    

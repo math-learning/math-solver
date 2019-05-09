@@ -38,3 +38,13 @@ class TestListUtils(unittest.TestCase):
     def test_combinations_diff_sizes(self):
         lista = [1,2,3]
         listb = [4,5,6]
+
+
+    def test_get_list_of_joins(self):
+        smaller_size = 2
+        larger_size = 4
+        a = ListUtils.compute_rec(3, 4, 2,[],[])
+        expected = [[0,2,0], [1,0,1]]
+        self.assertEquals(expected, a)
+
+    

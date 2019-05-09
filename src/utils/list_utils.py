@@ -36,21 +36,61 @@ class ListUtils:
 
         return combinations
 
+    @staticmethod
+    def combinations_diferent_sizes(listone, listtwo):
+        if len(listone) > len(listtwo):
+            larger = listone
+            smaller = listtwo
+        else:
+            larger = listtwo
+            smaller = listone
 
-    # TODO: Later
-    # @staticmethod
-    # def combinations_diferent_sizes(listone, listtwo):
-    #     if len(listone) > len(listtwo):
-    #         larger = listone
-    #         smaller = listtwo
-    #     else:
-    #         larger = listtwo
-    #         smaller = listone
+        return ListUtils.combinations_diferent_sizes_rec(larger, smaller)
 
-    #     return ListUtils.combinations_diferent_sizes_rec(larger, smaller)
+    # Idea:
+    # A = [a,b] ; B = [1,2,3,4]
+    # diff = 2
+    # Possibles: 
+    # 1. join 2 sets of 2 elements of B to reduce its size
+    # 2. join 1 set of 3 elements of B to reduce its size
 
-    # @staticmethod
-    # def combinations_diferent_sizes_rec(larger, smaller):
-    #     diff = len(larger) - len(smaller)
-    #     for i in range(2,diff):
-    #         for 
+    @staticmethod
+    def combinations_diferent_sizes_rec(larger, smaller, possibilities):
+        diff = len(larger) - len(smaller)
+        
+        # Each item is an array of numbers representing the amount of items of that length joined
+        # for example with a difference in length of 4 and the length of the smaller 2
+        # [0,2,0,0] a possible reduction is 0 elements of lenght 1; two elements of length 2; etc..
+        join_possibilities = possibilities
+        
+            
+    # TODO: logic
+    @staticmethod
+    def get_list_of_joins(smaller_size, larger_size):
+        pass
+    
+
+    # TODO: refactor
+    @staticmethod
+    def compute_rec(amount_joined, rest_size, expected_amount, accum, total):
+        if amount_joined == 0:
+            sum = 0
+            for item in accum:
+                sum += item
+            if rest_size == 0 and sum == expected_amount:
+                return [accum]
+            return []
+        
+        if (rest_size < amount_joined ):
+            accum_copy = accum[:]
+            accum_copy.append(0)
+            return ListUtils.compute_rec(amount_joined - 1, rest_size, expected_amount, accum_copy, total)
+
+        max_amount_of_joins = int (rest_size / amount_joined)
+        for i in range(0, max_amount_of_joins + 1):
+            accum_copy = accum[:]
+            accum_copy.append(i)
+            
+            total += ListUtils.compute_rec(amount_joined - 1, rest_size - (i * amount_joined), expected_amount, accum_copy, [])
+        
+        return total
