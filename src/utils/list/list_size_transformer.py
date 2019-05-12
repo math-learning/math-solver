@@ -2,8 +2,8 @@
 
 class ListSizeTransformer:
 
-    def __init__(self, index_combinations_strategy):
-        self.index_combinations_strategy = index_combinations_strategy
+    def __init__(self, group_case_transformer):
+        self.group_case_transformer = group_case_transformer
 
     # Idea:
     # A = [a,b] ; B = [1,2,3,4]
@@ -31,7 +31,7 @@ class ListSizeTransformer:
             # larger reduced cases are the combinations of for example [1,0,1]
             # combination of indices of elements that form an array that contains 1 list of size 1
             # and another of size 3
-            larger_reduced_cases = self.transform_grouping_case(grouping_case, listone)
+            larger_reduced_cases = self.group_case_transformer.transform(grouping_case, listone)
             for single_case in larger_reduced_cases:
                 combinations.append(single_case)
 
@@ -74,32 +74,5 @@ class ListSizeTransformer:
         return new_accum
 
 
-    def transform_grouping_case(self, grouping_case, elements):
-        if len(grouping_case) <= 0:
-            return None
-        return self.transform_grouping_case_rec(grouping_case, 0, grouping_case[0], elements, [], [])
-
-    # TODO: refactor
-    def transform_grouping_case_rec(self, join_case, current_index, quantity, not_gruped_elements, accum, total):
-
-        if len(join_case) < current_index + 1:
-            return [accum]
-
-        if quantity == 0:
-            new_index = current_index + 1
-            new_quantity = 0
-            if len(join_case) > current_index + 1:
-                new_quantity = join_case[current_index + 1] 
-            return self.transform_grouping_case_rec(join_case, new_index, new_quantity, not_gruped_elements, accum, total)
-
-        amount_joined = current_index + 1
-
-        combinations = self.index_combinations_strategy.combinations_of_n_elements(not_gruped_elements, amount_joined)
-
-        for combination in combinations:
-            accum_copy = accum[:]
-            accum_copy.append(combination.elements)
-            total += self.transform_grouping_case_rec(join_case, current_index, quantity - 1, combination.rest, accum_copy, [])
-        
-        return total
+    
 

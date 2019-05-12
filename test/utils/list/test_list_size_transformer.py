@@ -1,6 +1,9 @@
 import unittest
 
-from src.utils.list.index_combinations_strategy import IndexCombinationStrategy
+from src.utils.list.index_group_transformer import \
+    CommutativeGroupTransformer
+from src.utils.list.index_group_transformer_only_continuous import \
+    NonCommutativeGroupTransformer
 from src.utils.list.list_size_transformer import ListSizeTransformer
 
 
@@ -8,8 +11,8 @@ class TestListSizeTransformer(unittest.TestCase):
     
     def test_transform(self):
         a_list = [1,2,3]
-        combinations_strategy = IndexCombinationStrategy()
-        transformer = ListSizeTransformer(combinations_strategy)
+        group_transformer = CommutativeGroupTransformer()
+        transformer = ListSizeTransformer(group_transformer)
         transformations  = transformer.transform(a_list,2)
         expected = [
             [[1],[2,3]],
@@ -18,12 +21,23 @@ class TestListSizeTransformer(unittest.TestCase):
         ]
         self.assertEquals(expected, transformations)
     
+    def test_transform_only_continuous(self):
+        a_list = [1,2,3]
+        group_transformer = NonCommutativeGroupTransformer()
+        transformer = ListSizeTransformer(group_transformer)
+        transformations  = transformer.transform(a_list,2)
+        expected = [
+            [[1],[2,3]],
+            [[2],[1,3]],
+            [[3],[1,2]]
+        ]
+        self.assertEquals(expected, transformations)
 
     def test_amount_of_groups_by_group_elements_number(self):
         smaller_size = 2
         larger_size = 4
-        combinations_strategy = IndexCombinationStrategy()
-        transformer = ListSizeTransformer(combinations_strategy)
+        group_transformer = CommutativeGroupTransformer()
+        transformer = ListSizeTransformer(group_transformer)
         result = transformer.amount_of_groups_by_group_elements_number(smaller_size, larger_size)
         expected = [[0,2,0], [1,0,1]]
         self.assertEquals(expected, result)
@@ -31,8 +45,8 @@ class TestListSizeTransformer(unittest.TestCase):
     def test_amount_of_groups_by_group_elements_number_other(self):
         smaller_size = 2
         larger_size = 5
-        combinations_strategy = IndexCombinationStrategy()
-        transformer = ListSizeTransformer(combinations_strategy)
+        group_transformer = CommutativeGroupTransformer()
+        transformer = ListSizeTransformer(group_transformer)
         result = transformer.amount_of_groups_by_group_elements_number(smaller_size, larger_size)
         expected = [[0,1,1,0], [1,0,0,1]]
         self.assertEquals(expected, result)
@@ -56,8 +70,8 @@ class TestListSizeTransformer(unittest.TestCase):
         elements = [1,2,3,4]
         join_case = [1,0,1]
 
-        combinations_strategy = IndexCombinationStrategy()
-        transformer = ListSizeTransformer(combinations_strategy)
+        group_transformer = CommutativeGroupTransformer()
+        transformer = ListSizeTransformer(group_transformer)
 
         a = transformer.transform_grouping_case(join_case, elements)
         expected = [
@@ -67,4 +81,3 @@ class TestListSizeTransformer(unittest.TestCase):
             [[4], [1,2,3]]
         ]
         self.assertEquals(expected, a)
-    
