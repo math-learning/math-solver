@@ -1,4 +1,4 @@
-from src.utils.list_utils import ListUtils
+from src.utils.list.list_utils import ListUtils
 
 
 class Equality:
@@ -121,21 +121,16 @@ class TemplateMatchAnalyzer:
     def analyze_exp_with_user_def_func_diff_sizes(self, template, expression, analysis):
         if len(template.get_children()) > len(expression.get_children()):
             return self.build_match_analysis_report(False, analysis, template, expression)
-        
-        len_diff =  len(expression.get_children()) - len(template.get_children())
 
-        # TODO:
+        expression_children_size_n = expression.get_children_combinations_size_n()
+        template_children = template.get_children()
+
+        
         # 1. Get Index combinations to reduce expression children length to equal template children length
         # For example [1,2,3] to equal length 2 [[1,2] , 3] ; [1 , [2,3]] (if is commutative) or [2, [1,3]]
         # If expression len is 4 and template is 2.
-        # We have to consider the following cases: Reducing the expression length to 2 by:
-        # - grouping an expression of three children and another of one child
-        # - grouping an expression of two children and another of two children
-        # if we think about it is similar to the coin changing problem.
-        # 1.1 Commutative case
-        if expression.is_commutative():
+         
             
-                
         # 1.2 Non commutative case
         # 2. Join children as arguments of the function
         # 3. analyze each case with eq_len funct defined above

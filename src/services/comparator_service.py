@@ -1,15 +1,5 @@
 from sympy import simplify
 
-from src.comparators.comparator_utils import ComparatorUtils
-from src.comparators.comparison_result import ComparisonResult
-from src.comparators.user_defined_function_comparator import UserDefinedFunctionComparator
-from src.model.theorem import Theorem
-from src.model.history_item import HistoryItem
-from src.model.transformation_result import TransformationResult
-from src.services.derivative_service import DerivativeApplier
-from src.transformers.expression_transformer import ExpressionTransformer
-from src.utils.logger import Logger
-
 
 class ComparatorService:
 
