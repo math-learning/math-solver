@@ -10,29 +10,47 @@ class NonCommutativeSubCombination:
 class NonCommutativeGroupTransformer:
 
     def transform(self, grouping_case, elements):
-        pass
+        return self.transform_rec(grouping_case, 0, grouping_case[0], [elements], [], [])
 
-    def transform_rec(self, grouping_case, current_index, quantity, not_gruped_elements_list, accum, total):
+    def transform_rec(self, grouping_case, current_index, quantity, not_grouped_elements_list, accum, total):
         
-        if len(join_case) < current_index + 1:
+        if len(grouping_case) < current_index + 1:
             return [accum]
 
         if quantity == 0:
             new_index = current_index + 1
             new_quantity = 0
-            if len(join_case) > current_index + 1:
-                new_quantity = join_case[current_index + 1] 
-            return self.transform_rec(join_case, new_index, new_quantity, not_gruped_elements, accum, total)
+            if len(grouping_case) > current_index + 1:
+                new_quantity = grouping_case[current_index + 1] 
+            return self.transform_rec(grouping_case, new_index, new_quantity, not_grouped_elements_list, accum, total)
 
         amount_joined = current_index + 1
 
-        for not_grouped_elements in not_gruped_elements_list
-            combinations = self.combinations_of_n_elements(not_gruped_elements, amount_joined)
+        for not_grouped_elements in not_grouped_elements_list:
+            combinations = self.combinations_of_n_elements(not_grouped_elements, amount_joined)
+            if combinations != None:
+                for combination in combinations:
+                    not_grouped_elements_list_copy = not_grouped_elements_list[:]
+                    not_grouped_elements_list_copy.remove(not_grouped_elements)
+
+                    if len(combination.left_rest) != 0:
+                        not_grouped_elements_list_copy.append(combination.left_rest)
+                    if len(combination.right_rest) != 0:
+                        not_grouped_elements_list_copy.append(combination.right_rest)
+
+                    accum_copy = accum[:]
+                    accum_copy.append(combination.elements)
+
+                    a_result = self.transform_rec(grouping_case, current_index, quantity - 1, not_grouped_elements_list_copy, accum_copy, [])
+                    if a_result != None:
+                        total += a_result
+        
+        return total
         
         # TODO: complex logic
             
 
-    def combinations_of_n_elements(self, elements, n, accum, total):
+    def combinations_of_n_elements(self, elements, n):
         if n > len(elements):
             return None
         
@@ -41,7 +59,7 @@ class NonCommutativeGroupTransformer:
 
             left_elements = elements[:i]
             sub_elements = elements[i:i+n]    
-            right_elements = [i+n:]
+            right_elements = elements[i+n:]
             
             result.append(NonCommutativeSubCombination(left_elements, sub_elements, right_elements))
         

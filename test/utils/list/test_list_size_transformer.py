@@ -66,18 +66,4 @@ class TestListSizeTransformer(unittest.TestCase):
     #     self.assertEquals(expected, combinations)
 
 
-    def test_transform_grouping_case(self):
-        elements = [1,2,3,4]
-        join_case = [1,0,1]
-
-        group_transformer = CommutativeGroupTransformer()
-        transformer = ListSizeTransformer(group_transformer)
-
-        a = transformer.transform_grouping_case(join_case, elements)
-        expected = [
-            [[1], [2,3,4]],
-            [[2], [1,3,4]],
-            [[3], [1,2,4]],
-            [[4], [1,2,3]]
-        ]
-        self.assertEquals(expected, a)
+    
