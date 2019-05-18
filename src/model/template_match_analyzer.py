@@ -1,3 +1,8 @@
+from src.utils.list.index_combinations_strategy import \
+    CommutativeGroupTransformer
+from src.utils.list.index_combinations_strategy_only_continuous import \
+    NonCommutativeGroupTransformer
+from src.utils.list.list_size_transformer import ListSizeTransformer
 from src.utils.list.list_utils import ListUtils
 
 
@@ -35,6 +40,11 @@ class MatchAnalysisReport:
 
 class TemplateMatchAnalyzer:
 
+    def __init__(self):
+        self.commutative_list_size_transformer = ListSizeTransformer(CommutativeGroupTransformer())
+        self.non_commutative_list_size_transformer = ListSizeTransformer(NonCommutativeGroupTransformer())
+        self.list_utils = ListUtils()
+
     def analyze(self, template, expression):
         analysis = MatchAnalysisReport(template, expression, True, [])
         return self.analyze_rec(template, expression, analysis)
@@ -58,9 +68,10 @@ class TemplateMatchAnalyzer:
         # Handle non leaves with at least one user defined function
         elif template.children_amount() == expression.children_amount():
             analysis = self.analyze_exp_with_user_def_func_eq_sizes(template, expression, analysis)
-        else:
-            # TODO
-            self.analyze_exp_with_user_def_func_diff_sizes(template, expression, analysis)
+        
+        # Handle different size children. for example f(x)  = x + x**2
+        else:    
+            analysis = self.analyze_exp_with_user_def_func_diff_sizes(template, expression, analysis)
         
         return analysis
 
@@ -77,7 +88,7 @@ class TemplateMatchAnalyzer:
     def analyze_exp_with_user_def_func_eq_sizes(self, template, expression, analysis):
         if template.compare_func(expression):
             if template.is_commutative():
-                return self.analyze_commutative_children_eq_len(template, expression, analysis)
+                return self.analyze_commutative_children_eq_len(template.get_children(), expression.get_children(), analysis)
             else:
                 return self.analyze_children_non_commutative_eq_len(template, expression, analysis)
     
@@ -87,8 +98,8 @@ class TemplateMatchAnalyzer:
     # + is commutative so we should analyze:
     # 1. ¿f(x) == x ** 2  && x == x ?
     # 2. ¿f(x) == x && x ** 2 == x ?
-    def analyze_commutative_children_eq_len(self, template, expression, analysis):
-        comparison_cases = ListUtils.combinations(template.get_children(),expression.get_children())
+    def analyze_commutative_children_eq_len(self, template_children, expression_children, analysis):
+        comparison_cases = self.list_utils.pair_combinations(template_children, expression_children)
         case_analysis = analysis
         for case in comparison_cases:
             case_analysis = self.analyze_case(case, analysis)
@@ -117,23 +128,19 @@ class TemplateMatchAnalyzer:
             result = self.analyze_rec(template_children[i], expression_children[i], result)
         return result
 
-    # TODO
+    # TODO refactor
     def analyze_exp_with_user_def_func_diff_sizes(self, template, expression, analysis):
-        if len(template.get_children()) > len(expression.get_children()):
+        if len(template.get_children()) >= len(expression.get_children()):
             return self.build_match_analysis_report(False, analysis, template, expression)
 
-        expression_children_size_n = expression.get_children_combinations_size_n()
-        template_children = template.get_children()
-
+        possible_expression_children = expression.get_children_with_size(len(template.get_children()))
         
-        # 1. Get Index combinations to reduce expression children length to equal template children length
-        # For example [1,2,3] to equal length 2 [[1,2] , 3] ; [1 , [2,3]] (if is commutative) or [2, [1,3]]
-        # If expression len is 4 and template is 2.
-         
-            
-        # 1.2 Non commutative case
-        # 2. Join children as arguments of the function
-        # 3. analyze each case with eq_len funct defined above
-
-
-    
+        for children in possible_expression_children:
+            if template.is_commutative():
+                new_analysis = self.analyze_commutative_children_eq_len(template.get_children(), children, analysis)
+            else:
+                new_analysis = self.analyze_children_non_commutative_eq_len(template.get_children(), children, analysis)
+            if new_analysis.expression_match_template:
+                return new_analysis
+        
+        return self.build_match_analysis_report(False, analysis, template, expression)
