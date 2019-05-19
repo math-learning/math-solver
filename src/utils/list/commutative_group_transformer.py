@@ -36,6 +36,7 @@ class CommutativeGroupTransformer:
     def combinations_of_n_elements(self, elements, n):
         return self.combinations_of_n_elements_rec(elements, elements,n,[],[])
 
+    # TODO: REFACTOR!
     def combinations_of_n_elements_rec(self, elements, all_elements, n, accum, total):
         if n == 0:
             rest = []

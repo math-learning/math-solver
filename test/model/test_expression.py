@@ -8,9 +8,6 @@ class TestExpression(unittest.TestCase):
         leaf = Expression("x")
         self.assertTrue(leaf.is_leaf())
 
-        non_leaf = Expression("x + 2")
-        self.assertFalse(non_leaf.is_leaf())
-
     def test_solve_derivatives(self):
         exp = Expression("d(x, x)")
         exp.solve_derivatives()
@@ -35,3 +32,9 @@ class TestExpression(unittest.TestCase):
 
         self.assertTrue(Expression("x") in children)
         self.assertTrue(Expression("x**2") in children)
+
+    
+    def test_get_children_with_size(self):
+        exp = Expression("x+x**2+x**3")
+        children = exp.get_children_with_size(2)
+        print("hello")
