@@ -30,5 +30,16 @@ class TestTemplateMatchAnalyzer(unittest.TestCase):
         result = analyzer.analyze_exp_with_user_def_func_diff_sizes(template, expression, analysis)
 
         self.assertTrue(result.expression_match_template)
-
     
+    def test_analyze_derivatives(self):
+        analyzer = TemplateMatchAnalyzer()
+        template = Expression("d(f(x) + g(x) ,x)")
+        expression = Expression("d(x + x**2,x)")
+        
+        result = analyzer.analyze(template, expression)
+
+        equalities = [Equality(Expression("f(x)"), Expression("x")),
+                    Equality(Expression("g(x)"), Expression("x**2"))]
+        expected = MatchAnalysisReport(template, expression, True, equalities)
+
+        self.assertEquals(expected, result)
