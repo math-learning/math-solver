@@ -15,4 +15,15 @@ class TestTheorem(unittest.TestCase):
         new_exp = theorem.apply_to(exp)
 
         self.assertEqual(new_exp.to_string(), "d(x, x) + d(x**2, x)")
+    
+    def test_apply_to_children(self):    
+        theorem = Theorem("Derivada de la suma",
+                        "d(f(x) + g(x), x)",
+                        "d(f(x), x) + d(g(x),x)")
+
+        exp = Expression("d(x + x**2, x) + x ** 3")
+        new_exp = theorem.apply_to(exp)
+
+        self.assertEqual("x**3 + d(x, x) + d(x**2, x)", new_exp.to_string())
         
+    

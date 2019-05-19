@@ -2,7 +2,7 @@ import logging
 from logging.handlers import RotatingFileHandler, TimedRotatingFileHandler
 from src.utils.environment import Environment
 
-LOGGING_FILE = 'log'
+LOGGING_FILE = 'log.log'
 FORMATTER_STYLE = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 LOGGING_LEVEL = logging.INFO
 

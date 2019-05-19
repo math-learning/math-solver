@@ -1,8 +1,8 @@
 import unittest
 
-from src.utils.list.index_group_transformer import \
+from src.utils.list.commutative_group_transformer import \
     CommutativeGroupTransformer
-from src.utils.list.index_group_transformer_only_continuous import \
+from src.utils.list.non_commutative_group_transformer import \
     NonCommutativeGroupTransformer
 from src.utils.list.list_size_transformer import ListSizeTransformer
 
@@ -28,7 +28,6 @@ class TestListSizeTransformer(unittest.TestCase):
         transformations  = transformer.transform(a_list,2)
         expected = [
             [[1],[2,3]],
-            [[2],[1,3]],
             [[3],[1,2]]
         ]
         self.assertEquals(expected, transformations)
