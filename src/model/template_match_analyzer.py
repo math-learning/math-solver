@@ -57,7 +57,7 @@ class TemplateMatchAnalyzer:
         return self.analyze_rec(template, expression, analysis)
 
     def analyze_rec(self, template, expression, analysis):
-        print ("Analizing" + to_string(template, expression))
+        print ("Analizing " + to_string(template, expression))
         
         if not analysis.expression_match_template:
             return analysis
@@ -111,8 +111,8 @@ class TemplateMatchAnalyzer:
     # of the expression and the template
     # for example: comparing f(x) + x with x**2 + x
     # + is commutative so we should analyze:
-    # 1. ¿f(x) == x ** 2  && x == x ?
-    # 2. ¿f(x) == x && x ** 2 == x ?
+    # 1. f(x) == x ** 2  && x == x ?
+    # 2. f(x) == x && x ** 2 == x ?
     def analyze_commutative_children_eq_len(self, template_children, expression_children, analysis):
         comparison_cases = self.list_utils.pair_combinations(template_children, expression_children)
         case_analysis = analysis

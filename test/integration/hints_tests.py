@@ -13,6 +13,7 @@ def test_get_theorems_hint(json_file_path, expected_result):
         result = get_theorems_hint(data)
         assert(result.status_code == 200)
         if result.status_code == 200 :
+            print(result)
             print(json.dumps(result.content.__dict__))
             assert(json.loads(result.content) == expected_result)
 

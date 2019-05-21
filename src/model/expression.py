@@ -1,7 +1,6 @@
 import inspect
 
 import sympy
-from cffi.setuptools_ext import basestring
 from sympy import Symbol
 from sympy.core.basic import preorder_traversal
 from sympy.core.expr import UnevaluatedExpr
@@ -29,7 +28,7 @@ class Expression:
         self.non_commutative_group_transformer = NonCommutativeGroupTransformer()
         self.commutative_list_size_transformer = ListSizeTransformer(CommutativeGroupTransformer())
         self.non_commutative_list_size_transformer = ListSizeTransformer(NonCommutativeGroupTransformer())
-        if isinstance(formula, basestring):
+        if isinstance(formula, str):
             self.sympy_expr = parse_expr(formula)
         elif is_sympy_exp(formula):
             self.sympy_expr = formula
@@ -44,12 +43,14 @@ class Expression:
 
     # Search and derivate expressions
     def solve_derivatives(self):
+        derivatives_solved = self
         for exp in preorder_traversal(self.sympy_expr):
             # TODO
             exp = Expression(exp)
             if exp.is_derivative():
                 derivative_applied = exp.apply_derivative()
-                self.replace(exp, derivative_applied)
+                derivatives_solved.replace(exp, derivative_applied)
+        return derivatives_solved
     
     def is_derivative(self):
         return isinstance(self.sympy_expr.func, UndefinedFunction) and self.compare_func(Expression("d()"))
@@ -126,7 +127,11 @@ class Expression:
         combinations = transformer.combinations_of_n_elements(self.get_children(), size)
 
         for combination in combinations:
-            possibilities.append(combination.elements)
+            sympy_elements = []
+            for element in combination.elements:
+                sympy_elements.append(element.sympy_expr)
+            children_sympy = self.sympy_expr.func(*sympy_elements,evaluate=self.__evaluate)
+            possibilities.append(Expression(children_sympy))
         return possibilities
 
     def get_children_with_size(self, size):
@@ -155,4 +160,4 @@ class Expression:
         return False
     
     def __str__(self):
-        return "Expression with sympy_expr: " + str(self.sympy_expr)
+        return str(self.sympy_expr)

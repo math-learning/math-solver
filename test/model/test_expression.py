@@ -10,7 +10,7 @@ class TestExpression(unittest.TestCase):
 
     def test_solve_derivatives(self):
         exp = Expression("d(x, x)")
-        exp.solve_derivatives()
+        exp = exp.solve_derivatives()
         self.assertEqual(exp.to_string(), '1')
 
     def test_compare(self):

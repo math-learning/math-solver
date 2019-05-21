@@ -51,10 +51,11 @@ class Theorem:
         for size in range(2, expression.children_amount() + 1):
             children_of_size_n_possibilities = expression.get_child_with_size_possibilities(size)
             for child_of_size_n in children_of_size_n_possibilities:
-                analysis = self.analyzer.analyze(template, child_of_size_n)
-                if analysis.expression_match_template:
-                    return TheoremApplication(child_of_size_n, self.transform_right_side(analysis.equalities))
-                already_tried.add(str(child_of_size_n))
+                if str(child_of_size_n) not in already_tried:
+                    analysis = self.analyzer.analyze(template, child_of_size_n)
+                    if analysis.expression_match_template:
+                        return TheoremApplication(child_of_size_n, self.transform_right_side(analysis.equalities))
+                    already_tried.add(str(child_of_size_n))
         return None
 
     def transform_right_side(self, equalities):
