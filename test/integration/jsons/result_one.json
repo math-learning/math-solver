@@ -1,0 +1,20 @@
+{
+    "exercise": {
+        "input_data": "d(x + x,x)",
+        "theorems": [{
+            "name": "derivada de la suma",
+            "left": "d(f(x) + g(x) , x)",
+            "right": "d(f(x), x) + d(g(x), x)"
+        }, {
+            "name": "derivada del producto",
+            "left": "d(f(x) * g(x) , x)",
+            "right": "d(f(x), x) * g(x) + d(g(x), x) * f(x)"
+        }, {
+            "name": "derivada de la division",
+            "left": "d(f(x) / g(x) , x)",
+            "right": "d(( f(x), x) * g(x) - d(g(x), x) * f(x)) / ( g(x)** 2)"
+        }],
+        "result": "2"
+    },
+    "steps": ["d(x + x,x)", "d(x,x) + d(x,x)", "2"]
+}
