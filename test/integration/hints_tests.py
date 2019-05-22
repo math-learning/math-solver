@@ -14,7 +14,7 @@ def test_get_theorems_hint(json_file_path, expected_result):
         assert(result.status_code == 200)
         if result.status_code == 200 :
             print(result)
-            print(json.dumps(result.content.__dict__))
-            assert(json.loads(result.content) == expected_result)
+            print(result.text)
+            assert(json.loads(result.text) == expected_result)
 
 test_get_theorems_hint('jsons/hints_example_one.json', [])
