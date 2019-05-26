@@ -9,6 +9,7 @@ class HintsService:
         self.comparatorService = ComparatorService()
         self.derivatives_applier = DerivativeApplier()
 
+<<<<<<< Updated upstream
     def get_theorems_that_apply_hint(self, expression, theorems):
         theorems_that_apply = []
         
@@ -16,6 +17,11 @@ class HintsService:
             comparison = self.comparatorService.compare(theo.left, expression)
             if comparison.structures_match:
                 theorems_that_apply.append(theo)
+=======
+    def get_hints(self, expression, theorems):
+        
+        hints = self.theorems_service.get_theorems_that_can_be_applied_to(expression, theorems)
+>>>>>>> Stashed changes
         
         if len(theorems_that_apply) == 0:
             new_step_deriv = self.derivatives_applier.apply_derivatives(expression)
