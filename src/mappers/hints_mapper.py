@@ -20,3 +20,9 @@ class HintsMapper:
         except Exception as e:
             self.logger.error("Error while trying to map theorems that apply input: {}".format(e))
             raise e
+<<<<<<< HEAD
+=======
+            
+        return expression, theorems
+
+>>>>>>> 51bda8f99d7fdaf9c43ff869243b45ce968e6748

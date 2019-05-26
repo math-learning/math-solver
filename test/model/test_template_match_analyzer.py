@@ -33,8 +33,8 @@ class TestTemplateMatchAnalyzer(unittest.TestCase):
     
     def test_analyze_derivatives(self):
         analyzer = TemplateMatchAnalyzer()
-        template = Expression("d(f(x) + g(x) ,x)")
-        expression = Expression("d(x + x**2,x)")
+        template = Expression("Derivative(f(x) + g(x) ,x)")
+        expression = Expression("Derivative(x + x**2,x)")
         
         result = analyzer.analyze(template, expression)
 

@@ -1,14 +1,13 @@
-from src.services.comparator_service import ComparatorService
-from sympy import simplify
 from src.model.theorem import Theorem
-from src.services.derivative_service import DerivativeApplier
+from src.model.hint import TextHint
+from src.services.theorems_service import TheoremsService
 
 class HintsService:
 
     def __init__(self):
-        self.comparatorService = ComparatorService()
-        self.derivatives_applier = DerivativeApplier()
+        self.theorems_service = TheoremsService()
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     def get_theorems_that_apply_hint(self, expression, theorems):
         theorems_that_apply = []
@@ -22,15 +21,20 @@ class HintsService:
         
         hints = self.theorems_service.get_theorems_that_can_be_applied_to(expression, theorems)
 >>>>>>> Stashed changes
+=======
+    def get_hints(self, expression, exercise):
         
-        if len(theorems_that_apply) == 0:
-            new_step_deriv = self.derivatives_applier.apply_derivatives(expression)
+        hints = self.theorems_service.get_theorems_that_can_be_applied_to(expression, exercise.theorems)
+>>>>>>> 51bda8f99d7fdaf9c43ff869243b45ce968e6748
+        
+        # Todo
+        if len(hints) == 0:
+            new_step_deriv = expression.solve_derivatives()
             if new_step_deriv != expression:
-                theorems_that_apply.append(Theorem("Aplicar derivadas con la tabla", "", ""))
+                hints.append(TextHint("Aplicar derivadas con la tabla"))
             else:
-                new_step_simplif = simplify(expression)
+                new_step_simplif = expression.simplify()
                 if new_step_simplif != expression:
-                    theorems_that_apply.append(Theorem("Simplificar la expresion", "", ""))
+                    hints.append(TextHint("Simplificar la expresion"))
 
-
-        return theorems_that_apply
+        return hints

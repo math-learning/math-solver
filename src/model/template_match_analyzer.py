@@ -52,44 +52,52 @@ class TemplateMatchAnalyzer:
         self.non_commutative_list_size_transformer = ListSizeTransformer(NonCommutativeGroupTransformer())
         self.list_utils = ListUtils()
 
-    def analyze(self, template, expression):
+    def analyze(self, template, template_conditions, expression):
         analysis = MatchAnalysisReport(template, expression, True, [])
-        return self.analyze_rec(template, expression, analysis)
+        return self.analyze_rec(template, template_conditions, expression, analysis)
 
-    def analyze_rec(self, template, expression, analysis):
-        print ("Analizing" + to_string(template, expression))
+    def analyze_rec(self, template, template_conditions, expression, analysis):
+        print ("Analizing " + to_string(template, expression))
         
         if not analysis.expression_match_template:
             return analysis
 
         # Handle two simpy expressions
         if not template.contains_user_defined_funct() and not expression.contains_user_defined_funct():
+            #TODO: REFACTOR
             logger.info("Comparing two sympy expressions")
-            match = template.is_equivalent_to(expression)
-            analysis = self.build_match_analysis_report(match, analysis, template, expression)
+
+            conditions = template_conditions.get(template.to_string())
+            if conditions != None and "IS_CONSTANT" in conditions:
+                match = expression.is_constant()
+            else:
+                match = template.is_equivalent_to(expression)
+
+            analysis = self.build_match_analysis_report(match, analysis, template, template_conditions, expression)
 
         elif template.is_user_defined_func():
             logger.info("Template is user defined function")
             match = template.free_symbols_match(expression)
-            analysis = self.build_match_analysis_report(match, analysis, template, expression)
+            analysis = self.build_match_analysis_report(match, analysis, template, template_conditions, expression)
 
         elif not template.compare_func(expression):
             logger.info("Functions dont match")
-            return self.build_match_analysis_report(False, analysis, template, expression)
+            analysis = self.build_match_analysis_report(False, analysis, template, template_conditions, expression)
 
         # Handle non leaves with at least one user defined function
         elif template.children_amount() == expression.children_amount():
             logger.info("Analyzing children with equal sizes")
-            analysis = self.analyze_exp_with_user_def_func_eq_sizes(template, expression, analysis)
+            analysis = self.analyze_exp_with_user_def_func_eq_sizes(template, template_conditions, expression, analysis)
         
         # Handle different size children. for example f(x)  = x + x**2
         else:
             logger.info("Analyzing children with different sizes")
-            analysis = self.analyze_exp_with_user_def_func_diff_sizes(template, expression, analysis)
+            analysis = self.analyze_exp_with_user_def_func_diff_sizes(template, template_conditions, expression, analysis)
         
         return analysis
 
-    def build_match_analysis_report(self, match, analysis, template, expression):
+    def build_match_analysis_report(self, match, analysis, template, template_conditions, expression):
+        #TODO: conditions
         equalities = analysis.equalities
         if match:
             current_equalities = analysis.equalities
@@ -100,24 +108,25 @@ class TemplateMatchAnalyzer:
 
         return MatchAnalysisReport(analysis.template, analysis.expression, match, equalities)
 
-    def analyze_exp_with_user_def_func_eq_sizes(self, template, expression, analysis):
+    def analyze_exp_with_user_def_func_eq_sizes(self, template, template_conditions, expression, analysis):
+        #TODO: Conditions
         if template.compare_func(expression):
             if template.is_commutative():
-                return self.analyze_commutative_children_eq_len(template.get_children(), expression.get_children(), analysis)
+                return self.analyze_commutative_children_eq_len(template.get_children(), template_conditions, expression.get_children(), analysis)
             else:
-                return self.analyze_children_non_commutative_eq_len(template, expression, analysis)
+                return self.analyze_children_non_commutative_eq_len(template, template_conditions, expression, analysis)
     
     # if the function is commutative we should compare all children combinations 
     # of the expression and the template
     # for example: comparing f(x) + x with x**2 + x
     # + is commutative so we should analyze:
-    # 1. ¿f(x) == x ** 2  && x == x ?
-    # 2. ¿f(x) == x && x ** 2 == x ?
-    def analyze_commutative_children_eq_len(self, template_children, expression_children, analysis):
+    # 1. f(x) == x ** 2  && x == x ?
+    # 2. f(x) == x && x ** 2 == x ?
+    def analyze_commutative_children_eq_len(self, template_children, template_conditions, expression_children, analysis):
         comparison_cases = self.list_utils.pair_combinations(template_children, expression_children)
         case_analysis = analysis
         for case in comparison_cases:
-            case_analysis = self.analyze_case(case, analysis)
+            case_analysis = self.analyze_case(case, template_conditions, analysis)
             if case_analysis.expression_match_template:
                 return case_analysis
         return case_analysis
@@ -125,39 +134,39 @@ class TemplateMatchAnalyzer:
     # A comparison case is a collection of pairs to compare for ex:
     # [ [x, x] , [f(x), x + 3]  ] 
     # the analysis then consist in comparing x with x and f(x) with x + 3
-    def analyze_case(self, comparison_case, analysis):
+    def analyze_case(self, comparison_case, template_conditions, analysis):
         result = analysis
         for pair in comparison_case:
-            result = self.analyze_rec(pair[0], pair[1], result)
+            result = self.analyze_rec(pair[0], template_conditions, pair[1], result)
         return result
 
     
     # If the function is non commutative we must respect the order
     # Ex: comparing x - x**2 with g(y) - f(x)
     # we only compare x with g(y) and x **2 with f(x)
-    def analyze_children_non_commutative_eq_len(self, template, expression, analysis):
+    def analyze_children_non_commutative_eq_len(self, template, template_conditions, expression, analysis):
         result = analysis
         template_children = template.get_children()
         expression_children = expression.get_children()
         for i in range(0, len(template)):
-            result = self.analyze_rec(template_children[i], expression_children[i], result)
+            result = self.analyze_rec(template_children[i], template_conditions, expression_children[i], result)
         return result
 
     # TODO refactor
-    def analyze_exp_with_user_def_func_diff_sizes(self, template, expression, analysis):
+    def analyze_exp_with_user_def_func_diff_sizes(self, template, template_conditions, expression, analysis):
 
         if template.children_amount() >= expression.children_amount():
-            return self.build_match_analysis_report(False, analysis, template, expression)
+            return self.build_match_analysis_report(False, analysis, template, template_conditions, expression)
 
         possible_expression_children = expression.get_children_with_size(template.children_amount())
         
         for children in possible_expression_children:
             if template.is_commutative():
-                new_analysis = self.analyze_commutative_children_eq_len(template.get_children(), children, analysis)
+                new_analysis = self.analyze_commutative_children_eq_len(template.get_children(), template_conditions, children, analysis)
             else:
-                new_analysis = self.analyze_children_non_commutative_eq_len(template.get_children(), children, analysis)
+                new_analysis = self.analyze_children_non_commutative_eq_len(template.get_children(), template_conditions, children, analysis)
             if new_analysis.expression_match_template:
                 return new_analysis
         
-        return self.build_match_analysis_report(False, analysis, template, expression)
+        return self.build_match_analysis_report(False, analysis, template, template_conditions, expression)
 

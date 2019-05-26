@@ -9,5 +9,10 @@
     "python.testing.pyTestEnabled": false,
     "python.testing.nosetestsEnabled": false,
     "python.testing.unittestEnabled": true,
+<<<<<<< HEAD
     "python.pythonPath": "/Library/Frameworks/Python.framework/Versions/3.7/bin/python3"
+=======
+    "python.pythonPath": "/usr/local/bin/python3",
+    "python.linting.enabled": true
+>>>>>>> 51bda8f99d7fdaf9c43ff869243b45ce968e6748
 }

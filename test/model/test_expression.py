@@ -9,8 +9,8 @@ class TestExpression(unittest.TestCase):
         self.assertTrue(leaf.is_leaf())
 
     def test_solve_derivatives(self):
-        exp = Expression("d(x, x)")
-        exp.solve_derivatives()
+        exp = Expression("Derivative(x, x)")
+        exp = exp.solve_derivatives()
         self.assertEqual(exp.to_string(), '1')
 
     def test_compare(self):

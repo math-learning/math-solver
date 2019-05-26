@@ -1,17 +1,4 @@
 {
 	"new_expression": "1 + 1",
-	"old_expression": "Derivative(x,x) + Derivative(x,x)",
-	"theorems": [{
-		"name": "derivada de la suma",
-		"left": "Derivative(f(x) + g(x) , x)",
-		"right": "Derivative(f(x), x) + Derivative(g(x), x)"
-	}, {
-		"name": "derivada del producto",
-		"left": "Derivative(f(x) * g(x) , x)",
-		"right": "Derivative(f(x), x) * g(x) + Derivative(g(x), x) * f(x)"
-	}, {
-		"name": "derivada de la division",
-		"left": "Derivative(f(x) / g(x) , x)",
-		"right": "Derivative(( f(x), x) * g(x) - Derivative(g(x), x) * f(x)) / ( g(x)** 2)"
-	}]
+	"old_expression": "Derivative(x,x) + Derivative(x,x)"
 }
