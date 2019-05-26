@@ -16,13 +16,13 @@ class Logger:
         if not clazz.__initialized and Environment.is_production():
             formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
             logger.setLevel(logging.INFO)
-            time_handler = TimedRotatingFileHandler(LOGGING_FILE,
-                                       when="m",
-                                       interval=1,
-                                       backupCount=5)
+            # time_handler = TimedRotatingFileHandler(LOGGING_FILE,
+            #                            when="m",
+            #                            interval=1,
+            #                            backupCount=5)
 
-            time_handler.setFormatter(formatter)
-            logger.addHandler(time_handler)
+            # time_handler.setFormatter(formatter)
+            # logger.addHandler(time_handler)
 
             clazz.__initialized = True
 

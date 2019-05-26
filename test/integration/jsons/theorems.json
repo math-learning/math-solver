@@ -1,0 +1,30 @@
+{
+    "theorems": [
+        {
+            "name": "derivada de la suma",
+            "left": "Derivative(f(x) + g(x) , x)",
+            "right": "Derivative(f(x), x) + Derivative(g(x), x)",
+            "conditions": []
+        },
+        {
+            "name": "derivada del producto",
+            "left": "Derivative(f(x) * g(x) , x)",
+            "right": "Derivative(f(x), x) * g(x) + Derivative(g(x), x) * f(x)",
+            "conditions": []
+        },
+        {
+            "name": "derivada de la division",
+            "left": "Derivative(f(x) / g(x) , x)",
+            "right": "Derivative(( f(x), x) * g(x) - Derivative(g(x), x) * f(x)) / ( g(x)** 2)",
+            "conditions": []
+        },
+        {
+            "name": "Derivada por un numero real",
+            "left": "Derivative( a * f(x), x)",
+            "right": "a * Derivative(f(x), x)",
+            "conditions": {
+                "a": ["IS_REAL", "IS_CONSTANT"]
+            }
+        }
+    ]
+}

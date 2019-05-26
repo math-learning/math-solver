@@ -8,6 +8,7 @@ from src.mappers.hints_mapper import HintsMapper
 from src.services.hints_service import HintsService
 from src.utils.request_decorators import log_request
 from src.model.theorem import Theorem
+from src.model.exercise import Exercise
 
 from src.utils.json_parser import JsonParser
 
@@ -19,7 +20,7 @@ hints_mapper = HintsMapper()
 def get_theorems_that_apply_hint():
     request_data = request.get_json()
     (expression, theorems) = hints_mapper.map_theorems_that_apply_input(request_data)
-    result = hints_service.get_theorems_that_apply_hint(expression, theorems)
+    result = hints_service.get_hints(expression, Exercise(theorems))
     
     res = JsonParser.dumps_pretty(result)
     app.logger.info("Theorems that apply: {}".format(res))

@@ -20,4 +20,5 @@ class HintsMapper:
             self.logger.error("Error while trying to map theorems that apply input: {}".format(e))
             raise e
             
-        return (expression, theorems)
+        return expression, theorems
+
