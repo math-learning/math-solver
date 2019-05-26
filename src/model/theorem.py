@@ -7,10 +7,11 @@ class TheoremApplication:
         self.after = after
 
 class Theorem:
-    def __init__(self, name, left, right):
+    def __init__(self, name, left, right, conditions):
         self.name = name
         self.left = Expression(left)
         self.right = Expression(right)
+        self.conditions = conditions
         self.analyzer = TemplateMatchAnalyzer()
 
     def to_json(self):

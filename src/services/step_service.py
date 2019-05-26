@@ -1,4 +1,3 @@
-from sympy import simplify
 from src.services.theorems_service import TheoremsService
 from src.utils.logger import Logger
 
@@ -35,6 +34,7 @@ class StepService:
             logger.info("Simplifications were applied")
             return True
         
+        logger.info("Invalid next step: " + str(new_expression) + " - Old expression: " + str(old_expression))
         return False
         
     

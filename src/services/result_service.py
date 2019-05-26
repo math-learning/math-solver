@@ -1,4 +1,3 @@
-from sympy import simplify
 from src.services.step_service import StepService
 from src.utils.logger import Logger
 

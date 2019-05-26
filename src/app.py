@@ -6,7 +6,7 @@ app.logger.setLevel(logging.INFO)
 
 from src.controllers.step_controller import *
 from src.controllers.hints_controller import *
-from src.controllers.hints_controller import *
+from src.controllers.result_controller import *
 
 if __name__ == "__main__":
     app.run()

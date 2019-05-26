@@ -1,9 +1,7 @@
 import inspect
-
 import sympy
 from sympy import Symbol
 from sympy.core.basic import preorder_traversal
-from sympy.core.expr import UnevaluatedExpr
 from sympy.core.function import Derivative, UndefinedFunction
 from sympy.parsing.sympy_parser import parse_expr
 from sympy.simplify import simplify
@@ -11,17 +9,12 @@ from src.utils.list.list_size_transformer import ListSizeTransformer
 from src.utils.list.commutative_group_transformer import CommutativeGroupTransformer
 from src.utils.list.non_commutative_group_transformer import NonCommutativeGroupTransformer
 
+
 def is_sympy_exp(formula):
     sympy_classes = tuple(x[1] for x in inspect.getmembers(sympy,inspect.isclass))
     return isinstance(formula, sympy_classes)
 
 class Expression:
-    
-    __evaluate = False
-
-    @classmethod
-    def set_evaluate(cls, value):
-        cls.__evaluate = value
     
     def __init__(self, formula):
         self.commutative_group_transformer = CommutativeGroupTransformer()
@@ -43,7 +36,7 @@ class Expression:
 
     # Search and derivate expressions
     def solve_derivatives(self):
-        derivatives_solved = self
+        derivatives_solved = self.get_copy()
         for exp in preorder_traversal(self.sympy_expr):
             # TODO
             exp = Expression(exp)
@@ -53,19 +46,19 @@ class Expression:
         return derivatives_solved
     
     def is_derivative(self):
-        return isinstance(self.sympy_expr.func, UndefinedFunction) and self.compare_func(Expression("d()"))
+        return isinstance(self.sympy_expr.func, Derivative)
+
+    def get_copy(self):
+        return Expression(str(self.sympy_expr))
 
     def apply_derivative(self):
-        deriv = Derivative(self.sympy_expr.args[0],self.sympy_expr.args[1])
+        copy = self.get_copy()
+        deriv = Derivative(copy.sympy_expr.args[0],copy.sympy_expr.args[1])
         return Expression(deriv.doit())
 
-    def wrap_expression(self, exp):
-        if self.__evaluate:
-            return UnevaluatedExpr(exp)
-        return exp
-
     def simplify(self):
-        self.sympy_expr = simplify(self.sympy_expr)
+        copy = self.get_copy()
+        return Expression(simplify(copy.sympy_expr))
 
     def is_user_defined_func(self):
         return isinstance(self.sympy_expr.func, UndefinedFunction) and not self.is_derivative() 
@@ -92,11 +85,16 @@ class Expression:
     def compare_func(self, expression):
         return self.sympy_expr.func == expression.sympy_expr.func
     
-    def free_symbols_match(self, expression):
-        for free_symbol in expression.sympy_expr.expr_free_symbols:
+    def has_all_free_symbols(self, free_symbols):
+        for free_symbol in free_symbols:
             if free_symbol.func == Symbol and not self.sympy_expr.has(free_symbol):
                 return False
         return True
+
+    def free_symbols_match(self, expression):
+        result = self.has_all_free_symbols(expression.sympy_expr.expr_free_symbols)
+        result &= expression.has_all_free_symbols(self.sympy_expr.expr_free_symbols)
+        return result
 
     def children_amount(self):
         # TODO: handle this cases derivatives
@@ -118,6 +116,7 @@ class Expression:
         replacement_sympy = replacement.sympy_expr
         self.sympy_expr = self.sympy_expr.subs({to_replace_sympy: replacement_sympy})
     
+    #Refactor
     def get_child_with_size_possibilities(self, size):
         if self.is_commutative():
             transformer = self.commutative_group_transformer
@@ -130,7 +129,7 @@ class Expression:
             sympy_elements = []
             for element in combination.elements:
                 sympy_elements.append(element.sympy_expr)
-            children_sympy = self.sympy_expr.func(*sympy_elements,evaluate=self.__evaluate)
+            children_sympy = self.sympy_expr.func(*sympy_elements)
             possibilities.append(Expression(children_sympy))
         return possibilities
 
@@ -148,7 +147,7 @@ class Expression:
                 if len(item) == 1:
                     children_transformation.append(Expression(item[0]))
                 elif len(item) > 1:
-                    children_sympy = self.sympy_expr.func(*item,evaluate=self.__evaluate) 
+                    children_sympy = self.sympy_expr.func(*item) 
                     children_transformation.append(Expression(children_sympy))
             results.append(children_transformation)
         return results
