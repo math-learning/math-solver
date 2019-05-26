@@ -19,6 +19,10 @@ class ValidateMapper:
             theorems = request_data['theorems']
             new_expression = request_data['new_expression']
             old_expression = request_data['old_expression']
+            
+            #TODO: Do a better handling of this case
+            if new_expression == old_expression:
+                raise Exception()
 
             parsed_theorems = self.theoremMapper.from_json_to_theorems(theorems)
             new_expr = Expression(new_expression)

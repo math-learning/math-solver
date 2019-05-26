@@ -13,10 +13,11 @@ class StepService:
     def is_a_valid_next_step(self, old_expression, new_expression, theorems):
         logger.info("Starting transition validation")
         
-        if old_expression == new_expression:
-            logger.info("New expression is equal to the old one.")
-            return False
+        # if old_expression == new_expression:
+        #     logger.info("New expression is equal to the old one.")
+        #     return False
 
+        logger.info("Checking if a theorem can be applied")
         theorems_that_apply = self.theorems_service.get_theorems_that_can_be_applied_to(old_expression, theorems)
 
         for theorem in theorems_that_apply:
@@ -25,11 +26,13 @@ class StepService:
                 return True
         
         #try with derivatives
+        logger.info("Try with derivatives")
         if old_expression.solve_derivatives() == new_expression:
             logger.info("Derivatives were applied")
             return True
         
         #try simplifying the expression
+        logger.info("Try simplifying")
         if old_expression.simplify() == new_expression:
             logger.info("Simplifications were applied")
             return True

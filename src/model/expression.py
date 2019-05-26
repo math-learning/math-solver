@@ -34,6 +34,13 @@ class Expression:
     def is_commutative(self):
         return self.sympy_expr.is_commutative
 
+    def is_constant(self):
+        free_symbols = self.sympy_expr.expr_free_symbols
+        for symbol in free_symbols:
+            if isinstance(symbol.func, Symbol):
+                return False
+        return True
+
     # Search and derivate expressions
     def solve_derivatives(self):
         derivatives_solved = self.get_copy()
@@ -46,7 +53,7 @@ class Expression:
         return derivatives_solved
     
     def is_derivative(self):
-        return isinstance(self.sympy_expr.func, Derivative)
+        return isinstance(self.sympy_expr, Derivative)
 
     def get_copy(self):
         return Expression(str(self.sympy_expr))

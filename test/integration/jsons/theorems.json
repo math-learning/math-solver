@@ -22,12 +22,9 @@
             "name": "Derivada por un numero real",
             "left": "Derivative( a * f(x), x)",
             "right": "a * Derivative(f(x), x)",
-            "conditions": [{
-                "element" : "a",
-                "conditions":[
-                    "is_real"
-                ]
-            }]
+            "conditions": {
+                "a": ["IS_REAL", "IS_CONSTANT"]
+            }
         }
     ]
 }
