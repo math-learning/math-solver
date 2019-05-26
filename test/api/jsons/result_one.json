@@ -3,5 +3,5 @@
         "input_data": "Derivative(x + x,x)",
         "result": "2"
     },
-    "steps": ["Derivative(x + x,x)", "Derivative(x,x) + d(x,x)", "2"]
+    "steps": ["Derivative(x + x,x)", "Derivative(x,x) + Derivative(x,x)", "2"]
 }
