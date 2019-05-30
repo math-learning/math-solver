@@ -1,6 +1,6 @@
 {
     "exercise": {
-        "input_data": "\\frac{d(x + x)}{dx}",
+        "input_data": "\\frac{d((x ^ 3 - 3 * x^2) * (e^x + 5))} {dx}",
         "result": "2"
     },
     "steps": ["\\frac{d(x + x)}{dx}", "\\frac{d(x)}{dx} + \\frac{d(x)}{dx}", "2"]

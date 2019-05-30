@@ -24,8 +24,8 @@ def test_get_theorems_hint(json_file_path, json_file_path_theorems, expected_res
 
 test_get_theorems_hint('jsons/hints_example_one.json', 'jsons/theorems.json',[
         {
-            "left": "Derivative(a*f(x), x)",
+            "left": "\\frac{d(a*f(x))}{dx}",
             "name": "Derivada por un numero real",
-            "right": "2*Derivative(x, x)"
+            "right": "2*\\frac{d(x)}{dx}"
         }
     ])

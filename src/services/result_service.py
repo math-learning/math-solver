@@ -15,7 +15,6 @@ class ResultService:
             old_step = steps[i]
             new_step = steps[i+1]
             if not self.step_service.is_a_valid_next_step(old_step, new_step, exercise.theorems):
-                logger.info("Invalid intermediate step")
                 return False
         
         result = steps[-1]

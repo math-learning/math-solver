@@ -24,9 +24,10 @@ class ValidateMapper:
             if new_expression == old_expression:
                 raise Exception()
 
-            parsed_theorems = self.theoremMapper.from_json_to_theorems(theorems)
             new_expr = Expression(new_expression)
             old_expr = Expression(old_expression)
+
+            parsed_theorems = self.theoremMapper.from_json_to_theorems(theorems)
 
             return new_expr, old_expr, parsed_theorems
         except Exception as e:
@@ -61,10 +62,9 @@ class ValidateMapper:
             new_expression = request_data['new_expression']
             history_dto = request_data['history']
 
-            new_expression = Expression(new_expression)
             history = []
             for history_item in history_dto:
-                history.append(Expression(history_item))
+                history.append(history_item)
     
             return new_expression, history
         except Exception as e:

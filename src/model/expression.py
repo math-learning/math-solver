@@ -1,6 +1,7 @@
 import inspect
 import sympy
 from sympy import Symbol
+from sympy.parsing.latex import parse_latex
 from sympy.core.basic import preorder_traversal
 from sympy.core.function import Derivative, UndefinedFunction
 from sympy.parsing.sympy_parser import parse_expr
@@ -14,6 +15,11 @@ def is_sympy_exp(formula):
     sympy_classes = tuple(x[1] for x in inspect.getmembers(sympy,inspect.isclass))
     return isinstance(formula, sympy_classes)
 
+def clean_latex(formula):
+    latex = formula.replace("\\left(","(")
+    latex = latex.replace("\\right)",")")
+    return latex
+
 class Expression:
     
     def __init__(self, formula):
@@ -22,7 +28,8 @@ class Expression:
         self.commutative_list_size_transformer = ListSizeTransformer(CommutativeGroupTransformer())
         self.non_commutative_list_size_transformer = ListSizeTransformer(NonCommutativeGroupTransformer())
         if isinstance(formula, str):
-            self.sympy_expr = parse_expr(formula)
+            sympy_latex = clean_latex(formula)
+            self.sympy_expr = simplify(parse_latex(sympy_latex))
         elif is_sympy_exp(formula):
             self.sympy_expr = formula
         else:
@@ -41,6 +48,9 @@ class Expression:
                 return False
         return True
 
+    def get_copy(self):
+        return Expression(parse_expr(str(self.sympy_expr)))
+    
     # Search and derivate expressions
     def solve_derivatives(self):
         derivatives_solved = self.get_copy()
@@ -55,17 +65,13 @@ class Expression:
     def is_derivative(self):
         return isinstance(self.sympy_expr, Derivative)
 
-    def get_copy(self):
-        return Expression(str(self.sympy_expr))
 
     def apply_derivative(self):
-        copy = self.get_copy()
-        deriv = Derivative(copy.sympy_expr.args[0],copy.sympy_expr.args[1])
+        deriv = Derivative(self.sympy_expr.args[0],self.sympy_expr.args[1])
         return Expression(deriv.doit())
 
     def simplify(self):
-        copy = self.get_copy()
-        return Expression(simplify(copy.sympy_expr))
+        return Expression(simplify(self.sympy_expr))
 
     def is_user_defined_func(self):
         return isinstance(self.sympy_expr.func, UndefinedFunction) and not self.is_derivative() 

@@ -9,7 +9,7 @@ class TestExpression(unittest.TestCase):
         self.assertTrue(leaf.is_leaf())
 
     def test_solve_derivatives(self):
-        exp = Expression("Derivative(x, x)")
+        exp = Expression("\\frac{d(x)}{dx}")
         exp = exp.solve_derivatives()
         self.assertEqual(exp.to_string(), '1')
 
@@ -26,15 +26,9 @@ class TestExpression(unittest.TestCase):
         self.assertTrue(exp_one == exp_two)
 
     def test_get_children(self):
-        exp = Expression("x + x**2")
+        exp = Expression("x + x^2")
         children = exp.get_children()
         self.assertEqual(2, len(children))
 
         self.assertTrue(Expression("x") in children)
-        self.assertTrue(Expression("x**2") in children)
-
-    
-    def test_get_children_with_size(self):
-        exp = Expression("x+x**2+x**3")
-        children = exp.get_children_with_size(2)
-        print("hello")
+        self.assertTrue(Expression("x^2") in children)

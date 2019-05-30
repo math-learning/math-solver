@@ -89,12 +89,17 @@ class TemplateMatchAnalyzer:
             logger.info("Analyzing children with equal sizes")
             analysis = self.analyze_exp_with_user_def_func_eq_sizes(template, template_conditions, expression, analysis)
         
-        # Handle different size children. for example f(x)  = x + x**2
+        # Handle different size children. for example f(x)  = x + x^2
         else:
             logger.info("Analyzing children with different sizes")
             analysis = self.analyze_exp_with_user_def_func_diff_sizes(template, template_conditions, expression, analysis)
         
         return analysis
+
+    def meets_the_conditions(self, equalities, template_conditions):
+        # TODO
+        return True
+
 
     def build_match_analysis_report(self, match, analysis, template, template_conditions, expression):
         #TODO: conditions
@@ -109,7 +114,6 @@ class TemplateMatchAnalyzer:
         return MatchAnalysisReport(analysis.template, analysis.expression, match, equalities)
 
     def analyze_exp_with_user_def_func_eq_sizes(self, template, template_conditions, expression, analysis):
-        #TODO: Conditions
         if template.compare_func(expression):
             if template.is_commutative():
                 return self.analyze_commutative_children_eq_len(template.get_children(), template_conditions, expression.get_children(), analysis)
@@ -118,10 +122,10 @@ class TemplateMatchAnalyzer:
     
     # if the function is commutative we should compare all children combinations 
     # of the expression and the template
-    # for example: comparing f(x) + x with x**2 + x
+    # for example: comparing f(x) + x with x^2 + x
     # + is commutative so we should analyze:
-    # 1. f(x) == x ** 2  && x == x ?
-    # 2. f(x) == x && x ** 2 == x ?
+    # 1. f(x) == x ^ 2  && x == x ?
+    # 2. f(x) == x && x ^ 2 == x ?
     def analyze_commutative_children_eq_len(self, template_children, template_conditions, expression_children, analysis):
         comparison_cases = self.list_utils.pair_combinations(template_children, expression_children)
         case_analysis = analysis
@@ -142,8 +146,8 @@ class TemplateMatchAnalyzer:
 
     
     # If the function is non commutative we must respect the order
-    # Ex: comparing x - x**2 with g(y) - f(x)
-    # we only compare x with g(y) and x **2 with f(x)
+    # Ex: comparing x - x^2 with g(y) - f(x)
+    # we only compare x with g(y) and x ^2 with f(x)
     def analyze_children_non_commutative_eq_len(self, template, template_conditions, expression, analysis):
         result = analysis
         template_children = template.get_children()

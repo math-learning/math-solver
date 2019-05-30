@@ -1,5 +1,3 @@
-cd ./test/api
-python hints_tests.py
-python result_tests.py 
-python validate_tests.py 
-cd ../..
+python ./test/integration/hints_tests.py
+python ./test/integration/result_tests.py 
+python ./test/integration/validate_tests.py

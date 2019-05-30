@@ -1,3 +1,3 @@
 {
-	"expression": "Derivative(x + x,x)"
+	"expression": "\\frac{d(x + x)}{dx}"
 }

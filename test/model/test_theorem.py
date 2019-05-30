@@ -8,22 +8,24 @@ class TestTheorem(unittest.TestCase):
 
     def test_apply_to(self):    
         theorem = Theorem("Derivada de la suma",
-                        "Derivative(f(x) + g(x), x)",
-                        "Derivative(f(x), x) + d(g(x),x)")
+                        "\\frac{d(f(x) + g(x))}{dx}",
+                        "\\frac{d(f(x))}{dx} + d(g(x))}{dx}",
+                            [])
 
-        exp = Expression("Derivative(x + x**2, x)")
+        exp = Expression("\\frac{d(x + x^2)}{dx}")
         new_exp = theorem.apply_to(exp)
 
-        self.assertEqual(new_exp.to_string(), "Derivative(x, x) + d(x**2, x)")
+        self.assertEqual(new_exp.to_string(), "\\frac{d(x)}{dx} + d(x^2)}{dx}")
     
     def test_apply_to_children(self):    
         theorem = Theorem("Derivada de la suma",
-                        "Derivative(f(x) + g(x), x)",
-                        "Derivative(f(x), x) + d(g(x),x)")
+                        "\\frac{d(f(x) + g(x))}{dx}",
+                        "\\frac{d(f(x))}{dx} + d(g(x))}{dx}",
+                            [])
 
-        exp = Expression("Derivative(x + x**2, x) + x ** 3")
+        exp = Expression("\\frac{d(x + x^2)}{dx} + x ^ 3")
         new_exp = theorem.apply_to(exp)
 
-        self.assertEqual("x**3 + d(x, x) + d(x**2, x)", new_exp.to_string())
+        self.assertEqual("x^3 + \\frac{d(x)}{dx} + \\frac{d(x^2)}{dx}", new_exp.to_string())
         
     

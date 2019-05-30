@@ -1,4 +1,0 @@
-{
-	"new_expression": "Derivative(x,x) + Derivative(x,x)",
-	"old_expression": "Derivative(x + x,x)"
-}

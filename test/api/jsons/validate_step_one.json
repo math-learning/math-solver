@@ -1,4 +1,4 @@
 {
-	"new_expression": "Derivative(x,x) + Derivative(x,x)",
-	"old_expression": "Derivative(x + x,x)"
+	"new_expression": "\\frac{d(x)}{dx} + \\frac{d(x)}{dx}",
+	"old_expression": "\\frac{d(x + x)}{dx}"
 }
