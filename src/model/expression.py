@@ -40,7 +40,7 @@ class Expression:
     def is_constant(self):
         free_symbols = self.sympy_expr.expr_free_symbols
         for symbol in free_symbols:
-            if isinstance(symbol.func, Symbol):
+            if isinstance(symbol, Symbol):
                 return False
         return True
 
