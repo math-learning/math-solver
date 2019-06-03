@@ -12,30 +12,36 @@ class StepService:
 
     def is_a_valid_next_step(self, old_expression, new_expression, theorems):
         logger.info("Starting transition validation")
-        
-        # if old_expression == new_expression:
-        #     logger.info("New expression is equal to the old one.")
-        #     return False
 
         logger.info("Checking if a theorem can be applied")
         theorems_that_apply = self.theorems_service.get_theorems_that_can_be_applied_to(old_expression, theorems)
 
         for theorem in theorems_that_apply:
-            if theorem.apply_to(old_expression) == new_expression:
-                logger.info("Theorem can be applied")
-                return True
+            theo_applied = theorem.apply_to(old_expression)
+            for possibility in theo_applied:
+                if possibility != None and possibility.simplify() == new_expression.simplify():
+                    logger.info("Theorem can be applied")
+                    return True
         
         #try with derivatives
         logger.info("Try with derivatives")
-        if old_expression.solve_derivatives() == new_expression:
+        if old_expression.solve_derivatives().simplify() == new_expression.simplify():
             logger.info("Derivatives were applied")
             return True
         
+        only_one_derivative = old_expression.derivatives_solving_possibilities()
+        for derivative_applied in only_one_derivative:
+            if derivative_applied.simplify() == new_expression.simplify():
+                return True
+        
         #try simplifying the expression
         logger.info("Try simplifying")
-        if old_expression.simplify() == new_expression:
-            logger.info("Simplifications were applied")
-            return True
+        old_simplifications = old_expression.get_simplifications()
+        for simplification in old_simplifications:
+            new_simplifications = new_expression.get_simplifications()
+            if simplification in new_simplifications:
+                logger.info("Simplifications were applied")
+                return True
         
         logger.info("Invalid next step: " + str(new_expression) + " - Old expression: " + str(old_expression))
         return False

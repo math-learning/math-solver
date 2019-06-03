@@ -22,26 +22,31 @@ class Theorem:
         return {'name': self.name, 'right': str(self.right), 'left': str(self.left)}
 
     def apply_to(self, expression):
+        application_possibilities = []
+
         template = self.left
 
         # Apply to general structure
         logger.info("Trying to apply: " + self.name + " to the general structure: " + str(expression))
         analysis = self.analyzer.analyze(template,self.conditions, expression)
         if analysis.expression_match_template:
-            return self.transform_right_side(analysis.equalities)
+            application_possibilities.append(self.transform_right_side(analysis.equalities))
         
         # Apply to children
-        else:
-            logger.info("Trying to apply: " + self.name + " to expression CHILDREN: " + str(expression))
-            children_transformation = self.apply_to_children(expression)
-            if children_transformation != None:
-                result = expression
-                result.replace(children_transformation.before, children_transformation.after)
-                return result
-
-        return None
+        
+        logger.info("Trying to apply: " + self.name + " to expression CHILDREN: " + str(expression))
+        children_transformations = self.apply_to_children(expression)
+        for child_transformation in children_transformations:
+            result = expression.get_copy()
+            result.replace(child_transformation.before, child_transformation.after)
+            application_possibilities.append(result)
+            
+        return application_possibilities
 
     def apply_to_children(self, expression):
+        #TODO: apply to children of children
+        application_possibilities = []
+
         template = self.left
         children = expression.get_children()
         already_tried = set()
@@ -53,7 +58,7 @@ class Theorem:
                 logger.info("Trying to apply: "  + self.name + " directly to child: " + str(child))
                 analysis = self.analyzer.analyze(template,self.conditions, child)
                 if analysis.expression_match_template:
-                    return TheoremApplication(child, self.transform_right_side(analysis.equalities))
+                    application_possibilities.append(TheoremApplication(child, self.transform_right_side(analysis.equalities)))
                 already_tried.add(str(child))
         
         # try applying to groups of children
@@ -65,12 +70,12 @@ class Theorem:
                     logger.info("Trying to apply: " + self.name + "to: " + str(child_of_size_n))
                     analysis = self.analyzer.analyze(template,self.conditions, child_of_size_n)
                     if analysis.expression_match_template:
-                        return TheoremApplication(child_of_size_n, self.transform_right_side(analysis.equalities))
+                        application_possibilities.append(TheoremApplication(child_of_size_n, self.transform_right_side(analysis.equalities)))
                     already_tried.add(str(child_of_size_n))
-        return None
+        return application_possibilities
 
     def transform_right_side(self, equalities):
-        result = self.right
+        result = self.right.get_copy()
         for equality in equalities:
             result.replace(equality.template, equality.expression)
         return result
