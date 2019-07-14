@@ -27,3 +27,12 @@ def validate_not_in_history():
     result = step_service.validate_not_in_history(expr, history)
     logger.info('Returning the following response: {}'.format(result))
     return "true" if result else "false"
+
+@app.route('/expressions/compare', methods=['POST'])
+@log_request
+def compare_expressions():
+    request_data = request.get_json()
+    (expr_one, expr_two) = validateMapper.parse_compare_expressions_data(request_data)
+    result = expr_one.is_equivalent_to(expr_two)
+    logger.info('Returning the following response: {}'.format(result))
+    return "true" if result else "false"

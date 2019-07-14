@@ -56,6 +56,22 @@ class ValidateMapper:
             self.logger.error("Error while parsing validate result input: {}".format(e))
             raise ValidateMapperException(e)
 
+    def  parse_compare_expressions_data(self, request_data):
+        self.logger.info("Parsing validate not in history request data: {}".format(request_data))
+        try:
+            expression_one_str = request_data['expression_one']
+            expression_two_str = request_data['expression_two']
+
+            expression_one = Expression(expression_one_str)
+            expression_two = Expression(expression_two_str)
+            
+            return (expression_one, expression_two)
+
+        except Exception as e:
+            self.logger.error("Error while parsing validate result input: {}".format(e))
+            raise ValidateMapperException(e)
+
+
     def parse_validate_not_in_history_input(self, request_data):
         self.logger.info("Parsing validate not in history request data: {}".format(request_data))
         try:
