@@ -43,3 +43,16 @@ class TestTemplateMatchAnalyzer(unittest.TestCase):
         expected = MatchAnalysisReport(template, expression, True, equalities)
 
         self.assertEquals(expected, result)
+
+    def test_analyze_derivatives_sum_of_three(self):
+        analyzer = TemplateMatchAnalyzer()
+        template = Expression("\\frac{d(f(x) + g(x))}{dx}")
+        expression = Expression("\\frac{d(x + x^2 + \\cos (x))}{dx}")
+        
+        result = analyzer.analyze(template, [], expression)
+
+        equalities = [Equality(Expression("f(x)"), Expression("x+ x^2 ")),
+                    Equality(Expression("g(x)"), Expression(" \\cos(x)"))]
+        expected = MatchAnalysisReport(template, expression, True, equalities)
+
+        self.assertEquals(expected, result)
