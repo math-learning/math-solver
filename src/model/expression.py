@@ -126,7 +126,7 @@ class Expression:
         # TODO: handle this cases derivatives
         if self.is_derivative():
             return 1
-        return len(self.sympy_expr.args)
+        return len(self.get_children())
     
     def get_children(self):
         children = []
@@ -134,7 +134,11 @@ class Expression:
             children.append(Expression(self.sympy_expr.args[0]))
             return children
         for child in self.sympy_expr.args:
-            children.append(Expression(child))
+            expression_child = Expression(child)
+            if self.is_commutative() and self.compare_func(expression_child):
+                children.extend(expression_child.get_children())
+            else:
+                children.append(expression_child)
         return children
 
     def replace(self, to_replace, replacement):
