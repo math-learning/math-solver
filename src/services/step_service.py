@@ -16,13 +16,22 @@ class StepService:
         logger.info("Checking if a theorem can be applied")
         theorems_that_apply = self.theorems_service.get_theorems_that_can_be_applied_to(old_expression, theorems)
 
+        logger.info("THEOREMS THAT APPLY:")
+        logger.info(theorems_that_apply)
+
         for theorem in theorems_that_apply:
             theo_applied = theorem.apply_to(old_expression)
             for possibility in theo_applied:
                 if possibility != None and possibility.simplify() == new_expression.simplify():
                     logger.info("Theorem can be applied")
                     return True
-        
+                    
+            theo_applied_reverse = theorem.apply_reverse_to(new_expression)
+            for possibility in theo_applied_reverse:
+                if possibility != None and possibility.simplify() == old_expression.simplify():
+                    logger.info("Theorem can be applied")
+                    return True
+
         #try with derivatives
         logger.info("Try with derivatives")
         if old_expression.solve_derivatives().simplify() == new_expression.simplify():

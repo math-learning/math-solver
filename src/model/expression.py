@@ -144,7 +144,13 @@ class Expression:
     def replace(self, to_replace, replacement):
         to_replace_sympy = to_replace.sympy_expr
         replacement_sympy = simplify(replacement.sympy_expr)
-        self.sympy_expr = self.sympy_expr.subs({to_replace_sympy: replacement_sympy})
+        new_sympy_expr = self.sympy_expr.subs({to_replace_sympy: replacement_sympy})
+        if new_sympy_expr == self.sympy_expr:
+            to_replace_sympy = simplify(to_replace.sympy_expr)
+            self.sympy_expr = self.sympy_expr.subs({to_replace_sympy: replacement_sympy})
+        else:
+            self.sympy_expr = new_sympy_expr
+
     
     #Refactor
     def get_child_with_size_possibilities(self, size):
