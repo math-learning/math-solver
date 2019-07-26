@@ -2,4 +2,4 @@ build:
   docker:
     web: Dockerfile
 run:
-  web: gunicorn -b 0.0.0.0:5000 --chdir src 'app:app'
+  web: gunicorn --chdir src 'app:app'
