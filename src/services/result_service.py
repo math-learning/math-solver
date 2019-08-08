@@ -1,5 +1,7 @@
 from src.services.step_service import StepService
 from src.utils.logger import Logger
+from src.services.hints_service import HintsService
+from src.model.expression import Expression
 
 logger = Logger.getLogger()
 
@@ -7,6 +9,7 @@ class ResultService:
     
     def __init__(self):
         self.step_service = StepService()
+        self.hints_service = HintsService()
 
     def validate_result(self, steps, exercise):
         
@@ -20,3 +23,12 @@ class ResultService:
         result = steps[-1]
 
         return  exercise.result == result
+
+    def get_derivative_result(self, expression: Expression) -> Expression:
+        return expression.solve_derivatives()
+        
+                
+            
+
+
+        
