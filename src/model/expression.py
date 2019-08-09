@@ -93,7 +93,7 @@ class Expression:
         return str(self.sympy_expr)
 
     def to_latex(self) -> str:
-        return latex(self.sympy_expr)
+        return sympy.latex(self.sympy_expr)
 
     def is_equivalent_to(self, expression):
         return simplify(self.sympy_expr) == simplify(expression.sympy_expr)
