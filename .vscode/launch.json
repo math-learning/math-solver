@@ -35,10 +35,11 @@
             "name": "Python: Django",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/manage.py",
+            "program": "${workspaceFolder}/mathlearning/manage.py",
             "console": "integratedTerminal",
             "args": [
                 "runserver",
+                "5000",
                 "--noreload",
                 "--nothreading"
             ],

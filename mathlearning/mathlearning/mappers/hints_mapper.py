@@ -1,8 +1,8 @@
-from src.mappers.theorem_mapper import TheoremMapper
-from src.model.expression import Expression
-from src.utils.logger import Logger
+from mathlearning.mappers.theorem_mapper import TheoremMapper
+from mathlearning.model.expression import Expression
+from mathlearning.utils.logger import Logger
 from typing import List
-from src.model.theorem import Theorem
+from mathlearning.model.theorem import Theorem
 
 class HintsMapper:
 

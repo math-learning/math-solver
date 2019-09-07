@@ -6,6 +6,7 @@ class HintsService:
 
     def __init__(self):
         self.theorems_service = TheoremsService()
+        self.comparatorService = ComparatorService()
 
 
     def get_theorems_that_apply_hint(self, expression, theorems):
@@ -16,7 +17,7 @@ class HintsService:
             if comparison.structures_match:
                 theorems_that_apply.append(theo)
 
-    def get_hints(self, expression, theorems):
+    def get_hints(self, expression: Expression, theorems: List[Theorem]):
         hints = self.theorems_service.get_theorems_that_can_be_applied_to(expression, theorems)
         # Todo
         if len(hints) == 0:
