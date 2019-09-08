@@ -2,7 +2,7 @@
     "python.testing.unittestArgs": [
         "-v",
         "-s",
-        ".",
+        "./mathlearning",
         "-p",
         "test_*.py"
     ],

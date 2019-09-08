@@ -27,7 +27,7 @@ class ValidateMapper:
             new_expr = Expression(new_expression)
             old_expr = Expression(old_expression)
 
-            parsed_theorems = self.theoremMapper.from_json_to_theorems(theorems)
+            parsed_theorems = self.theoremMapper.theorems(theorems)
 
             return new_expr, old_expr, parsed_theorems
         except Exception as e:
@@ -40,7 +40,7 @@ class ValidateMapper:
             exercise_dto = request_data['exercise']
             theorems_dto = exercise_dto['theorems']
 
-            theorems = self.theoremMapper.from_json_to_theorems(theorems_dto)
+            theorems = self.theoremMapper.theorems(theorems_dto)
             result = Expression(exercise_dto['result'])
             input_data = Expression(exercise_dto['input_data'])
 

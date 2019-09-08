@@ -20,10 +20,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from mathlearning.routes.result_routes import result_paths
 from mathlearning.routes.validation_routes import validation_paths
-
+from mathlearning.routes.comparison_routes import comparison_paths
 
 urlpatterns = [
     path('admin', admin.site.urls)
 ]
 
-urlpatterns += result_paths + validation_paths
+urlpatterns += result_paths + validation_paths + comparison_paths

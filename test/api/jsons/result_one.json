@@ -1,7 +1,0 @@
-{
-    "exercise": {
-        "input_data": "\\frac{d(x + x)}{dx}",
-        "result": "2"
-    },
-    "steps": ["\\frac{d(x + x)}{dx}", "\\frac{d(x)}{dx} + \\frac{d(x)}{dx}", "2"]
-}

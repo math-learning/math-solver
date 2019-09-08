@@ -4,6 +4,20 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        {   
+            "name": "TESTS Django",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/mathlearning/manage.py",
+            "console": "integratedTerminal",
+            "args": [
+                "test"
+            ],
+            "django": true,
+            "cwd": "${workspaceFolder}/mathlearning"
+
+            
+        },
         {
             "name": "Python: Current File (Integrated Terminal)",
             "type": "python",

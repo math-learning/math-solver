@@ -5,12 +5,11 @@ from sympy.parsing.latex import parse_latex
 from sympy.core.basic import preorder_traversal
 from sympy.core.function import Derivative, UndefinedFunction
 from sympy.parsing.sympy_parser import parse_expr
-from mpmath import *
 from sympy.simplify import simplify
 from mathlearning.utils.list.list_size_transformer import ListSizeTransformer
 from mathlearning.utils.list.commutative_group_transformer import CommutativeGroupTransformer
 from mathlearning.utils.list.non_commutative_group_transformer import NonCommutativeGroupTransformer
-
+from mathlearning.utils.latex_utils import clean_latex
 
 def is_sympy_exp(formula):
     sympy_classes = tuple(x[1] for x in inspect.getmembers(sympy,inspect.isclass))
@@ -24,7 +23,8 @@ class Expression:
         self.commutative_list_size_transformer = ListSizeTransformer(CommutativeGroupTransformer())
         self.non_commutative_list_size_transformer = ListSizeTransformer(NonCommutativeGroupTransformer())
         if isinstance(formula, str):
-            self.sympy_expr = parse_latex(formula)
+            clean_formula = clean_latex(formula)
+            self.sympy_expr = parse_latex(clean_formula)
             self.sympy_expr = self.sympy_expr.subs(simplify(parse_expr("e")), parse_expr("exp(1)"))
         elif is_sympy_exp(formula):
             self.sympy_expr = formula

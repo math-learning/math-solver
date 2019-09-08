@@ -14,13 +14,16 @@ result_service = ResultService()
 logger = Logger.getLogger()
 validateMapper = ValidateMapper()
 
+def bool_to_str(boolean_value) :
+    return "true" if boolean_value else "false"
+
 @api_view(['POST'])
-def solve_derivative(request):
+def compare_expressions(request):
     if request.method == 'POST':
         body = json.loads(request.body)
-        expression = Expression(body['expression'])
-        result = result_service.get_derivative_result(expression)
+        (expr_one, expr_two) = validateMapper.parse_compare_expressions_data(body)
+        result = expr_one.is_equivalent_to(expr_two)
         logger.info('Returning the following response: {}'.format(result))
-        return Response(result.to_latex(), status= status.HTTP_200_OK)
+        return Response(data= bool_to_str(result), status= status.HTTP_200_OK)
 
-result_paths = [path('results/solve-derivative', solve_derivative)]
+comparison_paths = [path('compare', compare_expressions)]
