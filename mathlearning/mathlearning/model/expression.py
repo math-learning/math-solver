@@ -18,7 +18,7 @@ def is_sympy_exp(formula):
 
 class Expression:
     
-    def __init__(self, formula: Union[Expression, str]):
+    def __init__(self, formula: Union['Expression', str]):
         self.commutative_group_transformer = CommutativeGroupTransformer()
         self.non_commutative_group_transformer = NonCommutativeGroupTransformer()
         self.commutative_list_size_transformer = ListSizeTransformer(CommutativeGroupTransformer())
@@ -45,11 +45,11 @@ class Expression:
                 return False
         return True
 
-    def get_copy(self) -> Expression:
+    def get_copy(self) -> 'Expression':
         return Expression(parse_expr(str(self.sympy_expr)))
     
     # Search and derivate expressions
-    def solve_derivatives(self) -> Expression:
+    def solve_derivatives(self) -> 'Expression':
         derivatives_solved = self.get_copy()
         for exp in preorder_traversal(self.sympy_expr):
             # TODO
@@ -60,7 +60,7 @@ class Expression:
         return derivatives_solved
     
     # possibilities of solving just 1 derivative
-    def derivatives_solving_possibilities(self) -> List[Expression]:
+    def derivatives_solving_possibilities(self) -> List['Expression']:
         
         derivatives = []
         for exp in preorder_traversal(self.sympy_expr):
@@ -79,11 +79,11 @@ class Expression:
         return isinstance(self.sympy_expr, Derivative)
 
 
-    def apply_derivative(self) -> Expression:
+    def apply_derivative(self) -> 'Expression':
         deriv = Derivative(self.sympy_expr.args[0],self.sympy_expr.args[1])
         return Expression(deriv.doit())
 
-    def simplify(self) -> Expression:
+    def simplify(self) -> 'Expression':
         copy = self.get_copy()
         return Expression(simplify(copy.sympy_expr))
 
@@ -96,7 +96,7 @@ class Expression:
     def to_latex(self) -> str:
         return sympy.latex(self.sympy_expr)
 
-    def is_equivalent_to(self, expression) -> bool:
+    def is_equivalent_to(self, expression: 'Expression') -> bool:
         return simplify(self.sympy_expr) == simplify(expression.sympy_expr)
 
     def contains_user_defined_funct(self) -> bool:
@@ -109,7 +109,7 @@ class Expression:
             result = result or child.contains_user_defined_funct()
         return result
 
-    def compare_func(self, expression: Expression) -> bool:
+    def compare_func(self, expression: 'Expression') -> bool:
         return self.sympy_expr.func == expression.sympy_expr.func
     
     def has_all_free_symbols(self, free_symbols) -> bool:
@@ -118,7 +118,7 @@ class Expression:
                 return False
         return True
 
-    def free_symbols_match(self, expression: Expression) -> bool:
+    def free_symbols_match(self, expression: 'Expression') -> bool:
         result = self.has_all_free_symbols(expression.sympy_expr.expr_free_symbols)
         result &= expression.has_all_free_symbols(self.sympy_expr.expr_free_symbols)
         return result
@@ -129,7 +129,7 @@ class Expression:
             return 1
         return len(self.get_children())
     
-    def get_children(self) -> List[Expression]:
+    def get_children(self) -> List['Expression']:
         children = []
         if self.is_derivative():
             children.append(Expression(self.sympy_expr.args[0]))
@@ -155,7 +155,7 @@ class Expression:
 
     
     #Refactor
-    def get_child_with_size_possibilities(self, size) -> List[Expression]:
+    def get_child_with_size_possibilities(self, size) -> List['Expression']:
         if self.is_commutative():
             transformer = self.commutative_group_transformer
         else:
@@ -171,7 +171,7 @@ class Expression:
             possibilities.append(Expression(children_sympy))
         return possibilities
 
-    def get_children_with_size(self, size) -> List[List[Expression]]:
+    def get_children_with_size(self, size) -> List[List['Expression']]:
         # TODO refactor
         if self.is_commutative():
             transformer = self.commutative_list_size_transformer
@@ -190,7 +190,7 @@ class Expression:
             results.append(children_transformation)
         return results
 
-    def get_simplifications(self) -> List[Expression]:
+    def get_simplifications(self) -> List['Expression']:
         simplifications = []
         simplifications.append(Expression(sympy.expand(self.sympy_expr)))
         simplifications.append(Expression(sympy.factor(self.sympy_expr)))
