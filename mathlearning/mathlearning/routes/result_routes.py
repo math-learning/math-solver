@@ -3,6 +3,7 @@ from mathlearning.services.result_service import ResultService
 from mathlearning.utils.logger import Logger
 from mathlearning.utils.request_decorators import log_request
 from mathlearning.model.expression import Expression
+from rest_framework.request import Request
 
 from django.urls import path
 from rest_framework.decorators import api_view
@@ -15,7 +16,7 @@ logger = Logger.getLogger()
 validateMapper = ValidateMapper()
 
 @api_view(['POST'])
-def solve_derivative(request):
+def solve_derivative(request: Request):
     if request.method == 'POST':
         body = json.loads(request.body)
         expression = Expression(body['expression'])

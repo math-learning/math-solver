@@ -10,7 +10,7 @@ class HintsMapper:
         self.theorem_mapper = TheoremMapper()
         self.logger = Logger.getLogger()
 
-    def map_theorems_that_apply_input(self, request_data) -> List[Theorem]:
+    def map_theorems_that_apply_input(self, request_data: dict) -> List[Theorem]:
         try:
             formula = request_data['expression']
             expression = Expression(formula)

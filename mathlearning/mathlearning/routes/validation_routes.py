@@ -3,6 +3,8 @@ from mathlearning.services.step_service import StepService
 from mathlearning.utils.logger import Logger
 from mathlearning.utils.request_decorators import log_request
 
+from rest_framework.request import Request
+
 from django.urls import path
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -14,11 +16,11 @@ logger = Logger.getLogger()
 validateMapper = ValidateMapper()
 
 
-def bool_to_str(boolean_value) :
+def bool_to_str(boolean_value: bool) -> str:
     return "true" if boolean_value else "false"
 
 @api_view(['POST'])
-def validate_new_step(request):
+def validate_new_step(request: Request):
     if request.method == 'POST':
         body = json.loads(request.body)
         (new_expression, old_expression, theorems) = validateMapper.parse_validate_new_step_input(body)
@@ -28,7 +30,7 @@ def validate_new_step(request):
     
 
 @api_view(['POST'])
-def validate_not_in_history(request):
+def validate_not_in_history(request: Request):
     if request.method == 'POST':
         body = json.loads(request.body)
         (expr, history) = validateMapper.parse_validate_not_in_history_input(body)

@@ -1,5 +1,8 @@
 from mathlearning.services.theorems_service import TheoremsService
 from mathlearning.utils.logger import Logger
+from typing import List
+from mathlearning.model.theorem import Theorem
+from mathlearning.model.expression import Expression
 
 RESULT_FOUND_TEMPLATE = "The new expression {} was the result of applying {} theorem to {}"
 
@@ -10,7 +13,11 @@ class StepService:
     def __init__(self):
         self.theorems_service = TheoremsService()
 
-    def is_a_valid_next_step(self, old_expression, new_expression, theorems):
+    def is_a_valid_next_step(self, 
+                            old_expression: Expression, 
+                            new_expression: Expression, 
+                            theorems: List[Theorem]
+                            ) -> bool:
         logger.info("Starting transition validation")
 
         logger.info("Checking if a theorem can be applied")

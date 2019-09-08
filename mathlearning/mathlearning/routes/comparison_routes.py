@@ -7,6 +7,7 @@ from mathlearning.model.expression import Expression
 from django.urls import path
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework import status
 import json
 
@@ -18,7 +19,7 @@ def bool_to_str(boolean_value) :
     return "true" if boolean_value else "false"
 
 @api_view(['POST'])
-def compare_expressions(request):
+def compare_expressions(request: Request):
     if request.method == 'POST':
         body = json.loads(request.body)
         (expr_one, expr_two) = validateMapper.parse_compare_expressions_data(body)

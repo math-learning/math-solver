@@ -2,7 +2,8 @@ from mathlearning.mappers.theorem_mapper import TheoremMapper
 from mathlearning.utils.logger import Logger
 from mathlearning.model.exercise import Exercise
 from mathlearning.model.expression import Expression
-
+from typing import List
+from mathlearning.model.theorem import Theorem
 
 class ValidateMapperException(Exception):
     pass
@@ -13,7 +14,7 @@ class ValidateMapper:
         self.theoremMapper = TheoremMapper()
         self.logger = Logger.getLogger()
     
-    def parse_validate_new_step_input(self, request_data):
+    def parse_validate_new_step_input(self, request_data: dict) -> (Expression, Expression, List[Theorem]):
         self.logger.info("Parsing validate new step request data: {}".format(request_data))
         try:
             theorems = request_data['theorems']
@@ -34,7 +35,7 @@ class ValidateMapper:
             self.logger.error("Error while parsing validate new step input: {}".format(e))
             raise ValidateMapperException(e)
 
-    def parse_validate_result_input(self, request_data):
+    def parse_validate_result_input(self, request_data: dict) -> (List[Expression], Exercise):
         self.logger.info("Parsing validate result request data: {}".format(request_data))
         try:
             exercise_dto = request_data['exercise']
@@ -56,7 +57,7 @@ class ValidateMapper:
             self.logger.error("Error while parsing validate result input: {}".format(e))
             raise ValidateMapperException(e)
 
-    def  parse_compare_expressions_data(self, request_data):
+    def  parse_compare_expressions_data(self, request_data: dict) -> (Expression, Expression):
         self.logger.info("Parsing validate not in history request data: {}".format(request_data))
         try:
             expression_one_str = request_data['expression_one']
@@ -72,7 +73,7 @@ class ValidateMapper:
             raise ValidateMapperException(e)
 
 
-    def parse_validate_not_in_history_input(self, request_data):
+    def parse_validate_not_in_history_input(self, request_data: dict) -> (Expression, List[Expression]):
         self.logger.info("Parsing validate not in history request data: {}".format(request_data))
         try:
             new_expression = request_data['new_expression']
