@@ -1,4 +1,0 @@
-{
-	"new_expression": "\\frac{d(x)}{dx} + \\frac{d(x)}{dx}",
-	"old_expression": "\\frac{d(x + x)}{dx}"
-}
