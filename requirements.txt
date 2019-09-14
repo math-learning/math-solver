@@ -1,8 +1,0 @@
-flask
-gunicorn
-sympy
-requests
-flask-cors
-antlr4-python3-runtime
-Django
-djangorestframework
