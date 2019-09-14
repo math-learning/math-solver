@@ -1,11 +1,32 @@
 # math-learning-server
 
-Servidor Flask
+Servidor Django
 
-Para correr el servidor, luego de clonar el proyecto ejecutar el siguiente comando:
+El mismo se puede correr de dos maneras diferentes:
 
-    $ ./scripts/flask-debug.sh
+## Correr usando Docker compose
+
+Correr el siguiente comando en una terminal estando posicionado en el mismo directorio que el docker-compose.yml:
+
+Primera vez:
+
+    $ docker-compose up --build
     
-Proximamente:
+Luego no es necesario el --build
 
-- Documentacion de endpoints con el archivo swagger.yml
+    $ docker-compose up
+
+
+## Correr utilizando un virtualenv
+
+correr el siguiente comando para activar el entorno virtual:
+
+    $ source ./bin/activate
+
+luego correr el siguiente comando para instalar las dependencias:
+
+    $ pip3 install -r mathlearning/requirements.txt 
+
+por ultimo para iniciar la aplicacion django correr:
+
+    $ python mathlearning/manage.py runserver 0.0.0.0:5000
