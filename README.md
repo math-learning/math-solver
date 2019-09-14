@@ -12,7 +12,7 @@ Primera vez:
 
     $ docker-compose up --build
     
-Luego no es necesario el --build
+Una vez creada la imagen (una vez corrido el comando anterior) a menos de que haya cambios se puede correr el siguiente comando:
 
     $ docker-compose up
 
