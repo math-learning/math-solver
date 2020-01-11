@@ -6,8 +6,8 @@ LOGGING_FILE = 'log.log'
 FORMATTER_STYLE = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 LOGGING_LEVEL = logging.INFO
 
+
 class Logger:
-    
     __initialized = False
 
     @classmethod

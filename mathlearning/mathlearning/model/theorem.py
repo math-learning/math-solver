@@ -8,13 +8,13 @@ logger = Logger.getLogger()
 
 
 class TheoremApplication:
-  def __init__(self, before, after):
-    self.before = before
-    self.after = after
+    def __init__(self, before, after):
+        self.before = before
+        self.after = after
 
 
 class Theorem:
-  # left and right could be expressions or str
+    # left and right could be expressions or str
     def __init__(self, name: str, left: Expression, right: Expression, conditions: List):
         self.name = name
         self.left = Expression(left)
@@ -25,13 +25,13 @@ class Theorem:
     def to_json(self) -> str:
         return {'name': self.name, 'right': str(self.right), 'left': str(self.left)}
 
-  # Returns the application possibilities (could be more than 1)
+    # Returns the application possibilities (could be more than 1)
     def apply_reverse_to(self, expression: Expression) -> List[Expression]:
         from_side = self.right
         to_side = self.left
         return self._apply_to(expression, from_side, to_side)
 
-  # Returns the application possibilities (could be more than 1)
+    # Returns the application possibilities (could be more than 1)
     def apply_to(self, expression: Expression) -> List[Expression]:
         from_side = self.left
         to_side = self.right

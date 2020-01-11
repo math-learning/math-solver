@@ -15,8 +15,10 @@ result_service = ResultService()
 logger = Logger.getLogger()
 validateMapper = ValidateMapper()
 
-def bool_to_str(boolean_value) :
+
+def bool_to_str(boolean_value):
     return "true" if boolean_value else "false"
+
 
 @api_view(['POST'])
 def compare_expressions(request: Request):
@@ -25,6 +27,7 @@ def compare_expressions(request: Request):
         (expr_one, expr_two) = validateMapper.parse_compare_expressions_data(body)
         result = expr_one.is_equivalent_to(expr_two)
         logger.info('Returning the following response: {}'.format(result))
-        return Response(data= bool_to_str(result), status= status.HTTP_200_OK)
+        return Response(data=bool_to_str(result), status=status.HTTP_200_OK)
+
 
 comparison_paths = [path('compare', compare_expressions)]

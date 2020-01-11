@@ -15,6 +15,7 @@ result_service = ResultService()
 logger = Logger.getLogger()
 validateMapper = ValidateMapper()
 
+
 @api_view(['POST'])
 def solve_derivative(request: Request):
     if request.method == 'POST':
@@ -22,6 +23,7 @@ def solve_derivative(request: Request):
         expression = Expression(body['expression'])
         result = result_service.get_derivative_result(expression)
         logger.info('Returning the following response: {}'.format(result))
-        return Response(result.to_latex(), status= status.HTTP_200_OK)
+        return Response(result.to_latex(), status=status.HTTP_200_OK)
+
 
 result_paths = [path('results/solve-derivative', solve_derivative)]

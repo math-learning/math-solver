@@ -5,6 +5,7 @@ from mathlearning.model.expression import Expression
 from typing import List
 from mathlearning.model.theorem import Theorem
 
+
 class ValidateMapperException(Exception):
     pass
 
@@ -13,15 +14,15 @@ class ValidateMapper:
     def __init__(self):
         self.theoremMapper = TheoremMapper()
         self.logger = Logger.getLogger()
-    
+
     def parse_validate_new_step_input(self, request_data: dict) -> (Expression, Expression, List[Theorem]):
         self.logger.info("Parsing validate new step request data: {}".format(request_data))
         try:
             theorems = request_data['theorems']
             new_expression = request_data['new_expression']
             old_expression = request_data['old_expression']
-            
-            #TODO: Do a better handling of this case
+
+            # TODO: Do a better handling of this case
             if new_expression == old_expression:
                 raise Exception()
 
@@ -57,7 +58,7 @@ class ValidateMapper:
             self.logger.error("Error while parsing validate result input: {}".format(e))
             raise ValidateMapperException(e)
 
-    def  parse_compare_expressions_data(self, request_data: dict) -> (Expression, Expression):
+    def parse_compare_expressions_data(self, request_data: dict) -> (Expression, Expression):
         self.logger.info("Parsing validate not in history request data: {}".format(request_data))
         try:
             expression_one_str = request_data['expression_one']
@@ -65,13 +66,12 @@ class ValidateMapper:
 
             expression_one = Expression(expression_one_str)
             expression_two = Expression(expression_two_str)
-            
+
             return (expression_one, expression_two)
 
         except Exception as e:
             self.logger.error("Error while parsing validate result input: {}".format(e))
             raise ValidateMapperException(e)
-
 
     def parse_validate_not_in_history_input(self, request_data: dict) -> (Expression, List[Expression]):
         self.logger.info("Parsing validate not in history request data: {}".format(request_data))
@@ -82,7 +82,7 @@ class ValidateMapper:
             history = []
             for history_item in history_dto:
                 history.append(history_item)
-    
+
             return new_expression, history
         except Exception as e:
             self.logger.error("Error while parsing validate result input: {}".format(e))

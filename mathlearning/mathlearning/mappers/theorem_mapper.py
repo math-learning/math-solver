@@ -1,6 +1,7 @@
 from mathlearning.model.theorem import Theorem
 from typing import List
 
+
 class TheoremMapper:
 
     @staticmethod

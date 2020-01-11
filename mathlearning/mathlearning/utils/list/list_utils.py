@@ -1,4 +1,3 @@
-
 # DIVIDE 
 class ListUtils:
 
@@ -11,7 +10,7 @@ class ListUtils:
         if len(lista) != len(listb):
             return None
         return ListUtils.pair_combinations_rec(lista, listb, [], [])
-        
+
     # Idea a = [1,2, 3] ; b = [4, 5, 6]
     # every element of b is paired with the first element of a
     # [1,4] , [1,5] , [1,6]
@@ -27,13 +26,14 @@ class ListUtils:
         for elem in listtwo:
             combination_bifurcation = combination[:]
             combination_bifurcation.append([listone[0], elem])
-            
+
             listone_without_first = listone[1:]
 
             listtwo_without_elem = list(listtwo[:])
             listtwo_without_elem.remove(elem)
             listtwo_without_elem = tuple(listtwo_without_elem)
 
-            combinations = ListUtils.pair_combinations_rec(listone_without_first, listtwo_without_elem, combination_bifurcation, combinations)
+            combinations = ListUtils.pair_combinations_rec(listone_without_first, listtwo_without_elem,
+                                                           combination_bifurcation, combinations)
 
         return combinations

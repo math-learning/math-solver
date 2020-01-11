@@ -4,6 +4,7 @@ from mathlearning.utils.logger import Logger
 from typing import List
 from mathlearning.model.theorem import Theorem
 
+
 class HintsMapper:
 
     def __init__(self):
@@ -17,7 +18,7 @@ class HintsMapper:
             theorems_json = request_data['theorems']
             theorems = self.theorem_mapper.theorems(theorems_json)
             return expression, theorems
-            
+
         except Exception as e:
             self.logger.error("Error while trying to map theorems that apply input: {}".format(e))
             raise e
