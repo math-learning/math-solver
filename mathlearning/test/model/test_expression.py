@@ -1,10 +1,10 @@
 import unittest
 from mathlearning.model.expression import Expression
 
-class TestExpression(unittest.TestCase):
-    
-    def test_is_leaf(self):
 
+class TestExpression(unittest.TestCase):
+
+    def test_is_leaf(self):
         leaf = Expression("x")
         self.assertTrue(leaf.is_leaf())
 
@@ -18,7 +18,7 @@ class TestExpression(unittest.TestCase):
         exp_two = Expression("2 * x")
 
         self.assertTrue(exp_one.is_equivalent_to(exp_two))
-    
+
     def test_some(self):
         exp_one = Expression("x + x")
         exp_two = Expression("x + x")

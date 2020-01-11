@@ -8,21 +8,25 @@ from rest_framework.test import APITestCase
 class SolvedExercise:
     def __init__(self, name, steps: list, result):
         self.name = name
-        self.steps= steps
+        self.steps = steps
         self.result = result
+
 
 def load_exercises(exercises_path):
     with open(exercises_path, 'r') as exercises_file:
         exercises_json = json.load(exercises_file)
         exercises = []
         for exercise_json in exercises_json:
-            exercise = SolvedExercise(name= exercise_json["name"], steps= exercise_json["steps"], result= exercise_json["result"])
+            exercise = SolvedExercise(name=exercise_json["name"], steps=exercise_json["steps"],
+                                      result=exercise_json["result"])
             exercises.append(exercise)
         return exercises
+
 
 def load_theorems(theorems_path):
     with open(theorems_path, 'r') as theorems_file:
         return json.load(theorems_file)
+
 
 def validate_step(api_client, theorems, new_expression, old_expression):
     data = {
@@ -30,8 +34,7 @@ def validate_step(api_client, theorems, new_expression, old_expression):
         'new_expression': new_expression,
         'old_expression': old_expression
     }
-    return api_client.post(path= "/validations/new-step",data= data, format= 'json')
-
+    return api_client.post(path="/validations/new-step", data=data, format='json')
 
 
 class APITests(APITestCase):
@@ -52,25 +55,17 @@ class APITests(APITestCase):
             steps = solved_exercise.steps
             for i in range(0, len(steps) - 1):
                 old_expression = steps[i]
-                new_expression = steps[i+1]
-                self.validate_and_assert(api_client= self.client, 
-                    theorems= theorems, 
-                    new_expression=new_expression, 
-                    old_expression= old_expression)
-    
+                new_expression = steps[i + 1]
+                self.validate_and_assert(api_client=self.client,
+                                         theorems=theorems,
+                                         new_expression=new_expression,
+                                         old_expression=old_expression)
+
             print("Asserting result")
             data = {
                 'expression_one': steps[-1],
                 'expression_two': solved_exercise.result
             }
-            response = self.client.post(path= '/compare', data= data, format='json')
+            response = self.client.post(path='/compare', data=data, format='json')
             self.assertEquals(response.status_code, status.HTTP_200_OK)
             self.assertEquals(response.data, 'true')
-
-
-
-
-
-
-
-
