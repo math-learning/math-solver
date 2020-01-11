@@ -25,5 +25,13 @@ def solve_derivative(request: Request):
         logger.info('Returning the following response: {}'.format(result))
         return Response(result.to_latex(), status=status.HTTP_200_OK)
 
+@api_view(['POST'])
+def solution_tree(request: Request):
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        expression = Expression(body['expression'])
+        result = result_service.get_derivative_result(expression)
+        logger.info('Returning the following response: {}'.format(result))
+        return Response(result.to_latex(), status=status.HTTP_200_OK)
 
 result_paths = [path('results/solve-derivative', solve_derivative)]

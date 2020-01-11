@@ -1,6 +1,5 @@
 import json
 
-from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -46,7 +45,7 @@ class APITests(APITestCase):
         is_valid = json.loads(response.content)
         self.assertTrue(is_valid)
 
-    def test_create_account(self):
+    def test_solve_exercise(self):
         exercises = load_exercises('test/api/jsons/solved_exercises.json')
         theorems = load_theorems("test/api/jsons/theorems.json")
 

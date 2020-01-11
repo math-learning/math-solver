@@ -17,8 +17,9 @@ class Theorem:
     # left and right could be expressions or str
     def __init__(self, name: str, left: Expression, right: Expression, conditions: List):
         self.name = name
-        self.left = Expression(left)
-        self.right = Expression(right)
+        if left is not None and right is not None:
+            self.left = Expression(left)
+            self.right = Expression(right)
         self.conditions = conditions
         self.analyzer = TemplateMatchAnalyzer()
 

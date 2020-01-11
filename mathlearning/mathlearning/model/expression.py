@@ -17,7 +17,6 @@ def is_sympy_exp(formula):
     sympy_classes = tuple(x[1] for x in inspect.getmembers(sympy, inspect.isclass))
     return isinstance(formula, sympy_classes)
 
-
 class Expression:
 
     def __init__(self, formula: Union['Expression', str]):
@@ -32,7 +31,7 @@ class Expression:
         elif is_sympy_exp(formula):
             self.sympy_expr = formula
         else:
-            raise (Exception("error while trying to create an Expression, unsuported formula type"))
+            raise (Exception("error while trying to create an Expression, unsuported formula type" + str(formula)))
 
     def is_leaf(self) -> bool:
         return len(self.sympy_expr.args) == 0
