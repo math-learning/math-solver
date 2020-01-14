@@ -1,7 +1,7 @@
+from mathlearning.mappers.theorem_mapper import TheoremMapper
 from mathlearning.mappers.validate_mapper import ValidateMapper, ValidateMapperException
 from mathlearning.services.result_service import ResultService
 from mathlearning.utils.logger import Logger
-from mathlearning.utils.request_decorators import log_request
 from mathlearning.model.expression import Expression
 from rest_framework.request import Request
 
@@ -14,6 +14,7 @@ import json
 result_service = ResultService()
 logger = Logger.getLogger()
 validateMapper = ValidateMapper()
+theoremMapper = TheoremMapper()
 
 
 @api_view(['POST'])
@@ -29,9 +30,12 @@ def solve_derivative(request: Request):
 def solution_tree(request: Request):
     if request.method == 'POST':
         body = json.loads(request.body)
-        expression = Expression(body['expression'])
-        result = result_service.get_derivative_result(expression)
+        expression = Expression(body['problem_input'])
+        theorems = theoremMapper.theorems(body['theorems'])
+        result = result_service.solution_tree(expression, theorems)
+        result = result.to_json()
         logger.info('Returning the following response: {}'.format(result))
-        return Response(result.to_latex(), status=status.HTTP_200_OK)
+        return Response(result, status=status.HTTP_200_OK)
 
 result_paths = [path('results/solve-derivative', solve_derivative)]
+result_paths = [path('results/solution-tree', solution_tree)]

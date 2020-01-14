@@ -1,8 +1,12 @@
 import json
+from collections import Set
 
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from mathlearning.mappers.solution_tree_mapper import SolutionTreeMapper
+
+solution_tree_mapper = SolutionTreeMapper()
 
 class SolvedExercise:
     def __init__(self, name, steps: list, result):
@@ -68,3 +72,17 @@ class APITests(APITestCase):
             response = self.client.post(path='/compare', data=data, format='json')
             self.assertEquals(response.status_code, status.HTTP_200_OK)
             self.assertEquals(response.data, 'true')
+
+    def test_solution_tree(self):
+        theorems = load_theorems("test/api/jsons/theorems.json")
+        problem_input = "\\frac{d\\left(e^x.\\ x\\right)}{dx}\\ +\\ \\frac{d\\left(sen\\left(x\\right)\\cdot x^2\\right)}{dx}"
+        data = {
+            'problem_input': problem_input,
+            'theorems': theorems
+        }
+        response = self.client.post(path='/results/solution-tree', data=data, format='json')
+
+        tree = SolutionTreeMapper.parse(response.content)
+        theorem_names = tree.get_theorem_names()
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
+        self.assertEquals(theorem_names, set(["derivada del producto", "resolver derivadas"]))

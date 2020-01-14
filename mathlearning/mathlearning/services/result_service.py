@@ -4,7 +4,7 @@ from mathlearning.services.theorems_service import TheoremsService
 from mathlearning.utils.logger import Logger
 from mathlearning.model.expression import Expression
 from typing import List
-
+import json
 
 logger = Logger.getLogger()
 
@@ -30,13 +30,47 @@ class SolutionTreeNode:
             derivatives_solving_possibilities = self.expression.derivatives_solving_possibilities()
             for possibility in derivatives_solving_possibilities:
                 if not possibility.is_equivalent_to(self.expression):
-                    branch = SolutionTreeNode(possibility, Theorem('Aplicacion de derivadas', None, None, []),[])
+                    branch = SolutionTreeNode(possibility, Theorem('resolver derivadas', None, None, []),[])
                     branch.apply_derivatives_to_leaves()
                     branches.append(branch)
             self.branches = branches
         else:
             for branch in self.branches:
                 branch.apply_derivatives_to_leaves()
+
+    def to_latex(self):
+        self.expression = self.expression.to_latex()
+        for branch in self.branches:
+            branch.to_latex()
+
+    def to_json(self):
+        branches = []
+        for branch in self.branches:
+            branches.append(branch.to_json())
+
+        if self.theorem_applied is not None:
+            theorem = self.theorem_applied.to_json()
+        else:
+            theorem = {'name': 'none'}
+
+        return {
+            'expression': self.expression.to_latex(),
+            'theorem_applied': theorem,
+            'branches': branches
+        }
+
+    def get_theorem_names(self):
+        names = self.get_theorem_names_rec(set())
+        names.discard('none')
+        return names
+
+    def get_theorem_names_rec(self, accum):
+        accum.add(self.theorem_applied.name)
+        children_names = set()
+        for branch in self.branches:
+            children_names |= branch.get_theorem_names_rec(set())
+        accum |= children_names
+        return accum
 
 
 class ResultService:
@@ -62,7 +96,6 @@ class ResultService:
         theorems_that_apply = self.theorems_service.get_theorems_that_can_be_applied_to(expression, theorems)
         subtrees = []
         for theorem in theorems_that_apply:
-
             result = theorem.apply_to(expression)
             for case in result:
                 if not expression.is_equivalent_to(case):

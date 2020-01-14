@@ -3,6 +3,7 @@ from mathlearning.model.expression import Expression
 from mathlearning.utils.logger import Logger
 from typing import List
 from mathlearning.model.template_match_analyzer import Equality
+import sympy
 
 logger = Logger.getLogger()
 
@@ -20,6 +21,10 @@ class Theorem:
         if left is not None and right is not None:
             self.left = Expression(left)
             self.right = Expression(right)
+        else:
+            self.left = Expression(sympy.nan)
+            self.right = Expression(sympy.nan)
+
         self.conditions = conditions
         self.analyzer = TemplateMatchAnalyzer()
 
