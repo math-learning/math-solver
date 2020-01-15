@@ -24,7 +24,7 @@ SECRET_KEY = 'wqp0mejbprc9cpza*h_i$nlylkebyrds9f_qiw&yj0mj_3@0z6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['math-solver', '127.0.0.1', 'localhost']
 
 # Application definition
 

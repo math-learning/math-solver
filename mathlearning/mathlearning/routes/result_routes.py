@@ -30,7 +30,8 @@ def solve_derivative(request: Request):
 def solution_tree(request: Request):
     if request.method == 'POST':
         body = json.loads(request.body)
-        expression = Expression(body['problem_input'])
+        logger.debug(body)
+        expression = Expression(body['problemInput'])
         theorems = theoremMapper.theorems(body['theorems'])
         result = result_service.solution_tree(expression, theorems)
         result = result.to_json()
