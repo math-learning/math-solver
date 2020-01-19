@@ -83,7 +83,7 @@ class ResultService:
         return expression.solve_derivatives()
 
     def solution_tree(self, expression: Expression, theorems: List[Theorem]) -> SolutionTreeNode:
-        logger.debug("get solution tree for: " + expression.to_string())
+        logger.info("get solution tree for: " + expression.to_string())
         return self.solution_tree_for(expression, theorems, None)
 
     def solution_tree_for(self, expression: Expression, theorems: List[Theorem], applied_theorem: Theorem   ):
