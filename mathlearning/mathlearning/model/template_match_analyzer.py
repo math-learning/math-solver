@@ -76,7 +76,7 @@ class TemplateMatchAnalyzer:
                     analysis: MatchAnalysisReport
                     ) -> MatchAnalysisReport:
 
-        print("Analizing " + to_string(template, expression))
+        logger.info("Analizing " + to_string(template, expression))
 
         if not analysis.expression_match_template:
             return analysis
@@ -137,7 +137,7 @@ class TemplateMatchAnalyzer:
             new_equality = Equality(template, expression)
             equalities = current_equalities[:]
             equalities.append(new_equality)
-            print("Adding: " + new_equality.to_string())
+            logger.info("Adding: " + new_equality.to_string())
 
         return MatchAnalysisReport(analysis.template, analysis.expression, match, equalities)
 

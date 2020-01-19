@@ -6,14 +6,14 @@ LOGGING_FILE = 'log.log'
 FORMATTER_STYLE = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 LOGGING_LEVEL = logging.INFO
 
-
 class Logger:
     __initialized = False
 
     @classmethod
     def getLogger(clazz):
-        logger = logging.getLogger("flask.app")
-        if not clazz.__initialized and Environment.is_production():
+        logger = logging.getLogger("django")
+        # and Environment.is_production()
+        if not clazz.__initialized:
             formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
             logger.setLevel(logging.INFO)
             # time_handler = TimedRotatingFileHandler(LOGGING_FILE,

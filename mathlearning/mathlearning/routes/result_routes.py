@@ -36,7 +36,7 @@ def solution_tree(request: Request):
         result = result_service.solution_tree(expression, theorems)
         result = result.to_json()
         logger.info('Returning the following response: {}'.format(result))
-        return Response(result, status=status.HTTP_200_OK)
+        return Response(json.dumps(result), status=status.HTTP_200_OK, content_type='application/json')
 
 result_paths = [path('results/solve-derivative', solve_derivative)]
 result_paths = [path('results/solution-tree', solution_tree)]
