@@ -10,6 +10,10 @@ def is_present(expression, expressions):
             return True
     return False
 
+division_derivative = Theorem("derivada de la division",
+                              "\\frac{d(\\frac{f(x)}{g(x)})}{dx}",
+                              "\\frac{ \\frac{ d(f(x))}{dx} * g(x) - \\frac{d(g(x))}{dx} * f(x) }{g(x)^ 2}",
+                              {})
 
 class TestTheorem(unittest.TestCase):
 
@@ -42,10 +46,10 @@ class TestTheorem(unittest.TestCase):
         print(possibilities)
         self.assertTrue(is_present(expected, possibilities))
 
-    # def test_apply_reverse_to_(self):
-    #     theorem = self.derivative_sum_theorem
-    #     expression = Expression("- x^2\\sin ^2(x) +\\cos (x)\\frac{d\\left(x^2\\sin (x)\\right)}{dx}")
-    #     possibilities = theorem.apply_reverse_to(expression)
-    #     expected = Expression("-\\ x^2\\sin ^2(x) +\\cos (x) * \\left(\\frac{d\\left(\\sin (x)\\right)}{dx}x^2+ \\frac{d\\left(x^2\\right)}{dx} * \\sin \\left(x\\right)\\right)")
-    #     print(possibilities)
-    #     self.assertTrue(is_present(expected, possibilities))
+    def test_apply_derivative_division(self):
+        exp = Expression('\\frac{d}{d x} \\frac{\\sin{\\left(x \\right)}}{\\cos{\\left(x \\right)}}')
+        result = division_derivative.apply_to(exp)
+        Expression(result[0].to_latex())
+        print(exp)
+
+

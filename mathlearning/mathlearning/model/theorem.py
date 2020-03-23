@@ -4,6 +4,7 @@ from mathlearning.utils.logger import Logger
 from typing import List
 from mathlearning.model.template_match_analyzer import Equality
 import sympy
+from typing import Union
 
 logger = Logger.getLogger()
 
@@ -16,7 +17,7 @@ class TheoremApplication:
 
 class Theorem:
     # left and right could be expressions or str
-    def __init__(self, name: str, left: Expression, right: Expression, conditions: List):
+    def __init__(self, name: str, left: Union['Expression', str], right: Union['Expression', str], conditions: List):
         self.name = name
         if left is not None and right is not None:
             self.left = Expression(left)
@@ -79,6 +80,9 @@ class Theorem:
         already_tried = set()
 
         # try applying directly to children
+        # for example in x + y
+        # try applying to x
+        # try applying to y
         logger.info("Trying to apply: " + self.name +
                     " directly to children: " + str(expression))
         for child in children:
@@ -93,6 +97,8 @@ class Theorem:
                 already_tried.add(str(child))
 
         # try applying to groups of children
+        # for example in x + y + z
+        # try with: x + y ; x + z : y + z
         logger.info("Trying to apply: " + self.name +
                     " to a group children: " + str(expression))
         for size in range(2, expression.children_amount() + 1):
@@ -121,3 +127,6 @@ class Theorem:
         for equality in equalities:
             result.replace(equality.template, equality.expression)
         return result
+
+    def __str__(self):
+        return self.name + ' - ' + self.left.to_string() + " = " + self.right.to_string()
