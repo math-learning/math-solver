@@ -42,10 +42,4 @@ class TestTheorem(unittest.TestCase):
         print(possibilities)
         self.assertTrue(is_present(expected, possibilities))
 
-    # def test_apply_reverse_to_(self):
-    #     theorem = self.derivative_sum_theorem
-    #     expression = Expression("- x^2\\sin ^2(x) +\\cos (x)\\frac{d\\left(x^2\\sin (x)\\right)}{dx}")
-    #     possibilities = theorem.apply_reverse_to(expression)
-    #     expected = Expression("-\\ x^2\\sin ^2(x) +\\cos (x) * \\left(\\frac{d\\left(\\sin (x)\\right)}{dx}x^2+ \\frac{d\\left(x^2\\right)}{dx} * \\sin \\left(x\\right)\\right)")
-    #     print(possibilities)
-    #     self.assertTrue(is_present(expected, possibilities))
+

@@ -25,7 +25,9 @@ class Expression:
         self.commutative_list_size_transformer = ListSizeTransformer(CommutativeGroupTransformer())
         self.non_commutative_list_size_transformer = ListSizeTransformer(NonCommutativeGroupTransformer())
         if isinstance(formula, str):
+            print(formula)
             clean_formula = clean_latex(formula)
+            print(clean_formula)
             self.sympy_expr = parse_latex(clean_formula)
             self.sympy_expr = self.sympy_expr.subs(simplify(parse_expr("e")), parse_expr("exp(1)"))
         elif is_sympy_exp(formula):
@@ -59,6 +61,20 @@ class Expression:
                 derivative_applied = exp.apply_derivative()
                 derivatives_solved.replace(exp, derivative_applied)
         return derivatives_solved
+
+    def replace_derivatives_for_json(self):
+        replacements = []
+        for exp in preorder_traversal(self.sympy_expr):
+            # TODO
+            expression = Expression(exp)
+            if expression.is_derivative():
+                content = Expression(exp.args[0]).to_latex()
+                variable = Expression(exp.args[1][0]).to_latex()
+
+                replacement = '\\frac{d(%s)}{d%s}' % (content, variable)
+                replacements.append({"derivative": expression.to_latex(), "replacement": replacement})
+        return replacements
+
 
     # possibilities of solving just 1 derivative
     def derivatives_solving_possibilities(self) -> List['Expression']:
@@ -95,6 +111,14 @@ class Expression:
 
     def to_latex(self) -> str:
         return sympy.latex(self.sympy_expr)
+
+
+    def to_latex_with_derivatives(self) -> str:
+        replacements = self.replace_derivatives_for_json()
+        latex_exp = sympy.latex(self.sympy_expr)
+        for replacement in replacements:
+            latex_exp = latex_exp.replace(replacement['derivative'], replacement['replacement'])
+        return latex_exp
 
     def is_equivalent_to(self, expression: 'Expression') -> bool:
         return simplify(self.sympy_expr) == simplify(expression.sympy_expr)

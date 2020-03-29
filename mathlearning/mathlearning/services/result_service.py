@@ -4,7 +4,6 @@ from mathlearning.services.theorems_service import TheoremsService
 from mathlearning.utils.logger import Logger
 from mathlearning.model.expression import Expression
 from typing import List
-import json
 
 logger = Logger.getLogger()
 
@@ -25,6 +24,7 @@ class SolutionTreeNode:
             branch.explain_solution(profundidad + 1)
 
     def apply_derivatives_to_leaves(self):
+        logger.info("Trying to  apply derivatives to leaves")
         if len(self.branches) == 0:
             branches = []
             derivatives_solving_possibilities = self.expression.derivatives_solving_possibilities()
@@ -54,7 +54,7 @@ class SolutionTreeNode:
             theorem = {'name': 'none'}
 
         return {
-            'expression': self.expression.to_latex(),
+            'expression': self.expression.to_latex_with_derivatives(),
             'theorem_applied': theorem,
             'branches': branches
         }
@@ -65,12 +65,16 @@ class SolutionTreeNode:
         return names
 
     def get_theorem_names_rec(self, accum):
-        accum.add(self.theorem_applied.name)
+        if self.theorem_applied is not None:
+            accum.add(self.theorem_applied.name)
         children_names = set()
         for branch in self.branches:
             children_names |= branch.get_theorem_names_rec(set())
         accum |= children_names
         return accum
+
+    def __str__(self):
+        return self.expression.to_string() + str(self.theorem_applied)
 
 
 class ResultService:
@@ -88,11 +92,18 @@ class ResultService:
 
     def solution_tree_for(self, expression: Expression, theorems: List[Theorem], applied_theorem: Theorem   ):
         simplified_expression = expression.simplify()
-        tree = SolutionTreeNode(simplified_expression, applied_theorem, self.subtrees(simplified_expression, theorems))
+        tree = SolutionTreeNode(expression, applied_theorem, self.subtrees(expression, theorems))
+        if simplified_expression != expression:
+            tree.branches.append(
+                SolutionTreeNode(simplified_expression,
+                                 Theorem('simplificacion', None, None, []),
+                                 self.subtrees(simplified_expression, theorems))
+            )
         tree.apply_derivatives_to_leaves()
         return tree
 
     def subtrees(self, expression: Expression, theorems: List[Theorem]) -> List[SolutionTreeNode]:
+        logger.info('subtrees of ' + expression.to_string())
         theorems_that_apply = self.theorems_service.get_theorems_that_can_be_applied_to(expression, theorems)
         subtrees = []
         for theorem in theorems_that_apply:

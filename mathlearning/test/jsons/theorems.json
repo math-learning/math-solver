@@ -14,7 +14,7 @@
   {
     "name": "derivada de la division",
     "left": "\\frac{d(\\frac{f(x)}{g(x)})}{dx}",
-    "right": "\\frac{ \\frac{ d(f(x))}{x} * g(x) - \\frac{d(g(x))}{dx} * f(x) }{g(x)^ 2}",
+    "right": "\\frac{ \\frac{ d(f(x))}{dx} * g(x) - \\frac{d(g(x))}{dx} * f(x) }{g(x)^ 2}",
     "conditions": {}
   },
   {
@@ -28,4 +28,6 @@
       ]
     }
   }
+
+
 ]

@@ -49,3 +49,8 @@ class TestExpression(unittest.TestCase):
         self.assertTrue(Expression("\\frac{d(x^2)}{dx}") in children)
         self.assertTrue(Expression("\\frac{d(x)}{dx}") in children)
         self.assertTrue(Expression("x^3") in children)
+
+    def test_t(self):
+        exp = Expression("\\frac{d(x)}{dx}")
+        exp = Expression(exp.to_latex_with_derivatives())
+        print(exp.to_string())
