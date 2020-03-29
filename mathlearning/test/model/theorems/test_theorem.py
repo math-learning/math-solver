@@ -10,10 +10,6 @@ def is_present(expression, expressions):
             return True
     return False
 
-division_derivative = Theorem("derivada de la division",
-                              "\\frac{d(\\frac{f(x)}{g(x)})}{dx}",
-                              "\\frac{ \\frac{ d(f(x))}{dx} * g(x) - \\frac{d(g(x))}{dx} * f(x) }{g(x)^ 2}",
-                              {})
 
 class TestTheorem(unittest.TestCase):
 
@@ -45,11 +41,5 @@ class TestTheorem(unittest.TestCase):
         expected = Expression("\\frac{d(x + x^2)}{dx} + x^3")
         print(possibilities)
         self.assertTrue(is_present(expected, possibilities))
-
-    def test_apply_derivative_division(self):
-        exp = Expression('\\frac{d}{d x} \\frac{\\sin{\\left(x \\right)}}{\\cos{\\left(x \\right)}}')
-        result = division_derivative.apply_to(exp)
-        Expression(result[0].to_latex())
-        print(exp)
 
 

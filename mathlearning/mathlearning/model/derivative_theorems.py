@@ -3,7 +3,7 @@ from mathlearning.model.theorem import Theorem
 class DerivativeTheorems:
 
     def __init__(self):
-        self.sum_of_derivatives = Theorem(
+        self.derivative_of_a_sum = Theorem(
             "Derivada de la suma",
             "\\frac{d(f(x) + g(x))}{dx}",
             "\\frac{d(f(x))}{dx} + \\frac{d(g(x))}{dx}",
