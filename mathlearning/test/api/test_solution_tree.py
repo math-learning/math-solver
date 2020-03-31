@@ -52,18 +52,11 @@ derivative_of_a_multiplication = {
     "result": "2* x+1-\\sin (x)",
 }
 
-derivative_multiplication = {
+derivative_multiplication_of_three_elem = {
     "name": "multiplication of 3 elem",
     "problemInput": "x^2 * \\sin(x) * \\frac{d(\\cos(x))}{dx} + \\cos(x) * \\frac{d(x^2 * \\sin(x))}{dx}",
     "theorems": {D_PRODUCTO, RESOLVER_DERIV, SIMPLIFICACION},
     "result": "x^2\\sin(x)\\frac{d(\\cos(x))}{dx} + \\cos(x) * (\\frac{d(x^2)}{dx} * \\sin(x) + \\frac{d(\\sin(x))}{dx} * x^2)"
-}
-
-derivative_inside_cos = {
-    "name": "derivative inside cos",
-    "problemInput": "x^2 * sin(x) *\\frac{d( cos(x))}{dx}+ cos(x) * \\frac{d(x^2* sin(x))}{dx}",
-    "theorems": {D_PRODUCTO, RESOLVER_DERIV, SIMPLIFICACION},
-    "result": "cos(\\frac{d(\\cos(x) * x)}{dx})"
 }
 
 
@@ -76,7 +69,7 @@ class APITests(APITestCase):
         derivative_theorems = load_theorems()
         problem_input = "\\frac{d(e^x*x)}{dx} + \\frac{d(sen(x)* x^2)}{dx}"
         data = {
-            'problemInput': problem_input,
+            'problem_input': problem_input,
             'theorems': derivative_theorems
         }
         response = self.client.post(path='/results/solution-tree', data=data, format='json')
@@ -105,7 +98,7 @@ class APITests(APITestCase):
         derivative_theorems = load_theorems()
         problem_input = "\\frac{d(x)}{dx}"
         data = {
-            'problemInput': problem_input,
+            'problem_input': problem_input,
             'theorems': derivative_theorems
         }
         response = self.client.post(path='/results/solution-tree', data=data, format='json')
@@ -119,7 +112,7 @@ class APITests(APITestCase):
         print(case['name'])
         derivative_theorems = load_theorems()
         data = {
-            'problemInput': case["problemInput"],
+            'problem_input': case["problemInput"],
             'theorems': derivative_theorems
         }
 
@@ -145,7 +138,4 @@ class APITests(APITestCase):
         self.solution_tree_derivative_case(derivative_of_a_multiplication)
 
     def test_solution_tree_cases_derivative_multiplication(self):
-        self.solution_tree_derivative_case(derivative_multiplication)
-
-    def test_solution_tree_cases_derivative_inside_cos(self):
-        self.solution_tree_derivative_case(derivative_inside_cos)
+        self.solution_tree_derivative_case(derivative_multiplication_of_three_elem)

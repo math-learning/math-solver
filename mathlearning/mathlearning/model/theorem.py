@@ -8,7 +8,6 @@ from typing import Union
 
 logger = Logger.getLogger()
 
-
 class TheoremApplication:
     def __init__(self, before, after):
         self.before = before
@@ -37,6 +36,10 @@ class Theorem:
         from_side = self.right
         to_side = self.left
         return self._apply_to(expression, from_side, to_side)
+
+    def operators_and_levels_match(self, expression: Expression):
+        return expression.operators_and_levels_match(self.left)
+
 
     # Returns the application possibilities (could be more than 1)
     def apply_to(self, expression: Expression) -> List[Expression]:
@@ -94,6 +97,9 @@ class Theorem:
                 if analysis.expression_match_template:
                     application_possibilities.append(TheoremApplication(
                         child, self.transform_side(to_side, analysis.equalities)))
+                # children of children
+                children_of_children_result = self.apply_to_children(child, from_side, to_side)
+                application_possibilities += children_of_children_result
                 already_tried.add(str(child))
 
         # try applying to groups of children
@@ -127,6 +133,7 @@ class Theorem:
         for equality in equalities:
             result.replace(equality.template, equality.expression)
         return result
+
 
     def __str__(self):
         return self.name + ' - ' + self.left.to_string() + " = " + self.right.to_string()

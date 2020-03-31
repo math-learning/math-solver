@@ -214,11 +214,12 @@ class Expression:
         return results
 
     def get_simplifications(self) -> List['Expression']:
-        simplifications = []
-        simplifications.append(Expression(sympy.expand(self.sympy_expr)))
-        simplifications.append(Expression(sympy.factor(self.sympy_expr)))
-        simplifications.append(Expression(sympy.cancel(self.sympy_expr)))
-        simplifications.append(Expression(sympy.simplify(self.sympy_expr)))
+        simplifications = [
+            Expression(sympy.expand(self.sympy_expr)),
+            Expression(sympy.factor(self.sympy_expr)),
+            Expression(sympy.cancel(self.sympy_expr)),
+            Expression(sympy.simplify(self.sympy_expr))
+        ]
 
         return simplifications
 
@@ -230,3 +231,6 @@ class Expression:
 
     def __str__(self):
         return str(self.sympy_expr)
+
+    def operators_and_levels_match(self, expression: 'Expression'):
+        return isinstance(self.sympy_expr.func, UndefinedFunction) and not self.is_derivative()

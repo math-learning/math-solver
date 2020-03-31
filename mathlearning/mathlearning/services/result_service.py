@@ -115,4 +115,3 @@ class ResultService:
 
     def appy_derivatives(self, tree: SolutionTreeNode) -> SolutionTreeNode:
         tree.apply_derivatives_to_leaves()
-

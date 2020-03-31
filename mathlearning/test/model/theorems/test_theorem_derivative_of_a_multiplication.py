@@ -29,3 +29,9 @@ class TestTheoremDerivativeOfAMultiplication(unittest.TestCase):
         exp = Expression('\\frac{d(x * 1)}{dx}')
         result = theorem.apply_to(exp)
         self.assertEquals(len(result), 0)
+
+
+    def test_complex_expression_with_multiplication_should_apply(self):
+        exp = Expression('x^2 * \\sin(x) * \\frac{d(\\cos(x))}{dx} + \\cos(x) * \\frac{d(x^2 * \\sin(x))}{dx}')
+        result = theorem.apply_to(exp)
+        self.assertEquals(len(result), 1)

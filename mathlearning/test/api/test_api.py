@@ -50,8 +50,8 @@ class APITests(APITestCase):
         self.assertTrue(is_valid)
 
     def test_solve_exercise(self):
-        exercises = load_exercises('test/api/jsons/solved_exercises.json')
-        theorems = load_theorems("test/api/jsons/theorems.json")
+        exercises = load_exercises('test/jsons/solved_exercises.json')
+        theorems = load_theorems("test/jsons/theorems.json")
 
         for solved_exercise in exercises:
             print("Testing " + solved_exercise.name)
@@ -75,7 +75,7 @@ class APITests(APITestCase):
 
 
     def test_solution_tree(self):
-        theorems = load_theorems("test/api/jsons/theorems.json")
+        theorems = load_theorems("test/jsons/theorems.json")
         problem_input = "\\frac{d\\left(e^x.\\ x\\right)}{dx}\\ +\\ \\frac{d\\left(sen\\left(x\\right)\\cdot x^2\\right)}{dx}"
         data = {
             'problem_input': problem_input,
@@ -83,7 +83,8 @@ class APITests(APITestCase):
         }
         response = self.client.post(path='/results/solution-tree', data=data, format='json')
 
-        tree = SolutionTreeMapper.parse(response.content)
+        tree_str = json.loads(response.content)
+        tree = SolutionTreeMapper.parse(tree_str)
         theorem_names = tree.get_theorem_names()
         self.assertEquals(response.status_code, status.HTTP_200_OK)
-        self.assertEquals(theorem_names, {"derivada del producto", "resolver derivadas"})
+        self.assertEquals(theorem_names, {"derivada del producto", "resolver derivadas", "simplificacion"})

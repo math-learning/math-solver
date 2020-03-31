@@ -33,7 +33,3 @@ class TestListUtils(unittest.TestCase):
         lista = []
         listb = [1]
         self.assertIsNone(ListUtils.pair_combinations(lista, listb))
-
-    def test_combinations_diff_sizes(self):
-        lista = [1, 2, 3]
-        listb = [4, 5, 6]
