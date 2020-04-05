@@ -1,3 +1,4 @@
+from mathlearning.model.solution_tree_node import SolutionTreeNode
 from mathlearning.model.theorem import Theorem
 from mathlearning.services.step_service import StepService
 from mathlearning.services.theorems_service import TheoremsService
@@ -6,75 +7,6 @@ from mathlearning.model.expression import Expression
 from typing import List
 
 logger = Logger.getLogger()
-
-
-class SolutionTreeNode:
-    def __init__(self, expression: Expression, theorem_applied: Theorem, branches: List):
-        self.expression = expression
-        self.theorem_applied = theorem_applied
-        self.branches = branches
-
-    def explain_solution(self, profundidad):
-        theorem = "None"
-        if self.theorem_applied is not None:
-            theorem = self.theorem_applied.name
-        print(profundidad, ". Expression: " + self.expression.to_string(), ". Teorema aplicado: " + theorem)
-
-        for branch in self.branches:
-            branch.explain_solution(profundidad + 1)
-
-    def apply_derivatives_to_leaves(self):
-        logger.info("Trying to  apply derivatives to leaves")
-        if len(self.branches) == 0:
-            branches = []
-            derivatives_solving_possibilities = self.expression.derivatives_solving_possibilities()
-            for possibility in derivatives_solving_possibilities:
-                if not possibility.is_equivalent_to(self.expression):
-                    branch = SolutionTreeNode(possibility, Theorem('resolver derivadas', None, None, []),[])
-                    branch.apply_derivatives_to_leaves()
-                    branches.append(branch)
-            self.branches = branches
-        else:
-            for branch in self.branches:
-                branch.apply_derivatives_to_leaves()
-
-    def to_latex(self):
-        self.expression = self.expression.to_latex()
-        for branch in self.branches:
-            branch.to_latex()
-
-    def to_json(self):
-        branches = []
-        for branch in self.branches:
-            branches.append(branch.to_json())
-
-        if self.theorem_applied is not None:
-            theorem = self.theorem_applied.to_json()
-        else:
-            theorem = {'name': 'none'}
-
-        return {
-            'expression': self.expression.to_latex_with_derivatives(),
-            'theorem_applied': theorem,
-            'branches': branches
-        }
-
-    def get_theorem_names(self):
-        names = self.get_theorem_names_rec(set())
-        names.discard('none')
-        return names
-
-    def get_theorem_names_rec(self, accum):
-        if self.theorem_applied is not None:
-            accum.add(self.theorem_applied.name)
-        children_names = set()
-        for branch in self.branches:
-            children_names |= branch.get_theorem_names_rec(set())
-        accum |= children_names
-        return accum
-
-    def __str__(self):
-        return self.expression.to_string() + str(self.theorem_applied)
 
 
 class ResultService:
@@ -115,3 +47,12 @@ class ResultService:
 
     def appy_derivatives(self, tree: SolutionTreeNode) -> SolutionTreeNode:
         tree.apply_derivatives_to_leaves()
+
+    def resolve(self,
+                problem_input: Expression,
+                solution_tree: SolutionTreeNode,
+                exercise_type: str,
+                step_list: List[Expression],
+                current_expression: Expression,
+                theorems: List[Theorem]):
+        return solution_tree.validate_new_expression(step_list[-1], current_expression)

@@ -60,10 +60,7 @@ derivative_multiplication_of_three_elem = {
 }
 
 
-
-
-class APITests(APITestCase):
-
+class SolutionTreeAPITest(APITestCase):
 
     def test_solution_tree(self):
         derivative_theorems = load_theorems()
@@ -125,6 +122,8 @@ class APITests(APITestCase):
 
         print('Test case: ' + case['name'] + '\n')
         print('Resulting theorems: ' + str(theorem_names) + '\n')
+        # f = open(case['name']+'.txt', "w+")
+        # f.write(json.loads(response.content))
         self.assertEquals(response.status_code, status.HTTP_200_OK)
         self.assertEquals(theorem_names, case["theorems"])
 

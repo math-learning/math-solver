@@ -4,7 +4,7 @@ from mathlearning.model.derivative_theorems import DerivativeTheorems
 from mathlearning.model.expression import Expression
 from test.model.theorems.test_utils import TestUtils
 
-theorem = DerivativeTheorems().derivative_of_a_multiplication
+theorem = DerivativeTheorems.derivative_of_a_multiplication()
 
 equivalent_solutions = TestUtils.equivalent_solutions
 

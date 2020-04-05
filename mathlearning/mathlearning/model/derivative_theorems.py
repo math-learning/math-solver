@@ -1,27 +1,38 @@
 from mathlearning.model.theorem import Theorem
 
+
 class DerivativeTheorems:
 
-    def __init__(self):
-        self.derivative_of_a_sum = Theorem(
+    @staticmethod
+    def derivative_of_a_sum():
+        return Theorem(
             "Derivada de la suma",
             "\\frac{d(f(x) + g(x))}{dx}",
             "\\frac{d(f(x))}{dx} + \\frac{d(g(x))}{dx}",
             {}
         )
-        self.derivative_of_a_division = Theorem(
+
+    @staticmethod
+    def derivative_of_a_division():
+        return Theorem(
             "derivada de la division",
             "\\frac{d(\\frac{f(x)}{g(x)})}{dx}",
             "\\frac{ \\frac{ d(f(x))}{dx} * g(x) - \\frac{d(g(x))}{dx} * f(x) }{g(x)^ 2}",
             {}
         )
-        self.derivative_of_a_multiplication = Theorem(
+
+    @staticmethod
+    def derivative_of_a_multiplication():
+        return Theorem(
             "derivada del producto",
             "\\frac{d(f(x) * g(x))}{dx}",
             "\\frac{d(f(x))}{dx} * g(x) + \\frac{d(g(x))}{dx} * f(x)",
             {}
         )
-        self.derivative_multiply_for_constant = Theorem(
+
+    @staticmethod
+    def derivative_multiply_for_constant():
+        return Theorem(
             "Derivada por un numero real",
             "\\frac{d( a * f(x))}{dx}",
             "a * \\frac{d(f(x))}{dx}",
@@ -32,3 +43,12 @@ class DerivativeTheorems:
                 ]
             }
         )
+
+    @staticmethod
+    def get_all():
+        return [
+            DerivativeTheorems.derivative_of_a_multiplication(),
+            DerivativeTheorems.derivative_multiply_for_constant(),
+            DerivativeTheorems.derivative_of_a_division(),
+            DerivativeTheorems.derivative_of_a_sum()
+        ]

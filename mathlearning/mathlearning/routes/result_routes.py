@@ -1,3 +1,4 @@
+from mathlearning.mappers.solution_tree_mapper import SolutionTreeMapper
 from mathlearning.mappers.theorem_mapper import TheoremMapper
 from mathlearning.mappers.validate_mapper import ValidateMapper, ValidateMapperException
 from mathlearning.services.result_service import ResultService
@@ -15,6 +16,7 @@ result_service = ResultService()
 logger = Logger.getLogger()
 validateMapper = ValidateMapper()
 theoremMapper = TheoremMapper()
+solutionTreeMapper = SolutionTreeMapper()
 
 
 @api_view(['POST'])
@@ -38,5 +40,27 @@ def solution_tree(request: Request):
         return Response(json.dumps(result), status=status.HTTP_200_OK, content_type='application/json')
 
 
+@api_view(['POST'])
+def resolve(request: Request):
+    if request.method == 'POST':
+        body = json.loads(request.body)
+
+        problem_input = Expression(body['problem_input'])
+        solution_tree = solutionTreeMapper.parse(body['math_tree'])
+        exercise_type = body['type']
+        step_list = list(map(lambda expression: Expression(expression), json.loads(body['step_list'])))
+        current_expression = Expression(body['current_expression'])
+        theorems = theoremMapper.theorems(body['theorems'])
+
+        result = result_service.resolve(problem_input, solution_tree, exercise_type, step_list, current_expression, theorems)
+        logger.info('Returning the following response: {}'.format(result))
+
+        response_data = {
+            'exerciseStatus': result
+        }
+        return Response(json.dumps(response_data), status=status.HTTP_200_OK, content_type='application/json')
+
+
 result_paths = [path('results/solve-derivative', solve_derivative)]
-result_paths = [path('results/solution-tree', solution_tree)]
+result_paths += [path('results/solution-tree', solution_tree)]
+result_paths += [path('resolve', resolve)]

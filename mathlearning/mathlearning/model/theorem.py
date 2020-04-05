@@ -16,7 +16,7 @@ class TheoremApplication:
 
 class Theorem:
     # left and right could be expressions or str
-    def __init__(self, name: str, left: Union['Expression', str], right: Union['Expression', str], conditions: List):
+    def __init__(self, name: str, left: Union['Expression', str], right: Union['Expression', str], conditions: dict):
         self.name = name
         if left is not None and right is not None:
             self.left = Expression(left)
