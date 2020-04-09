@@ -52,7 +52,7 @@ class SolutionTreeNode:
             theorem = {'name': 'none'}
 
         return {
-            'expression': self.expression.to_latex_with_derivatives(),
+            'expression': self.expression.to_string(),
             'theorem_applied': theorem,
             'branches': branches
         }
@@ -93,7 +93,7 @@ class SolutionTreeNode:
 
     def get_sub_tree_with_root(self, current_expression):
         if self.expression.is_equivalent_to(current_expression):
-            return self
+            return [self]
         if len(self.branches) == 0:
             return []
         accum = []
@@ -111,16 +111,28 @@ class SolutionTreeNode:
                 to_check.append(branch)
         return False
 
+    def is_pre_simplification_step(self):
+        if len(self.branches) == 1:
+            branch = self.branches[0]
+            if branch.theorem_applied.name == 'simplificacion' and len(branch.branches) == 0:
+                return True
+        return False
+
     def is_a_result(self, expression):
         to_check = [self]
+        leaves_and_pre_simplification = []
         while len(to_check) > 0:
             current = to_check.pop()
-            if len(current.branches) == 1:
-                if current.branches[0].theorem_applied.name == 'simplificacion':
-                    return True
+            if current.is_pre_simplification_step():
+                return leaves_and_pre_simplification.append(current)
             elif len(current.branches) > 0:
                 for branch in current.branches:
                     to_check.append(branch)
-            elif current.expression.is_equivalent_to(expression):
+            else:
+                leaves_and_pre_simplification.append(current)
+
+        for leave in leaves_and_pre_simplification:
+            if leave.expression.is_equivalent_to(expression):
                 return True
+
         return False

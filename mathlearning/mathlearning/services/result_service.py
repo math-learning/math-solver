@@ -22,7 +22,7 @@ class ResultService:
         logger.info("get solution tree for: " + expression.to_string())
         return self.solution_tree_for(expression, theorems, None)
 
-    def solution_tree_for(self, expression: Expression, theorems: List[Theorem], applied_theorem: Theorem   ):
+    def solution_tree_for(self, expression: Expression, theorems: List[Theorem], applied_theorem: Theorem):
         simplified_expression = expression.simplify()
         tree = SolutionTreeNode(expression, applied_theorem, self.subtrees(expression, theorems))
         if simplified_expression != expression:
@@ -31,7 +31,6 @@ class ResultService:
                                  Theorem('simplificacion', None, None, []),
                                  self.subtrees(simplified_expression, theorems))
             )
-        tree.apply_derivatives_to_leaves()
         return tree
 
     def subtrees(self, expression: Expression, theorems: List[Theorem]) -> List[SolutionTreeNode]:
@@ -43,10 +42,16 @@ class ResultService:
             for case in result:
                 if not expression.is_equivalent_to(case):
                     subtrees.append(SolutionTreeNode(case, theorem, self.subtrees(case, theorems)))
-        return subtrees
 
-    def appy_derivatives(self, tree: SolutionTreeNode) -> SolutionTreeNode:
-        tree.apply_derivatives_to_leaves()
+        derivatives_solving_possibilities = expression.derivatives_solving_possibilities()
+        for derivatives_solving_possibility in derivatives_solving_possibilities:
+            if not derivatives_solving_possibility.is_equivalent_to(expression):
+                branch = SolutionTreeNode(derivatives_solving_possibility,
+                                          Theorem('resolver derivadas', None, None, []),
+                                          self.subtrees(derivatives_solving_possibility))
+                subtrees.append(branch)
+
+        return subtrees
 
     def resolve(self,
                 problem_input: Expression,

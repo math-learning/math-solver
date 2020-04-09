@@ -19,12 +19,12 @@ def is_sympy_exp(formula):
 
 class Expression:
 
-    def __init__(self, formula: Union['Expression', str]):
+    def __init__(self, formula: Union['Expression', str], is_latex=True):
         self.commutative_group_transformer = CommutativeGroupTransformer()
         self.non_commutative_group_transformer = NonCommutativeGroupTransformer()
         self.commutative_list_size_transformer = ListSizeTransformer(CommutativeGroupTransformer())
         self.non_commutative_list_size_transformer = ListSizeTransformer(NonCommutativeGroupTransformer())
-        if isinstance(formula, str):
+        if isinstance(formula, str) and is_latex:
             print(formula)
             clean_formula = clean_latex(formula)
             print(clean_formula)
@@ -32,6 +32,8 @@ class Expression:
             self.sympy_expr = self.sympy_expr.subs(simplify(parse_expr("e")), parse_expr("exp(1)"))
         elif is_sympy_exp(formula):
             self.sympy_expr = formula
+        elif isinstance(formula, str):
+            self.sympy_expr = parse_expr(formula)
         else:
             raise (Exception("error while trying to create an Expression, unsuported formula type" + str(formula)))
 
@@ -121,7 +123,15 @@ class Expression:
         return latex_exp
 
     def is_equivalent_to(self, expression: 'Expression') -> bool:
-        return simplify(self.sympy_expr) == simplify(expression.sympy_expr)
+        self_simplifications = self.get_simplifications()
+        expression_simplifications = expression.get_simplifications()
+        are_equivalent = False
+        for self_simplification in self_simplifications:
+            for expression_simplification in expression_simplifications:
+                simplifications_match = self_simplification.sympy_expr == expression_simplification.sympy_expr
+                if simplifications_match:
+                    return True
+        return False
 
     def contains_user_defined_funct(self) -> bool:
         if self.is_user_defined_func():
@@ -216,11 +226,10 @@ class Expression:
     def get_simplifications(self) -> List['Expression']:
         simplifications = [
             Expression(sympy.expand(self.sympy_expr)),
-            Expression(sympy.factor(self.sympy_expr)),
             Expression(sympy.cancel(self.sympy_expr)),
-            Expression(sympy.simplify(self.sympy_expr))
+            Expression(sympy.simplify(self.sympy_expr)),
+            Expression(sympy.factor(self.sympy_expr))
         ]
-
         return simplifications
 
     def __eq__(self, other):

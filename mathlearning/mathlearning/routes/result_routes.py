@@ -56,7 +56,7 @@ def resolve(request: Request):
         logger.info('Returning the following response: {}'.format(result))
 
         response_data = {
-            'exerciseStatus': result
+            'exercise_status': result
         }
         return Response(json.dumps(response_data), status=status.HTTP_200_OK, content_type='application/json')
 

@@ -28,8 +28,14 @@ class Theorem:
         self.conditions = conditions
         self.analyzer = TemplateMatchAnalyzer()
 
-    def to_json(self) -> str:
-        return {'name': self.name, 'right': str(self.right), 'left': str(self.left)}
+    def to_json(self) -> dict:
+        left = ''
+        right = ''
+        if self.left is not None:
+            left = self.left.to_latex_with_derivatives()
+        if self.right is not None:
+            right = self.right.to_latex_with_derivatives()
+        return {'name': self.name, 'right': right, 'left': left}
 
     # Returns the application possibilities (could be more than 1)
     def apply_reverse_to(self, expression: Expression) -> List[Expression]:
@@ -50,6 +56,8 @@ class Theorem:
     def _apply_to(self, expression: Expression, from_side: Expression, to_side: Expression) -> List[Expression]:
         application_possibilities = []
 
+        if not expression.operators_and_levels_match(from_side):
+            return []
         template = from_side
 
         # Apply to general structure
