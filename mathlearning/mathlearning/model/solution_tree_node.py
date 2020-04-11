@@ -5,7 +5,7 @@ from typing import List
 
 logger = Logger.getLogger()
 
-
+# TODO: change it to a graph to delete repetitions
 class SolutionTreeNode:
     def __init__(self, expression: Expression, theorem_applied: Theorem, branches: List):
         self.expression = expression
@@ -103,12 +103,15 @@ class SolutionTreeNode:
 
     def contains(self, expression):
         to_check = [self]
+        already_checked = set()
         while len(to_check) > 0:
             current = to_check.pop()
-            if current.expression.is_equivalent_to(expression):
-                return True
-            for branch in current.branches:
-                to_check.append(branch)
+            if current.expression.to_string() not in already_checked:
+                if current.expression.is_equivalent_to(expression):
+                    return True
+                for branch in current.branches:
+                    to_check.append(branch)
+            already_checked.add(current.expression.to_string())
         return False
 
     def is_pre_simplification_step(self):
@@ -136,3 +139,12 @@ class SolutionTreeNode:
                 return True
 
         return False
+
+    def get_amount_of_nodes(self):
+        accum = [self]
+        count = 0
+        while len(accum) > 0:
+            count += 1
+            current = accum.pop()
+            accum += current.branches
+        return count

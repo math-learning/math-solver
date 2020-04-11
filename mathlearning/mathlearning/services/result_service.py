@@ -23,21 +23,20 @@ class ResultService:
         return self.solution_tree_for(expression, theorems, None)
 
     def solution_tree_for(self, expression: Expression, theorems: List[Theorem], applied_theorem: Theorem):
-        simplified_expression = expression.simplify()
+        # simplified_expression = expression.simplify()
         tree = SolutionTreeNode(expression, applied_theorem, self.subtrees(expression, theorems))
-        if simplified_expression != expression:
-            tree.branches.append(
-                SolutionTreeNode(simplified_expression,
-                                 Theorem('simplificacion', None, None, []),
-                                 self.subtrees(simplified_expression, theorems))
-            )
+        # if simplified_expression.sympy_expr != expression.sympy_expr:
+        #     tree.branches.append(
+        #         SolutionTreeNode(simplified_expression,
+        #                          Theorem('simplificacion', None, None, []),
+        #                          self.subtrees(simplified_expression, theorems))
+        #     )
         return tree
 
     def subtrees(self, expression: Expression, theorems: List[Theorem]) -> List[SolutionTreeNode]:
-        logger.info('subtrees of ' + expression.to_string())
-        theorems_that_apply = self.theorems_service.get_theorems_that_can_be_applied_to(expression, theorems)
+        possible_theorems = self.theorems_service.possible_theorems_for(expression, theorems)
         subtrees = []
-        for theorem in theorems_that_apply:
+        for theorem in possible_theorems:
             result = theorem.apply_to(expression)
             for case in result:
                 if not expression.is_equivalent_to(case):
@@ -48,7 +47,7 @@ class ResultService:
             if not derivatives_solving_possibility.is_equivalent_to(expression):
                 branch = SolutionTreeNode(derivatives_solving_possibility,
                                           Theorem('resolver derivadas', None, None, []),
-                                          self.subtrees(derivatives_solving_possibility))
+                                          self.subtrees(derivatives_solving_possibility, theorems))
                 subtrees.append(branch)
 
         return subtrees

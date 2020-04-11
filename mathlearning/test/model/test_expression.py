@@ -1,4 +1,7 @@
 import unittest
+
+from sympy import Add, Derivative, Pow, Mul, cos
+
 from mathlearning.model.expression import Expression
 
 
@@ -50,3 +53,58 @@ class TestExpression(unittest.TestCase):
         self.assertTrue(Expression("\\frac{d(x)}{dx}") in children)
         self.assertTrue(Expression("x^3") in children)
 
+    def test_get_operators_by_level(self):
+        exp = Expression("x + Derivative(x + x**2, x)", is_latex=False)
+        operators = exp.get_operators_by_level()
+        expected = {
+            0: [Add],
+            1: [Derivative],
+            2: [Add],
+            3: [Pow]
+        }
+        self.assertEquals(expected, operators)
+
+    def test_get_operators_by_level_complex(self):
+        exp = Expression("cos(x+Derivative(e**x,x))  + Derivative(x + x**(2*x+3), x)", is_latex=False)
+        operators = exp.get_operators_by_level()
+        expected = {
+            0: [Add],
+            1: [cos, Derivative],
+            2: [Add, Add],
+            3: [Derivative, Pow],
+            4: [Pow, Add],
+            5: [Mul]
+        }
+        self.assertEquals(expected, operators)
+
+    def test_get_operators_by_level_one_level(self):
+        exp = Expression("x + 2", is_latex=False)
+        operators = exp.get_operators_by_level()
+        expected = {
+            0: [Add]
+        }
+        self.assertEquals(expected, operators)
+
+
+    def test_all_operators_and_levels_match(self):
+        expression = Expression("x + Derivative(x +  x**2, x)", is_latex=False)
+        sub_expression = Expression("Derivative(x +  x**2, x)", is_latex=False)
+        self.assertTrue(expression.operators_and_levels_match(sub_expression))
+
+    def test_all_operators_and_levels_match_long_expression(self):
+        expression = Expression("Derivative(x +  x**2, x) + Derivative(x +  x**2, x) + Derivative(x +  x**2, x)", is_latex=False)
+        sub_expression = Expression("Derivative(x +  x**2, x)", is_latex=False)
+        self.assertTrue(expression.operators_and_levels_match(sub_expression))
+
+    def test_all_operators_and_levels_match_non_contained(self):
+        expression = Expression("x + Derivative(x +  x**2, x)", is_latex=False)
+        sub_expression = Expression("Derivative(x**2)", is_latex=False)
+        self.assertFalse(expression.operators_and_levels_match(sub_expression))
+
+    def test_get_depth_with_user_defined_func(self):
+        expression = Expression("Derivative(f(x) +  g(x), x)", is_latex=False)
+        self.assertEquals(3, expression.get_depth())
+
+    def test_get_simplifications(self):
+        exp  = Expression('x**2*cos(x) + 2*x*sin(x) + x*Derivative(exp(x), x) + exp(x)', is_latex=False)
+        exp.get_simplifications()

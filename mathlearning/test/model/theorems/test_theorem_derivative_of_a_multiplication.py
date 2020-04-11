@@ -39,4 +39,4 @@ class TestTheoremDerivativeOfAMultiplication(unittest.TestCase):
     def test_should_apply(self):
         exp = Expression("\\frac{d\\left(e^x.\\ x\\right)}{dx}\\ +\\ \\frac{d\\left(sen\\left(x\\right)\\cdot x^2\\right)}{dx}")
         result = theorem.apply_to(exp)
-        self.assertEqual(1, len(result))
+        self.assertEqual(2, len(result))

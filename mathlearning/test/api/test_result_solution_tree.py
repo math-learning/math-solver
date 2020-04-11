@@ -41,7 +41,7 @@ sum_of_two_derivatives = {
 derivative_sen_divided_by_cos = {
     "name": "sen / cos",
     "problemInput": "\\frac{d(\\frac{sen(x)}{\\cos(x)})} {dx}",
-    "theorems": {D_DIVISION, SIMPLIFICACION, D_PRODUCTO, RESOLVER_DERIV},
+    "theorems": {D_DIVISION, D_PRODUCTO, SIMPLIFICACION, RESOLVER_DERIV},
     "result": "\\frac{1}{\\cos^2(x)}",
 }
 

@@ -49,29 +49,30 @@ class APITests(APITestCase):
         is_valid = json.loads(response.content)
         self.assertTrue(is_valid)
 
-    def test_solve_exercise(self):
-        exercises = load_exercises('test/jsons/solved_exercises.json')
-        theorems = load_theorems("test/jsons/theorems.json")
-
-        for solved_exercise in exercises:
-            print("Testing " + solved_exercise.name)
-            steps = solved_exercise.steps
-            for i in range(0, len(steps) - 1):
-                old_expression = steps[i]
-                new_expression = steps[i + 1]
-                self.validate_and_assert(api_client=self.client,
-                                         theorems=theorems,
-                                         new_expression=new_expression,
-                                         old_expression=old_expression)
-
-            print("Asserting result")
-            data = {
-                'expression_one': steps[-1],
-                'expression_two': solved_exercise.result
-            }
-            response = self.client.post(path='/compare', data=data, format='json')
-            self.assertEquals(response.status_code, status.HTTP_200_OK)
-            self.assertEquals(response.data, 'true')
+    # TODO: rewrite test
+    # def test_solve_exercise(self):
+    #     exercises = load_exercises('test/jsons/solved_exercises.json')
+    #     theorems = load_theorems("test/jsons/theorems.json")
+    #
+    #     for solved_exercise in exercises:
+    #         print("Testing " + solved_exercise.name)
+    #         steps = solved_exercise.steps
+    #         for i in range(0, len(steps) - 1):
+    #             old_expression = steps[i]
+    #             new_expression = steps[i + 1]
+    #             self.validate_and_assert(api_client=self.client,
+    #                                      theorems=theorems,
+    #                                      new_expression=new_expression,
+    #                                      old_expression=old_expression)
+    #
+    #         print("Asserting result")
+    #         data = {
+    #             'expression_one': steps[-1],
+    #             'expression_two': solved_exercise.result
+    #         }
+    #         response = self.client.post(path='/compare', data=data, format='json')
+    #         self.assertEquals(response.status_code, status.HTTP_200_OK)
+    #         self.assertEquals(response.data, 'true')
 
 
     def test_solution_tree(self):
