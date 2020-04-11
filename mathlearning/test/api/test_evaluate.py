@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 success_cases = [{
-  'problem_input': 'x^2',
+  'problem_input': 'x\ ^\ 2',
   'derivative': '2 x'
 }, {
   'problem_input': 'x^3',
