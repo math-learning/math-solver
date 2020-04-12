@@ -1,5 +1,6 @@
 from mathlearning.mappers.validate_mapper import ValidateMapper, ValidateMapperException
 from mathlearning.services.step_service import StepService
+from mathlearning.services.evaluate_service import EvaluateService
 from mathlearning.utils.logger import Logger
 from mathlearning.utils.request_decorators import log_request
 
@@ -9,8 +10,10 @@ from django.urls import path
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from django.core.exceptions import SuspiciousOperation
 import json
 
+evaluate_service = EvaluateService()
 step_service = StepService()
 logger = Logger.getLogger()
 validateMapper = ValidateMapper()
@@ -39,8 +42,25 @@ def validate_not_in_history(request: Request):
         logger.info('Returning the following response: {}'.format(result))
         return Response(bool_to_str(result), status=status.HTTP_200_OK)
 
+@api_view(['POST'])
+def evaluate(request: Request):
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        (problem_input, problem_type) = validateMapper.parse_evaluate(body)
+
+        try:
+            result = evaluate_service.evaluate_problem_input(problem_input, problem_type)
+            data = { 'result': result }
+
+            logger.info('Returning the following response: {}'.format(result))
+            return Response(data, status=status.HTTP_200_OK)
+
+        except SuspiciousOperation as e:
+            data = { 'message': str(e) }
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 validation_paths = [
     path('validations/not-in-history', validate_not_in_history),
-    path('validations/new-step', validate_new_step)
+    path('validations/new-step', validate_new_step),
+    path('validations/evaluate', evaluate),
 ]
