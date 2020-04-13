@@ -21,21 +21,6 @@ class SolutionTreeNode:
         for branch in self.branches:
             branch.explain_solution(profundidad + 1)
 
-    def apply_derivatives_to_leaves(self):
-        logger.info("Trying to  apply derivatives to leaves")
-        if len(self.branches) == 0:
-            branches = []
-            derivatives_solving_possibilities = self.expression.derivatives_solving_possibilities()
-            for possibility in derivatives_solving_possibilities:
-                if not possibility.is_equivalent_to(self.expression):
-                    branch = SolutionTreeNode(possibility, Theorem('resolver derivadas', None, None, []),[])
-                    branch.apply_derivatives_to_leaves()
-                    branches.append(branch)
-            self.branches = branches
-        else:
-            for branch in self.branches:
-                branch.apply_derivatives_to_leaves()
-
     def to_latex(self):
         self.expression = self.expression.to_latex()
         for branch in self.branches:
@@ -123,22 +108,17 @@ class SolutionTreeNode:
 
     def is_a_result(self, expression):
         to_check = [self]
-        leaves_and_pre_simplification = []
+        is_contained = False
         while len(to_check) > 0:
             current = to_check.pop()
-            if current.is_pre_simplification_step():
-                return leaves_and_pre_simplification.append(current)
-            elif len(current.branches) > 0:
-                for branch in current.branches:
-                    to_check.append(branch)
-            else:
-                leaves_and_pre_simplification.append(current)
+            if current.expression.is_equivalent_to(expression):
+                is_contained = True
+                if not len(current.branches) == 0 and not current.is_pre_simplification_step():
+                    return False
+            for branch in current.branches:
+                to_check.append(branch)
 
-        for leave in leaves_and_pre_simplification:
-            if leave.expression.is_equivalent_to(expression):
-                return True
-
-        return False
+        return is_contained
 
     def get_amount_of_nodes(self):
         accum = [self]

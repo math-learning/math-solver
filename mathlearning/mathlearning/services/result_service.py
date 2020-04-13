@@ -4,7 +4,7 @@ from mathlearning.services.step_service import StepService
 from mathlearning.services.theorems_service import TheoremsService
 from mathlearning.utils.logger import Logger
 from mathlearning.model.expression import Expression
-from typing import List
+from typing import List, Tuple
 
 logger = Logger.getLogger()
 
@@ -23,34 +23,63 @@ class ResultService:
         return self.solution_tree_for(expression, theorems, None)
 
     def solution_tree_for(self, expression: Expression, theorems: List[Theorem], applied_theorem: Theorem):
-        # simplified_expression = expression.simplify()
-        tree = SolutionTreeNode(expression, applied_theorem, self.subtrees(expression, theorems))
-        # if simplified_expression.sympy_expr != expression.sympy_expr:
-        #     tree.branches.append(
-        #         SolutionTreeNode(simplified_expression,
-        #                          Theorem('simplificacion', None, None, []),
-        #                          self.subtrees(simplified_expression, theorems))
-        #     )
+
+        already_seen = set()
+        subtrees = self.subtrees(expression, theorems, already_seen)
+        already_seen |= subtrees[1]
+        tree = SolutionTreeNode(expression, applied_theorem, subtrees[0])
+
+        # TODO: check if this si necessary
+        simplified_expression = expression.simplify()
+        if simplified_expression.sympy_expr != expression.sympy_expr:
+            if simplified_expression.to_string() in already_seen:
+                tree.branches.append(
+                    SolutionTreeNode(simplified_expression,
+                                     Theorem('simplificacion', None, None, []),
+                                     [])
+                )
+            else:
+                tree.branches.append(
+                    SolutionTreeNode(simplified_expression,
+                                     Theorem('simplificacion', None, None, []),
+                                     self.subtrees(simplified_expression, theorems, already_seen)[0])
+                )
         return tree
 
-    def subtrees(self, expression: Expression, theorems: List[Theorem]) -> List[SolutionTreeNode]:
+    # Returns the subtrees of a specific expression, if a expression is already in the tree the subtree is not going
+    # to be added again.
+    def subtrees(self, expression: Expression, theorems: List[Theorem], already_seen: set) -> Tuple[List[SolutionTreeNode], set]:
         possible_theorems = self.theorems_service.possible_theorems_for(expression, theorems)
         subtrees = []
+        already_seen.add(expression.to_string())
         for theorem in possible_theorems:
             result = theorem.apply_to(expression)
             for case in result:
                 if not expression.is_equivalent_to(case):
-                    subtrees.append(SolutionTreeNode(case, theorem, self.subtrees(case, theorems)))
+                    if case.to_string() in already_seen:
+                        subtrees.append(SolutionTreeNode(case, theorem, []))
+                    else:
+                        subtrees_result = self.subtrees(case, theorems, already_seen)
+                        subtrees.append(SolutionTreeNode(case, theorem, subtrees_result[0]))
+                        already_seen |= subtrees_result[1]
 
         derivatives_solving_possibilities = expression.derivatives_solving_possibilities()
         for derivatives_solving_possibility in derivatives_solving_possibilities:
             if not derivatives_solving_possibility.is_equivalent_to(expression):
-                branch = SolutionTreeNode(derivatives_solving_possibility,
-                                          Theorem('resolver derivadas', None, None, []),
-                                          self.subtrees(derivatives_solving_possibility, theorems))
+                if derivatives_solving_possibility.to_string() in already_seen:
+                    branch = SolutionTreeNode(derivatives_solving_possibility,
+                                              Theorem('resolver derivadas', None, None, []),
+                                              [])
+                else:
+                    subtrees_result = self.subtrees(derivatives_solving_possibility, theorems, already_seen)
+                    branch = SolutionTreeNode(derivatives_solving_possibility,
+                                              Theorem('resolver derivadas', None, None, []),
+                                              subtrees_result[0])
+                    already_seen |= subtrees_result[1]
+
                 subtrees.append(branch)
 
-        return subtrees
+        return subtrees, already_seen
 
     def resolve(self,
                 problem_input: Expression,

@@ -27,9 +27,7 @@ class Expression:
         self.commutative_list_size_transformer = ListSizeTransformer(CommutativeGroupTransformer())
         self.non_commutative_list_size_transformer = ListSizeTransformer(NonCommutativeGroupTransformer())
         if isinstance(formula, str) and is_latex:
-            print(formula)
             clean_formula = clean_latex(formula)
-            print(clean_formula)
             self.sympy_expr = parse_latex(clean_formula)
             self.sympy_expr = self.sympy_expr.subs(simplify(parse_expr("e")), parse_expr("exp(1)"))
         elif is_sympy_exp(formula):
