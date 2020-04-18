@@ -17,6 +17,6 @@ class SolutionTreeMapper:
         branches = []
         for branch in node_dictionary['branches']:
             branches.append(SolutionTreeMapper.parse_node(branch))
-        expression = Expression(node_dictionary['expression'])
+        expression = Expression(node_dictionary['expression'], is_latex=False)
         theorem_applied = TheoremMapper.theorem(node_dictionary['theorem_applied'])
         return SolutionTreeNode(expression, theorem_applied, branches)

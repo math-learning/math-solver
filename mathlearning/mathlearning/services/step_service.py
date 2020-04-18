@@ -22,7 +22,7 @@ class StepService:
         logger.info("Starting transition validation")
 
         logger.info("Checking if a theorem can be applied")
-        theorems_that_apply = self.theorems_service.get_theorems_that_can_be_applied_to(old_expression, theorems)
+        theorems_that_apply = self.theorems_service.possible_theorems_for(old_expression, theorems)
 
         logger.info("THEOREMS THAT APPLY:")
         logger.info(theorems_that_apply)

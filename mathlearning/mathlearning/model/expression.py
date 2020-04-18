@@ -12,26 +12,28 @@ from mathlearning.utils.list.non_commutative_group_transformer import NonCommuta
 from mathlearning.utils.latex_utils import clean_latex
 from typing import Union, List
 
+from mathlearning.utils.sympy_utils import SympyUtils
+
+sympy_classes = tuple(x[1] for x in inspect.getmembers(sympy, inspect.isclass))
 
 def is_sympy_exp(formula):
-    sympy_classes = tuple(x[1] for x in inspect.getmembers(sympy, inspect.isclass))
     return isinstance(formula, sympy_classes)
 
 class Expression:
 
-    def __init__(self, formula: Union['Expression', str]):
+    def __init__(self, formula: Union['Expression', str], is_latex=True):
         self.commutative_group_transformer = CommutativeGroupTransformer()
         self.non_commutative_group_transformer = NonCommutativeGroupTransformer()
         self.commutative_list_size_transformer = ListSizeTransformer(CommutativeGroupTransformer())
         self.non_commutative_list_size_transformer = ListSizeTransformer(NonCommutativeGroupTransformer())
-        if isinstance(formula, str):
-            print(formula)
+        if isinstance(formula, str) and is_latex:
             clean_formula = clean_latex(formula)
-            print(clean_formula)
             self.sympy_expr = parse_latex(clean_formula)
             self.sympy_expr = self.sympy_expr.subs(simplify(parse_expr("e")), parse_expr("exp(1)"))
         elif is_sympy_exp(formula):
             self.sympy_expr = formula
+        elif isinstance(formula, str):
+            self.sympy_expr = parse_expr(formula)
         else:
             raise (Exception("error while trying to create an Expression, unsuported formula type" + str(formula)))
 
@@ -121,7 +123,17 @@ class Expression:
         return latex_exp
 
     def is_equivalent_to(self, expression: 'Expression') -> bool:
-        return simplify(self.sympy_expr) == simplify(expression.sympy_expr)
+        if simplify(self.sympy_expr) == simplify(expression.sympy_expr) or \
+                self == expression:
+            return True
+        self_simplifications = self.get_simplifications()
+        expression_simplifications = expression.get_simplifications()
+        for self_simplification in self_simplifications:
+            for expression_simplification in expression_simplifications:
+                simplifications_match = self_simplification.sympy_expr == expression_simplification.sympy_expr
+                if simplifications_match:
+                    return True
+        return False
 
     def contains_user_defined_funct(self) -> bool:
         if self.is_user_defined_func():
@@ -167,7 +179,7 @@ class Expression:
         return children
 
     # todo remove side effect
-    def replace(self, to_replace, replacement):
+    def replace(self, to_replace: 'Expression', replacement: 'Expression'):
         to_replace_sympy = to_replace.sympy_expr
         replacement_sympy = simplify(replacement.sympy_expr)
         new_sympy_expr = self.sympy_expr.subs({to_replace_sympy: replacement_sympy})
@@ -216,21 +228,128 @@ class Expression:
     def get_simplifications(self) -> List['Expression']:
         simplifications = [
             Expression(sympy.expand(self.sympy_expr)),
-            Expression(sympy.factor(self.sympy_expr)),
             Expression(sympy.cancel(self.sympy_expr)),
-            Expression(sympy.simplify(self.sympy_expr))
+            Expression(sympy.simplify(self.sympy_expr)),
+            Expression(sympy.factor(self.sympy_expr))
         ]
-
         return simplifications
 
     def __eq__(self, other):
         """Overrides the default implementation"""
         if isinstance(other, Expression):
-            return self.sympy_expr == other.sympy_expr
+            return self.to_string() == other.to_string()
         return False
 
     def __str__(self):
         return str(self.sympy_expr)
 
-    def operators_and_levels_match(self, expression: 'Expression'):
-        return isinstance(self.sympy_expr.func, UndefinedFunction) and not self.is_derivative()
+    # TODO: refactor
+    def get_operators_by_level(self):
+        operators = {}
+        to_check = [{
+            'expression': self,
+            'level': 0
+        }]
+        while len(to_check) > 0:
+            current = to_check.pop()
+            current_level = current['level']
+            current_expression =  current['expression']
+            operator = current['expression'].sympy_expr.func
+
+            if not isinstance(operator, UndefinedFunction) and not current_expression.is_constant() \
+                    and not operator.is_symbol:
+
+                if current_level not in operators:
+                    operators[current_level] = []
+
+                if SympyUtils.is_division(current_expression.sympy_expr):
+                    operators[current_level].append('Division')
+
+                operators[current_level].append(operator)
+                to_check += list(
+                    map(
+                        lambda expression: {'expression': expression, 'level': current_level + 1},
+                        current['expression'].get_children()
+                    )
+                )
+
+        return operators
+
+    # TODO: refactor
+    # Compares if all the operators or a sub_expression are contained and in the right level order
+    def operators_and_levels_match(self, sub_expression: 'Expression'):
+        self_operators = self.get_operators_by_level()
+        sub_expression_operators = sub_expression.get_operators_by_level()
+
+        if len(sub_expression_operators) == 0:
+            return True
+
+        # expression  x + x**(2+x) -- 0: [Add] ; 1: [Pow] ; 2: [Add]
+        # sub_expression  x**(2+x) -- 0: [Pow] ; 1: [Add]
+        # self_level is used  to find the starting point where the first Pow of sub_expression is.
+        # in this example the only possible values are 0 and 1  since if we select 2 as the starting level
+        # we have to match the 1: [Add] sub_expression level with an non existent level.
+        for self_level in range(0, len(self_operators) - len(sub_expression_operators) + 1):
+            first_sub_expression_operator = sub_expression_operators[0][0]
+            if first_sub_expression_operator in self_operators[self_level]:
+                all_match = True
+                # check if the rest of the levels match
+                for self_level_to_check in range(self_level, self_level + len(sub_expression_operators)):
+                    sub_level_to_check = self_level_to_check - self_level
+                    sub_level_operators = sub_expression_operators[sub_level_to_check]
+                    for sub_level_operator in sub_level_operators:
+                        if sub_level_operator not in self_operators[self_level_to_check]:
+                            all_match = False
+                if all_match:
+                    return True
+        return False
+
+    # TODO: refactor
+    def get_subtrees_with_root_func_by_level(self, expression: 'Expression'):
+        subtrees = []
+        func = expression.sympy_expr.func
+        to_check = [{
+            'expression': self,
+            'level': 0
+        }]
+        while len(to_check) > 0:
+            current = to_check.pop()
+            current_level = current['level']
+            if current['expression'].sympy_expr.func == func:
+                subtrees.append(current)
+            to_check += list(
+                map(
+                    lambda expression: {'expression': expression, 'level': current_level + 1},
+                    current['expression'].get_children()
+                )
+            )
+        return subtrees
+
+    # TODO: refactor
+    def get_depth(self):
+        if self is None:
+            return 0
+
+        to_check = [{
+            'expression': self,
+            'depth': 1
+        }]
+
+        max = 0
+        while len(to_check) > 0:
+            current = to_check.pop()
+            if current['depth'] > max:
+                max = current['depth']
+            if not current['expression'].is_user_defined_func():
+                to_check += list(
+                    map(
+                        lambda expression: {'expression': expression, 'depth': current['depth'] + 1},
+                        current['expression'].get_children()
+                    )
+                )
+        return max
+
+    def can_group_children(self):
+        if self.sympy_expr.func in [sympy.Add, sympy.Mul]:
+            return True
+        return False

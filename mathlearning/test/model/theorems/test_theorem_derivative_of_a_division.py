@@ -24,4 +24,9 @@ class TestTheorem(unittest.TestCase):
         self.assertEquals(len(result), 1)
         self.assertTrue(equivalent_solutions(result, expected))
 
-
+    def test_division_that_can_be_simplified_should_apply(self):
+        exp = Expression('Derivative(cos(x)/sin(x),x)', is_latex=False)
+        expected = [Expression('(- cos(x) * Derivative(sin(x), x)+ sin(x) * Derivative(cos(x), x) )/ (sin(x))**2', is_latex=False)]
+        result = theorem.apply_to(exp)
+        self.assertEquals(len(result), 1)
+        self.assertTrue(equivalent_solutions(result, expected))

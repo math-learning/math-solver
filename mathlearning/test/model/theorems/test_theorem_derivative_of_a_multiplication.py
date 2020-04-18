@@ -35,3 +35,8 @@ class TestTheoremDerivativeOfAMultiplication(unittest.TestCase):
         exp = Expression('x^2 * \\sin(x) * \\frac{d(\\cos(x))}{dx} + \\cos(x) * \\frac{d(x^2 * \\sin(x))}{dx}')
         result = theorem.apply_to(exp)
         self.assertEquals(len(result), 1)
+
+    def test_should_apply(self):
+        exp = Expression("\\frac{d\\left(e^x.\\ x\\right)}{dx}\\ +\\ \\frac{d\\left(sen\\left(x\\right)\\cdot x^2\\right)}{dx}")
+        result = theorem.apply_to(exp)
+        self.assertEqual(2, len(result))

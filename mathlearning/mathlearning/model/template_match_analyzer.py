@@ -76,16 +76,12 @@ class TemplateMatchAnalyzer:
                     analysis: MatchAnalysisReport
                     ) -> MatchAnalysisReport:
 
-        logger.info("Analizing " + to_string(template, expression))
-
         if not analysis.expression_match_template:
             return analysis
 
         # Handle two simpy expressions
         if not template.contains_user_defined_funct() and not expression.contains_user_defined_funct():
             # TODO: REFACTOR
-            logger.info("Comparing two sympy expressions")
-
             conditions = template_conditions.get(template.to_string())
             if conditions != None and "IS_CONSTANT" in conditions:
                 match = expression.is_constant()
@@ -95,33 +91,23 @@ class TemplateMatchAnalyzer:
             analysis = self.build_match_analysis_report(match, analysis, template, template_conditions, expression)
 
         elif template.is_user_defined_func():
-            logger.info("Template is user defined function")
             match = template.free_symbols_match(expression)
             analysis = self.build_match_analysis_report(match, analysis, template, template_conditions, expression)
 
         elif not template.compare_func(expression):
-            logger.info("Functions dont match")
             analysis = self.build_match_analysis_report(False, analysis, template, template_conditions, expression)
 
         # Handle non leaves with at least one user defined function
         elif template.children_amount() == expression.children_amount():
-            logger.info("Analyzing children with equal sizes")
             analysis = self.analyze_exp_with_user_def_func_eq_sizes(template, template_conditions, expression, analysis)
 
         # Handle different size children. for example f(x)  = x + x^2
         else:
-            logger.info("Analyzing children with different sizes")
             analysis = self.analyze_exp_with_user_def_func_diff_sizes(template, template_conditions, expression,
                                                                       analysis)
 
         return analysis
 
-    def meets_the_conditions(self,
-                             equalities: List[Equality],
-                             template_conditions: List
-                             ) -> bool:
-        # TODO
-        return True
 
     def build_match_analysis_report(self,
                                     match: bool,
@@ -137,7 +123,6 @@ class TemplateMatchAnalyzer:
             new_equality = Equality(template, expression)
             equalities = current_equalities[:]
             equalities.append(new_equality)
-            logger.info("Adding: " + new_equality.to_string())
 
         return MatchAnalysisReport(analysis.template, analysis.expression, match, equalities)
 

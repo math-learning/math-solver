@@ -5,7 +5,7 @@ from typing import List
 
 logger = Logger.getLogger()
 
-
+# TODO: change it to a graph to delete repetitions
 class SolutionTreeNode:
     def __init__(self, expression: Expression, theorem_applied: Theorem, branches: List):
         self.expression = expression
@@ -20,21 +20,6 @@ class SolutionTreeNode:
 
         for branch in self.branches:
             branch.explain_solution(profundidad + 1)
-
-    def apply_derivatives_to_leaves(self):
-        logger.info("Trying to  apply derivatives to leaves")
-        if len(self.branches) == 0:
-            branches = []
-            derivatives_solving_possibilities = self.expression.derivatives_solving_possibilities()
-            for possibility in derivatives_solving_possibilities:
-                if not possibility.is_equivalent_to(self.expression):
-                    branch = SolutionTreeNode(possibility, Theorem('resolver derivadas', None, None, []),[])
-                    branch.apply_derivatives_to_leaves()
-                    branches.append(branch)
-            self.branches = branches
-        else:
-            for branch in self.branches:
-                branch.apply_derivatives_to_leaves()
 
     def to_latex(self):
         self.expression = self.expression.to_latex()
@@ -52,7 +37,7 @@ class SolutionTreeNode:
             theorem = {'name': 'none'}
 
         return {
-            'expression': self.expression.to_latex_with_derivatives(),
+            'expression': self.expression.to_string(),
             'theorem_applied': theorem,
             'branches': branches
         }
@@ -74,14 +59,14 @@ class SolutionTreeNode:
     def __str__(self):
         return self.expression.to_string() + str(self.theorem_applied)
 
-    def validate_new_expression(self, current_expression, new_expression):
-        subtree_possibilities = self.get_sub_tree_with_root(current_expression)
-        for subtree in subtree_possibilities:
-            if subtree.contains(new_expression):
-                if subtree.is_a_result(new_expression):
-                    return 'resolved'
-                return 'valid'
-        return 'invalid'
+    def validate_new_expression(self, new_expression):
+        if self.is_a_result(new_expression):
+            return 'resolved'
+
+        if not self.contains(new_expression):
+            return 'invalid'
+
+        return 'valid'
 
     def get_hints(self, current_expression):
         possible_subrees = self.get_sub_tree_with_root(current_expression)
@@ -93,7 +78,7 @@ class SolutionTreeNode:
 
     def get_sub_tree_with_root(self, current_expression):
         if self.expression.is_equivalent_to(current_expression):
-            return self
+            return [self]
         if len(self.branches) == 0:
             return []
         accum = []
@@ -103,24 +88,43 @@ class SolutionTreeNode:
 
     def contains(self, expression):
         to_check = [self]
+        already_checked = set()
         while len(to_check) > 0:
             current = to_check.pop()
-            if current.expression.is_equivalent_to(expression):
+            if current.expression.to_string() not in already_checked:
+                if current.expression.is_equivalent_to(expression):
+                    return True
+                for branch in current.branches:
+                    to_check.append(branch)
+            already_checked.add(current.expression.to_string())
+        return False
+
+    def is_pre_simplification_step(self):
+        if len(self.branches) == 1:
+            branch = self.branches[0]
+            if branch.theorem_applied.name == 'simplificacion' and len(branch.branches) == 0:
                 return True
-            for branch in current.branches:
-                to_check.append(branch)
         return False
 
     def is_a_result(self, expression):
         to_check = [self]
+        is_contained = False
         while len(to_check) > 0:
             current = to_check.pop()
-            if len(current.branches) == 1:
-                if current.branches[0].theorem_applied.name == 'simplificacion':
-                    return True
-            elif len(current.branches) > 0:
-                for branch in current.branches:
-                    to_check.append(branch)
-            elif current.expression.is_equivalent_to(expression):
-                return True
-        return False
+            if current.expression.is_equivalent_to(expression):
+                is_contained = True
+                if not len(current.branches) == 0 and not current.is_pre_simplification_step():
+                    return False
+            for branch in current.branches:
+                to_check.append(branch)
+
+        return is_contained
+
+    def get_amount_of_nodes(self):
+        accum = [self]
+        count = 0
+        while len(accum) > 0:
+            count += 1
+            current = accum.pop()
+            accum += current.branches
+        return count
