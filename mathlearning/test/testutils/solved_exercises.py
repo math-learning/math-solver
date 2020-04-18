@@ -14,7 +14,7 @@ class SolvedExercise:
     def get_results_as_expressions(self):
         return list(
             map(
-                lambda expression_string: Expression(expression_string, is_latex= False),
+                lambda expression_string: Expression(expression_string, is_latex=False),
                 self.steps_non_latex
             )
         )
@@ -47,7 +47,7 @@ class SolvedExercises:
             "x*exp(x) + exp(x)*Derivative(x, x) + Derivative(x**2*sin(x), x)",
             "x*exp(x) + exp(x) + Derivative(x**2*sin(x), x)",
             "x**2*Derivative(sin(x), x) + x*exp(x) + exp(x) + sin(x)*Derivative(x**2, x)",
-            "x**2*Derivative(sin(x), x) + x*exp(x) + x*(2*sin(x)) + exp(x)"
+            "x**2*Derivative(sin(x), x) + x*exp(x) + x*(2*sin(x)) + exp(x)",
             "x**2*cos(x) + x*(2*sin(x)) + (x + 1)*exp(x)"
         ]
 
