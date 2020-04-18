@@ -88,4 +88,4 @@ class ResultService:
                 step_list: List[Expression],
                 current_expression: Expression,
                 theorems: List[Theorem]):
-        return solution_tree.validate_new_expression(step_list[-1], current_expression)
+        return solution_tree.validate_new_expression(current_expression)

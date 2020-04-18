@@ -31,8 +31,6 @@ class SolutionTreeAPITest(APITestCase):
 
     def solve_exercise_with_solution_tree(self, exercise: SolvedExercise):
         # get solution tree
-        derivative_theorems = DerivativeTheorems.get_all()
-        #theorems = map(theorem_to_json, derivative_theorems)
         theorems = load_theorems("test/jsons/theorems.json")
         data = {
             'problem_input': exercise.steps[0],
@@ -51,13 +49,17 @@ class SolutionTreeAPITest(APITestCase):
         }
 
         # all steps should be valid
-        for i in range(1, len(exercise.steps) - 1):
-            previous_steps = exercise.steps[:i]
-            current_step = exercise.steps[i]
+        for i in range(1, len(exercise.non_result_steps)):
+            previous_steps = exercise.non_result_steps[:i]
+            current_step = exercise.non_result_steps[i]
             resolve_data['step_list'] = json.dumps(previous_steps)
             resolve_data['current_expression'] = current_step
             response = self.client.post(path='/resolve', data=resolve_data, format='json')
             result = json.loads(json.loads(response.content))
+            if result['exercise_status'] == 'resolved':
+                print(Expression(current_step).to_string())
+            if result['exercise_status'] == 'invalid':
+                print(Expression(current_step).to_string())
             self.assertEquals(response.status_code, status.HTTP_200_OK)
             self.assertEquals(result['exercise_status'], 'valid')
 
@@ -75,3 +77,12 @@ class SolutionTreeAPITest(APITestCase):
 
     def test_solution_tree_cases_sum_of_two_derivatives(self):
         self.solve_exercise_with_solution_tree(SolvedExercises.derivative_e_plus_sin())
+
+    def test_solution_tree_cases_derivative_mult_of_three_elem(self):
+        self.solve_exercise_with_solution_tree(SolvedExercises.derivative_mult_of_three_elem())
+
+    def test_solution_tree_cases_derivative_sin_divided_by_cos(self):
+        self.solve_exercise_with_solution_tree(SolvedExercises.derivative_sin_divided_by_cos())
+
+    def test_solution_tree_cases_sum_derivative_x2_derivative_sum_x_cos(self):
+        self.solve_exercise_with_solution_tree(SolvedExercises.sum_derivative_x2_derivative_sum_x_cos())

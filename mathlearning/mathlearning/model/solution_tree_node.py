@@ -59,14 +59,14 @@ class SolutionTreeNode:
     def __str__(self):
         return self.expression.to_string() + str(self.theorem_applied)
 
-    def validate_new_expression(self, current_expression, new_expression):
-        subtree_possibilities = self.get_sub_tree_with_root(current_expression)
-        for subtree in subtree_possibilities:
-            if subtree.contains(new_expression):
-                if subtree.is_a_result(new_expression):
-                    return 'resolved'
-                return 'valid'
-        return 'invalid'
+    def validate_new_expression(self, new_expression):
+        if self.is_a_result(new_expression):
+            return 'resolved'
+
+        if not self.contains(new_expression):
+            return 'invalid'
+
+        return 'valid'
 
     def get_hints(self, current_expression):
         possible_subrees = self.get_sub_tree_with_root(current_expression)
