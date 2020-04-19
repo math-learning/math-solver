@@ -1,0 +1,7 @@
+To run the tests ensure the server is up the the port 5000 (or change the variable `mathSolverBasePath` in the file `index.js`):
+
+If you want to reduce the tests that are going to be runned, modify the variables `theoremesToTest`, `functionsToTest` in the file `index.js`
+
+Then execute:
+`npm install`
+`node index.js`

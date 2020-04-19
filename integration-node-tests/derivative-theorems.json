@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Derivada de la suma",
+    "left": "\\frac{d(f(x) + g(x))}{dx}",
+    "right": "\\frac{d(f(x))}{dx} + \\frac{d(g(x))}{dx}",
+    "conditions": {}
+  },
+  {
+    "name": "Derivada del producto",
+    "left": "\\frac{d(f(x) * g(x))}{dx}",
+    "right": "\\frac{d(f(x))}{dx} * g(x) + \\frac{d(g(x))}{dx} * f(x)",
+    "conditions": {}
+  },
+  {
+    "name": "Derivada de la division",
+    "left": "\\frac{d(\\frac{f(x)}{g(x)})}{dx}",
+    "right": "\\frac{ \\frac{ d(f(x))}{dx} * g(x) - \\frac{d(g(x))}{dx} * f(x) }{g(x)^ 2}",
+    "conditions": {}
+  },
+  {
+    "name": "Derivada por un numero real",
+    "left": "\\frac{d( a * f(x))}{dx}",
+    "right": "a * \\frac{d(f(x))}{dx}",
+    "conditions": {
+      "a": [
+        "IS_REAL",
+        "IS_CONSTANT"
+      ]
+    }
+  }
+]

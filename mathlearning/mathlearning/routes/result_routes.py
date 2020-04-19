@@ -56,9 +56,9 @@ def resolve(request: Request):
         logger.info('Returning the following response: {}'.format(result))
 
         response_data = {
-            'exercise_status': result
+            'exerciseStatus': result
         }
-        return Response(json.dumps(response_data), status=status.HTTP_200_OK, content_type='application/json')
+        return Response(response_data, status=status.HTTP_200_OK, content_type='application/json')
 
 
 result_paths = [path('results/solve-derivative', solve_derivative)]
