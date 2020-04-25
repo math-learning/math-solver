@@ -5,3 +5,7 @@ If you want to reduce the tests that are going to be runned, modify the variable
 Then execute:
 `npm install`
 `node index.js`
+
+or
+
+`node index.js --color=always 2>&1 | tee test-result-file`
