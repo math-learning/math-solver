@@ -8,4 +8,4 @@ Then execute:
 
 or
 
-`node index.js --color=always 2>&1 | tee test-result-file` to save the results in a file
+`node index.js | tee test-result-file` to save the results in a file
