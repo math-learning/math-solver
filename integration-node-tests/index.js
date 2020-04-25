@@ -25,6 +25,10 @@ const functions = {
     'func': 'a1*\\sqrt[b1]{x}',
     'deriv': 'a1*\\frac{1}{b1} * x^{\\frac{1}{b1}-1}'
   },
+  '1/x': {
+    'func': 'a1*\\frac{1}{x}',
+    'deriv': '-a1*\\frac{1}{x^{2}}'
+  }
   // expx: {
   //   'func': 'a1*\\exp(x)',
   //   'deriv': 'a1*\\exp(x)'
@@ -37,7 +41,9 @@ const possible_theorems = {
     text: 'f+g',
     input: '\\frac{d(f1+g1)}{dx}',
     steps: [
+      { expression: '\\frac{d(f1+g1)}{dx}', status: 'valid' },
       { expression: '\\frac{d(f1)}{dx} + dg1', status: 'valid' },
+      { expression: 'dg1 + \\frac{d(f1)}{dx}', status: 'valid' },
       { expression: 'df1 + dg1', status: 'resolved' },
       { expression: 'dg1 + df1', status: 'resolved' },
 
@@ -51,7 +57,9 @@ const possible_theorems = {
     text: 'f1-g1',
     input: '\\frac{d(f1-g1)}{dx}',
     steps: [
+      { expression: '\\frac{d(f1-g1)}{dx}', status: 'valid' },
       { expression: '\\frac{d(f1)}{dx} - dg1', status: 'valid' },
+      { expression: '-dg1 + \\frac{d(f1)}{dx}', status: 'valid' },
       { expression: 'df1 - dg1', status: 'resolved' },
       { expression: '-dg1 + df1', status: 'resolved' },
 
@@ -65,6 +73,7 @@ const possible_theorems = {
     text: 'f*g',
     input: '\\frac{d(f1*g1)}{dx}',
     steps: [
+      { expression: '\\frac{d(f1*g1)}{dx}', status: 'valid' },
       { expression: '\\frac{d(f1)}{dx}*g1 + f1*\\frac{d(g1)}{dx}', status: 'valid' },
       { expression: 'df1*g1 + f1*\\frac{d(g1)}{dx}', status: 'valid' },
       { expression: '\\frac{d(f1)}{dx}*g1 + f1*dg1', status: 'valid' },
@@ -80,6 +89,7 @@ const possible_theorems = {
     text: 'f1/g1',
     input: '\\frac{d(\\frac{f1}{g1})}{dx}',
     steps: [
+      { expression: '\\frac{d(\\frac{f1}{g1})}{dx}', status: 'valid' },
       { expression: '\\frac{\\frac{d(f1)}{dx}*g1 - f1*\\frac{d(g1)}{dx}}{{g1}^{2}}', status: 'valid' },
       { expression: '\\frac{df1*g1 - f1*\\frac{d(g1)}{dx}}{{g1}^{2}}', status: 'valid' },
       { expression: '\\frac{\\frac{d(f1)}{dx}*g1 - f1*dg1}{{g1}^{2}}', status: 'valid' },
@@ -89,7 +99,22 @@ const possible_theorems = {
       { expression: 'df1*g1 - f1*\\frac{d(g1)}{dx}', status: 'invalid' },
       { expression: '2*\\frac{df1*g1 - f1*dg1}{g1^{2}}', status: 'invalid' },   
     ]
-  }
+  },
+  'f(g)': {
+    text: 'f(g)',
+    input: '\\frac{d(fr1)}{dx}',
+    steps: [
+      { expression: '\\frac{d(fr1)}{dx}', status: 'valid' },
+      { expression: 'dfr1*\\frac{d(g1)}{dx}', status: 'valid' },
+      { expression: '\\frac{d(g1)}{dx}*dfr1', status: 'valid' },
+      { expression: 'dfr1*dg1', status: 'resolved' },
+      { expression: 'dg1*dfr1', status: 'resolved' },
+
+      { expression: 'df1*\\frac{d(g1)}{dx}', status: 'invalid' },
+      { expression: 'df1', status: 'invalid' },
+      { expression: 'dg1', status: 'invalid' },
+    ]
+  },
 }
 
 const executeExpression = async (theoreme, functions, stepCount) => {
@@ -178,17 +203,27 @@ const makeFunctionsToExecute = (f, g, a = 1, b = 1) => {
   const variableA = new RegExp('a1', 'g');
   const variableB = new RegExp('b1', 'g');
 
+  // for +-*/ theoremes
   const dfTarget = f['deriv'].replace(variableA, a).replace(variableB, b);
   const dgTarget = g['deriv'].replace(variableA, a).replace(variableB, b);
   const fTarget = f['func'].replace(variableA, a).replace(variableB, b);
   const gTarget = g['func'].replace(variableA, a).replace(variableB, b);
 
+  // for f(g) theoremes
+  const dfrTarget = f['deriv'].replace(variableA, a).replace(variableB, b).replace('x', `{${gTarget}}`); // TODO: no estoy seguro si {} o () es la que va
+  const dgrTarget = g['deriv'].replace(variableA, a).replace(variableB, b).replace('x', `{${fTarget}}`);
+  const frTarget = f['func'].replace(variableA, a).replace(variableB, b).replace('x', `{${gTarget}}`);
+  const grTarget = g['func'].replace(variableA, a).replace(variableB, b).replace('x', `{${fTarget}}`);
 
   return [
     { source: 'df1', target: dfTarget },
     { source: 'dg1', target: dgTarget },
     { source: 'f1', target:  fTarget  },
     { source: 'g1', target:  gTarget  },
+    { source: 'dfr1', target: dfrTarget },
+    { source: 'dgr1', target: dgrTarget },
+    { source: 'fr1', target: frTarget },
+    { source: 'gr1', target: grTarget },
   ];
 }
 
@@ -201,14 +236,17 @@ const theoremesToTest = [
   'f+g',
   'f-g',
   'f*g',
-  'f/g'
+  'f/g',
+  // 'f(g)'
 ];
 const functionsToTest = [
   'x',
   'cosx',
   'senx',
   'tagx',
-  'sqrt'
+  'sqrt',
+  '1/x',
+  //expx
 ];
 
 const execute = async () => {
@@ -237,3 +275,10 @@ const execute = async () => {
 }
 
 execute();
+
+
+// TODO: más ideas de tests que se pueden hacer:
+//  - con 3 o más funciones
+//  - random "a1" y "b1"
+//  - si la función f y g es la misma, multiplicarla por 2 y derivarla
+//  - de manera random, simplificar algunas expressiones las variables "a1" y "b1" se multiplican
