@@ -5,7 +5,6 @@ from typing import List
 
 logger = Logger.getLogger()
 
-# TODO: change it to a graph to delete repetitions
 class SolutionTreeNode:
     def __init__(self, expression: Expression, theorem_applied: Theorem, branches: List):
         self.expression = expression
@@ -59,20 +58,31 @@ class SolutionTreeNode:
     def __str__(self):
         return self.expression.to_string() + str(self.theorem_applied)
 
-    def validate_new_expression(self, new_expression):
+    def validate_new_expression(self, new_expression, step_list):
+        hints = []
+
+        subtrees = self.get_sub_tree_with_root(step_list[-1])
+
+        for subtree in subtrees:
+            if not subtree.contains(new_expression):
+                if len(step_list) > 1:
+                    previous_step = step_list[-2]
+                else:
+                    previous_step = step_list[0]
+
+                hints = self.get_hints(previous_step)
+                return 'invalid', hints
+
         if self.is_a_result(new_expression):
-            return 'resolved'
+            return 'resolved', hints
 
-        if not self.contains(new_expression):
-            return 'invalid'
-
-        return 'valid'
+        return 'valid', hints
 
     def get_hints(self, current_expression):
         possible_subrees = self.get_sub_tree_with_root(current_expression)
         hints = []
         for subtree in possible_subrees:
-            for children in subtree.get_children():
+            for children in subtree.branches:
                 hints.append(children.theorem_applied)
         return hints
 

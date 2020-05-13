@@ -4,7 +4,6 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from mathlearning.mappers.solution_tree_mapper import SolutionTreeMapper
-from mathlearning.model.derivative_theorems import DerivativeTheorems
 from mathlearning.model.expression import Expression
 from mathlearning.model.theorem import Theorem
 from test.api.test_api import load_theorems

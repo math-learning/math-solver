@@ -138,3 +138,4 @@ class SolutionTreeAPITest(APITestCase):
 
     def test_solution_tree_cases_derivative_multiplication(self):
         self.solution_tree_derivative_case(derivative_multiplication_of_three_elem)
+
