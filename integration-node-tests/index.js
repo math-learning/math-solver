@@ -35,13 +35,13 @@ const functions = {
   // }
 }
 
-
 const possible_theorems = {
   'f+g': {
     text: 'f+g',
     input: '\\frac{d(f1+g1)}{dx}',
     steps: [
       { expression: '\\frac{d(f1+g1)}{dx}', status: 'valid' },
+      { expression: '\\frac{d(f1)}{dx} + \\frac{d(g1)}{dx}', status: 'valid' },
       { expression: '\\frac{d(f1)}{dx} + dg1', status: 'valid' },
       { expression: 'dg1 + \\frac{d(f1)}{dx}', status: 'valid' },
       { expression: 'df1 + dg1', status: 'resolved' },
@@ -113,6 +113,17 @@ const possible_theorems = {
       { expression: 'df1*\\frac{d(g1)}{dx}', status: 'invalid' },
       { expression: 'df1', status: 'invalid' },
       { expression: 'dg1', status: 'invalid' },
+    ]
+  },
+  'f+g+h': {
+    text: 'f+g+h',
+    input: '\\frac{d(f1+g1+h1)}{dx}',
+    steps: [
+      { expression: '\\frac{d(f1+g1+h1)}{dx}', status: 'valid' },
+      { expression: '\\frac{d(f1)}{dx} + \\frac{d(g1)}{dx} + \\frac{d(h1)}{dx}', status: 'valid' },
+      { expression: '\\frac{d(f1)}{dx} + \\frac{d(g1)}{dx} + dh1', status: 'valid' },
+      { expression: '\\frac{d(f1)}{dx} + dg1 + dh1', status: 'valid' },
+      { expression: 'df1 + dg1 + dh1', status: 'resolved' }
     ]
   },
 }
@@ -199,7 +210,7 @@ const replaceFunctions = (expression, functions) => {
   return finalExpression;
 }
 
-const makeFunctionsToExecute = (f, g, a = 1, b = 1) => {
+const makeFunctionsToExecute = ({ fs: { f, g, h }, variables: { a = 1, b = 1 } }) => {
   const variableA = new RegExp('a1', 'g');
   const variableB = new RegExp('b1', 'g');
 
@@ -208,6 +219,8 @@ const makeFunctionsToExecute = (f, g, a = 1, b = 1) => {
   const dgTarget = g['deriv'].replace(variableA, a).replace(variableB, b);
   const fTarget = f['func'].replace(variableA, a).replace(variableB, b);
   const gTarget = g['func'].replace(variableA, a).replace(variableB, b);
+  // const hTarget = h['func'].replace(variableA, a).replace(variableB, b);
+  // const dhTarget = h['deriv'].replace(variableA, a).replace(variableB, b);
 
   // for f(g) theoremes
   const dfrTarget = f['deriv'].replace(variableA, a).replace(variableB, b).replace('x', `{${gTarget}}`); // TODO: no estoy seguro si {} o () es la que va
@@ -220,6 +233,8 @@ const makeFunctionsToExecute = (f, g, a = 1, b = 1) => {
     { source: 'dg1', target: dgTarget },
     { source: 'f1', target:  fTarget  },
     { source: 'g1', target:  gTarget  },
+    // { source: 'dh1', target: dhTarget },
+    // { source: 'h1', target:  hTarget  },
     { source: 'dfr1', target: dfrTarget },
     { source: 'dgr1', target: dgrTarget },
     { source: 'fr1', target: frTarget },
@@ -232,12 +247,15 @@ const makeFunctionsToExecute = (f, g, a = 1, b = 1) => {
 let successCount = 0;
 let failedCount = 0;
 
+const a = 2;
+const b = 3;
 const theoremesToTest = [
   'f+g',
   'f-g',
   'f*g',
   'f/g',
-  // 'f(g)'
+  'f(g)',
+  // 'f+g+h'
 ];
 const functionsToTest = [
   'x',
@@ -246,12 +264,32 @@ const functionsToTest = [
   'tagx',
   'sqrt',
   '1/x',
-  //expx
+  // expx
 ];
 
+const executeFunctions = async ({ theoreme, fs, variables }) => {
+  const fsKeys = Object.keys(fs);
+
+  // comparamos que no haya ninguna función igual a otra
+  for (const key1 of fsKeys) {
+    for (const key2 of fsKeys) {
+      if (key1 !== key2 && fs[key1].func === fs[key2].func) {
+        return;
+      }
+    }
+  }
+
+  // function logging
+  fsKeys.forEach((key) => {
+    console.log(`${key}: ${fs[key].func}`);
+  });
+
+  const functionsToExecute = makeFunctionsToExecute({ fs, variables });
+  return executeExpression(possible_theorems[theoreme], functionsToExecute);
+}
+
 const execute = async () => {
-  const a = 2;
-  const b = 3;
+  const variables = { a, b };
 
   for (theoreme of theoremesToTest) {
     console.log(`Executing tests for theoreme: ${theoreme} \n`);
@@ -260,12 +298,16 @@ const execute = async () => {
       for (const keyg of functionsToTest) {
         const f = functions[keyf];
         const g = functions[keyg];
-    
-        console.log(`F: ${f.func}`);
-        console.log(`G: ${g.func}`);
-    
-        const functionsToExecute = makeFunctionsToExecute(f, g, a, b);
-        await executeExpression(possible_theorems[theoreme], functionsToExecute);
+        const fs = { f, g }
+
+        if (theoreme.includes('h')) {
+          for (const keyh of functionsToTest) {
+            fs.h = functions[keyh];
+            await executeFunctions({ theoreme, fs, variables });
+          }
+        } else {
+          await executeFunctions({ theoreme, fs, variables });
+        }
       }
     }
   }
@@ -277,8 +319,11 @@ const execute = async () => {
 execute();
 
 
+// TODO: bug cuando la primera expresión es igual a la segunda
+// TODO: bug cuando existen costantes dentro de la derivada del estilo. a * d(x) <> d(a * x)
+
 // TODO: más ideas de tests que se pueden hacer:
 //  - con 3 o más funciones
-//  - random "a1" y "b1"
+//  - agregar más casos de funciones equivalente (por ejemplo, diferentes formas de armar polinomios y meterlos en términos separados)
 //  - si la función f y g es la misma, multiplicarla por 2 y derivarla
 //  - de manera random, simplificar algunas expressiones las variables "a1" y "b1" se multiplican
