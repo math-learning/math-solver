@@ -58,42 +58,45 @@ class SolutionTreeNode:
     def __str__(self):
         return self.expression.to_string() + str(self.theorem_applied)
 
-    def validate_new_expression(self, new_expression, step_list):
+    def new_expression_is_valid(self, previous_step, new_expression):
+        previous_step_subtrees = self.get_sub_trees_with_root(previous_step)
+
+        for previous_step_subtree in previous_step_subtrees:
+            if previous_step_subtree.contains(new_expression):
+                return True
+
+        return False
+
+    def validate_new_expression(self, new_expression, previous_step):
         hints = []
+        is_valid = self.new_expression_is_valid(previous_step, new_expression)
 
-        subtrees = self.get_sub_tree_with_root(step_list[-1])
-
-        for subtree in subtrees:
-            if not subtree.contains(new_expression):
-                if len(step_list) > 1:
-                    previous_step = step_list[-2]
-                else:
-                    previous_step = step_list[0]
-
-                hints = self.get_hints(previous_step)
-                return 'invalid', hints
-
+        if not is_valid:
+            self.get_hints(previous_step)
+            return 'invalid', hints
         if self.is_a_result(new_expression):
             return 'resolved', hints
 
+        hints = self.get_hints(new_expression)
         return 'valid', hints
 
     def get_hints(self, current_expression):
-        possible_subrees = self.get_sub_tree_with_root(current_expression)
+        current_expression_subtrees = self.get_sub_trees_with_root(current_expression)
         hints = []
-        for subtree in possible_subrees:
-            for children in subtree.branches:
+        for current_expression_subtree in current_expression_subtrees:
+            for children in current_expression_subtree.branches:
                 hints.append(children.theorem_applied)
+
         return hints
 
-    def get_sub_tree_with_root(self, current_expression):
+    def get_sub_trees_with_root(self, current_expression):
         if self.expression.is_equivalent_to(current_expression):
             return [self]
         if len(self.branches) == 0:
             return []
         accum = []
         for branch in self.branches:
-            accum += branch.get_sub_tree_with_root(current_expression)
+            accum += branch.get_sub_trees_with_root(current_expression)
         return accum
 
     def contains(self, expression):

@@ -88,4 +88,9 @@ class ResultService:
                 step_list: List[Expression],
                 current_expression: Expression,
                 theorems: List[Theorem]):
-        return solution_tree.validate_new_expression(current_expression, step_list)
+        if len(step_list) < 2:
+            raise Exception('step list should have at least 2 elements')
+        previous_step = step_list[-2]
+        result, hints = solution_tree.validate_new_expression(current_expression, previous_step)
+        hints = list(map(lambda hint_theorem: {'name': hint_theorem.name}, hints))
+        return result, hints

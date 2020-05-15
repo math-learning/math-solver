@@ -49,18 +49,18 @@ class SolutionTreeAPITest(APITestCase):
 
         # all steps should be valid
         for i in range(1, len(exercise.non_result_steps)):
-            previous_steps = exercise.non_result_steps[:i]
+            previous_steps = exercise.non_result_steps[:i + 1]
             current_step = exercise.non_result_steps[i]
             resolve_data['step_list'] = json.dumps(previous_steps)
             resolve_data['current_expression'] = current_step
             response = self.client.post(path='/resolve', data=resolve_data, format='json')
             result = json.loads(json.loads(response.content))
-            if result['exercise_status'] == 'resolved':
+            if result['exerciseStatus'] == 'resolved':
                 print(Expression(current_step).to_string())
-            if result['exercise_status'] == 'invalid':
+            if result['exerciseStatus'] == 'invalid':
                 print(Expression(current_step).to_string())
             self.assertEquals(response.status_code, status.HTTP_200_OK)
-            self.assertEquals(result['exercise_status'], 'valid')
+            self.assertEquals(result['exerciseStatus'], 'valid')
 
         # the result should be resolved
         resolve_data['step_list'] = json.dumps(exercise.steps)
@@ -70,7 +70,7 @@ class SolutionTreeAPITest(APITestCase):
 
         result = json.loads(json.loads(response.content))
         self.assertEquals(response.status_code, status.HTTP_200_OK)
-        self.assertEquals(result['exercise_status'], 'resolved')
+        self.assertEquals(result['exerciseStatus'], 'resolved')
 
 
 
