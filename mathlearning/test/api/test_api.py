@@ -1,5 +1,4 @@
 import json
-from collections import Set
 
 from rest_framework import status
 from rest_framework.test import APITestCase

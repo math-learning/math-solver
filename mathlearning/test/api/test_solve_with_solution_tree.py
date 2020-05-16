@@ -49,7 +49,9 @@ class SolutionTreeAPITest(APITestCase):
 
         # all steps should be valid
         for i in range(1, len(exercise.non_result_steps)):
-            previous_steps = exercise.non_result_steps[:i + 1]
+            previous_steps = exercise.non_result_steps[:i]
+            # remove problem_input
+            previous_steps.pop()
             current_step = exercise.non_result_steps[i]
             resolve_data['step_list'] = json.dumps(previous_steps)
             resolve_data['current_expression'] = current_step

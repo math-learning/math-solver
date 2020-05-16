@@ -123,14 +123,14 @@ class Expression:
         return latex_exp
 
     def is_equivalent_to(self, expression: 'Expression') -> bool:
-        if simplify(self.sympy_expr) == simplify(expression.sympy_expr) or \
+        if str(simplify(self.sympy_expr)) == str(simplify(expression.sympy_expr)) or \
                 self == expression:
             return True
         self_simplifications = self.get_simplifications()
         expression_simplifications = expression.get_simplifications()
         for self_simplification in self_simplifications:
             for expression_simplification in expression_simplifications:
-                simplifications_match = self_simplification.sympy_expr == expression_simplification.sympy_expr
+                simplifications_match = str(self_simplification.sympy_expr) == str(expression_simplification.sympy_expr)
                 if simplifications_match:
                     return True
         return False

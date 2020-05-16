@@ -46,9 +46,9 @@ class SolvedExercises:
             "x*Derivative(exp(x), x) + exp(x)*Derivative(x, x) + Derivative(x**2*sin(x), x)",
             "x*exp(x) + exp(x)*Derivative(x, x) + Derivative(x**2*sin(x), x)",
             "x*exp(x) + exp(x) + Derivative(x**2*sin(x), x)",
-            "x**2*Derivative(sin(x), x) + x*exp(x) + exp(x) + sin(x)*Derivative(x**2, x)",
-            "x**2*Derivative(sin(x), x) + x*exp(x) + x*(2*sin(x)) + exp(x)",
-            "x**2*cos(x) + x*(2*sin(x)) + (x + 1)*exp(x)"
+            "x*exp(x) + exp(x) + x**2 * Derivative(sin(x), x) + sin(x) * Derivative(x**2, x)",
+            "x*exp(x) + exp(x) + x**2 * Derivative(sin(x), x) + sin(x) * 2 * x",
+            "x**2*cos(x) + x*2*sin(x) + (x + 1)*exp(x)"
         ]
 
         result_non_latex = "x**2*cos(x) + x*(2*sin(x)) + (x + 1)*exp(x)"

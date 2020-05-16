@@ -11,14 +11,14 @@ class SolutionTreeNode:
         self.theorem_applied = theorem_applied
         self.branches = branches
 
-    def explain_solution(self, profundidad):
+    def explain_solution(self, depth):
         theorem = "None"
         if self.theorem_applied is not None:
             theorem = self.theorem_applied.name
-        print(profundidad, ". Expression: " + self.expression.to_string(), ". Teorema aplicado: " + theorem)
+        print(depth, ". Expression: " + self.expression.to_string(), ". Teorema aplicado: " + theorem)
 
         for branch in self.branches:
-            branch.explain_solution(profundidad + 1)
+            branch.explain_solution(depth + 1)
 
     def to_latex(self):
         self.expression = self.expression.to_latex()
@@ -59,13 +59,8 @@ class SolutionTreeNode:
         return self.expression.to_string() + str(self.theorem_applied)
 
     def new_expression_is_valid(self, previous_step, new_expression):
-        previous_step_subtrees = self.get_sub_trees_with_root(previous_step)
-
-        for previous_step_subtree in previous_step_subtrees:
-            if previous_step_subtree.contains(new_expression):
-                return True
-
-        return False
+        # TODO: fix going backwards bug
+        return self.contains(new_expression)
 
     def validate_new_expression(self, new_expression, previous_step):
         hints = []
@@ -141,3 +136,10 @@ class SolutionTreeNode:
             current = accum.pop()
             accum += current.branches
         return count
+
+    # for debugging purposes
+    def print_tree(self, level=0):
+        ret = "\t" * level + self.expression.to_string() + "\n"
+        for branch in self.branches:
+            ret += branch.print_tree(level + 1)
+        return ret
