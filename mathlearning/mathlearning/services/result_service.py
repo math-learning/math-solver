@@ -88,4 +88,10 @@ class ResultService:
                 step_list: List[Expression],
                 current_expression: Expression,
                 theorems: List[Theorem]):
-        return solution_tree.validate_new_expression(current_expression)
+        if len(step_list) == 0:
+            previous_step = problem_input
+        else:
+            previous_step = step_list[-1]
+        result, hints = solution_tree.validate_new_expression(current_expression, previous_step)
+        hints = list(map(lambda hint_theorem: {'name': hint_theorem.name}, hints))
+        return result, hints

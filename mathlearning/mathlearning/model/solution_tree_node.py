@@ -5,21 +5,20 @@ from typing import List
 
 logger = Logger.getLogger()
 
-# TODO: change it to a graph to delete repetitions
 class SolutionTreeNode:
     def __init__(self, expression: Expression, theorem_applied: Theorem, branches: List):
         self.expression = expression
         self.theorem_applied = theorem_applied
         self.branches = branches
 
-    def explain_solution(self, profundidad):
+    def explain_solution(self, depth):
         theorem = "None"
         if self.theorem_applied is not None:
             theorem = self.theorem_applied.name
-        print(profundidad, ". Expression: " + self.expression.to_string(), ". Teorema aplicado: " + theorem)
+        print(depth, ". Expression: " + self.expression.to_string(), ". Teorema aplicado: " + theorem)
 
         for branch in self.branches:
-            branch.explain_solution(profundidad + 1)
+            branch.explain_solution(depth + 1)
 
     def to_latex(self):
         self.expression = self.expression.to_latex()
@@ -59,31 +58,40 @@ class SolutionTreeNode:
     def __str__(self):
         return self.expression.to_string() + str(self.theorem_applied)
 
-    def validate_new_expression(self, new_expression):
+    def new_expression_is_valid(self, previous_step, new_expression):
+        # TODO: fix going backwards bug
+        return self.contains(new_expression)
+
+    def validate_new_expression(self, new_expression, previous_step):
+        hints = []
+        is_valid = self.new_expression_is_valid(previous_step, new_expression)
+
+        if not is_valid:
+            self.get_hints(previous_step)
+            return 'invalid', hints
         if self.is_a_result(new_expression):
-            return 'resolved'
+            return 'resolved', hints
 
-        if not self.contains(new_expression):
-            return 'invalid'
-
-        return 'valid'
+        hints = self.get_hints(new_expression)
+        return 'valid', hints
 
     def get_hints(self, current_expression):
-        possible_subrees = self.get_sub_tree_with_root(current_expression)
+        current_expression_subtrees = self.get_sub_trees_with_root(current_expression)
         hints = []
-        for subtree in possible_subrees:
-            for children in subtree.get_children():
+        for current_expression_subtree in current_expression_subtrees:
+            for children in current_expression_subtree.branches:
                 hints.append(children.theorem_applied)
+
         return hints
 
-    def get_sub_tree_with_root(self, current_expression):
+    def get_sub_trees_with_root(self, current_expression):
         if self.expression.is_equivalent_to(current_expression):
             return [self]
         if len(self.branches) == 0:
             return []
         accum = []
         for branch in self.branches:
-            accum += branch.get_sub_tree_with_root(current_expression)
+            accum += branch.get_sub_trees_with_root(current_expression)
         return accum
 
     def contains(self, expression):
@@ -128,3 +136,10 @@ class SolutionTreeNode:
             current = accum.pop()
             accum += current.branches
         return count
+
+    # for debugging purposes
+    def print_tree(self, level=0):
+        ret = "\t" * level + self.expression.to_string() + "\n"
+        for branch in self.branches:
+            ret += branch.print_tree(level + 1)
+        return ret

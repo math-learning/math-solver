@@ -52,13 +52,15 @@ def resolve(request: Request):
         current_expression = Expression(body['current_expression'])
         theorems = theoremMapper.theorems(body['theorems'])
 
-        result = result_service.resolve(problem_input, solution_tree, exercise_type, step_list, current_expression, theorems)
+        (result, hints) = result_service.resolve(problem_input, solution_tree, exercise_type, step_list,
+                                                 current_expression, theorems)
         logger.info('Returning the following response: {}'.format(result))
 
         response_data = {
-            'exerciseStatus': result
+            'exerciseStatus': result,
+            'hints': hints
         }
-        return Response(response_data, status=status.HTTP_200_OK, content_type='application/json')
+        return Response(json.dumps(response_data), status=status.HTTP_200_OK, content_type='application/json')
 
 
 result_paths = [path('results/solve-derivative', solve_derivative)]
