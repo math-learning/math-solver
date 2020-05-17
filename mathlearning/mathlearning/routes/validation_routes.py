@@ -3,7 +3,7 @@ from mathlearning.services.step_service import StepService
 from mathlearning.services.evaluate_service import EvaluateService
 from mathlearning.utils.logger import Logger
 from mathlearning.utils.request_decorators import log_request
-
+from mathlearning.model.expression import Expression
 from rest_framework.request import Request
 
 from django.urls import path
@@ -47,9 +47,10 @@ def evaluate(request: Request):
     if request.method == 'POST':
         body = json.loads(request.body)
         (problem_input, problem_type) = validateMapper.parse_evaluate(body)
+        expression = Expression(problem_input)
 
         try:
-            result = evaluate_service.evaluate_problem_input(problem_input, problem_type)
+            result = evaluate_service.evaluate_problem_input(expression, problem_type)
             data = { 'result': result }
 
             logger.info('Returning the following response: {}'.format(result))

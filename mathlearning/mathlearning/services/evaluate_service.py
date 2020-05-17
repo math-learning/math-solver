@@ -15,22 +15,18 @@ from django.core.exceptions import SuspiciousOperation
 logger = Logger.getLogger()
 
 class EvaluateService:
-    def evaluate_problem_input(self, problem_input, problem_type):
+    def evaluate_problem_input(self, expression: Expression, problem_type):
         logger.info("Starting problem input validation")
-
-        sanitized_input = problem_input.replace('\\ ', '')
 
         if problem_type != 'derivative' and problem_type != 'integral':
             raise SuspiciousOperation('Invalid input type')
 
         try:
-            parsed_expression = parse_latex(sanitized_input)
-
             if problem_type == 'derivative':
-                derivative = Derivative(parsed_expression, 'x')
+                derivative = Derivative(expression.sympy_expr, 'x')
                 return latex(derivative.doit())
 
-            integral = Integral(parsed_expression, x)
+            integral = Integral(expression.sympy_expr, x)
             return latex(integral.doit())
 
         except:
