@@ -56,7 +56,7 @@ class SolutionTreeAPITest(APITestCase):
             resolve_data['step_list'] = json.dumps(previous_steps)
             resolve_data['current_expression'] = current_step
             response = self.client.post(path='/resolve', data=resolve_data, format='json')
-            result = json.loads(json.loads(response.content))
+            result = json.loads(response.content)
             if result['exerciseStatus'] == 'resolved':
                 print(Expression(current_step).to_string())
             if result['exerciseStatus'] == 'invalid':
@@ -70,7 +70,7 @@ class SolutionTreeAPITest(APITestCase):
 
         response = self.client.post(path='/resolve', data=resolve_data, format='json')
 
-        result = json.loads(json.loads(response.content))
+        result = json.loads(response.content)
         self.assertEquals(response.status_code, status.HTTP_200_OK)
         self.assertEquals(result['exerciseStatus'], 'resolved')
 

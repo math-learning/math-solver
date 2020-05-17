@@ -60,7 +60,7 @@ def resolve(request: Request):
             'exerciseStatus': result,
             'hints': hints
         }
-        return Response(json.dumps(response_data), status=status.HTTP_200_OK, content_type='application/json')
+        return Response(response_data, status=status.HTTP_200_OK, content_type='application/json')
 
 
 result_paths = [path('results/solve-derivative', solve_derivative)]
