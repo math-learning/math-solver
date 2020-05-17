@@ -93,5 +93,5 @@ class ResultService:
         else:
             previous_step = step_list[-1]
         result, hints = solution_tree.validate_new_expression(current_expression, previous_step)
-        hints = list(map(lambda hint_theorem: {'name': hint_theorem.name}, hints))
+        hints = list(map(lambda hint_theorem: {'title': hint_theorem.name}, hints))
         return result, hints
