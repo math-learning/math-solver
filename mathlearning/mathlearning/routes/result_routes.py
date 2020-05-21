@@ -29,7 +29,7 @@ def solve_derivative(request: Request):
         return Response(result.to_latex(), status=status.HTTP_200_OK)
 
 @api_view(['POST'])
-def solution_tree(request: Request):
+def calculate_solution_tree(request: Request):
     if request.method == 'POST':
         body = json.loads(request.body)
         expression = Expression(body['problem_input'])
@@ -54,7 +54,7 @@ def resolve(request: Request):
 
         (result, hints) = result_service.resolve(problem_input, solution_tree, exercise_type, step_list,
                                                  current_expression, theorems)
-        logger.info('Returning the following response: {}'.format(result))
+        logger.info('Returning the following response: {} {}'.format(result, json.dumps(hints)))
 
         response_data = {
             'exerciseStatus': result,
@@ -64,5 +64,5 @@ def resolve(request: Request):
 
 
 result_paths = [path('results/solve-derivative', solve_derivative)]
-result_paths += [path('results/solution-tree', solution_tree)]
+result_paths += [path('results/solution-tree', calculate_solution_tree)]
 result_paths += [path('resolve', resolve)]

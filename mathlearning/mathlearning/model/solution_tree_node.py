@@ -67,7 +67,7 @@ class SolutionTreeNode:
         is_valid = self.new_expression_is_valid(previous_step, new_expression)
 
         if not is_valid:
-            self.get_hints(previous_step)
+            hints = self.get_hints(previous_step)
             return 'invalid', hints
         if self.is_a_result(new_expression):
             return 'resolved', hints
