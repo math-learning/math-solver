@@ -51,6 +51,9 @@ class Theorem:
         from_side = self.left
         to_side = self.right
 
+        # Get the subtrees of the expression that have the same root as from side.
+        # by level means that we also get the level of that subtree to know if the
+        # subtree could match from_side
         subtrees = expression.get_subtrees_with_root_func_by_level(from_side)
         from_side_depth = from_side.get_depth()
         expression_depth = expression.get_depth()
@@ -58,10 +61,19 @@ class Theorem:
         for subtree in subtrees:
             sub_expression = subtree['expression']
             level = subtree['level']
+            # Example Derivative(x) have depth 2 and Derivative(f(x)+g(x)) have depth 3
+            # So, if the depth of the subtree is less than the from_side of the theorem
+            # it can't be applied
             if level <= expression_depth - from_side_depth:
                 application_possibilities = self._apply_to(sub_expression, from_side, to_side)
                 for possibility in application_possibilities:
                     if sub_expression != expression:
+                        # Example:
+                        # expression cos(x) + Derivative(2*x)
+                        # sub_expression = Derivative(2*x)
+                        # possibility = 2 * Derivative(x)
+                        # replace sub_expression with possibility
+                        # result = cos(x) + 2 * Derivative(x)
                         result = expression.get_copy()
                         result.replace(sub_expression,
                                    possibility)
@@ -104,30 +116,9 @@ class Theorem:
 
         already_tried = set()
 
-        # TODO: check if this is necessary
-        # children = expression.get_children()
-        # try applying directly to children
-        # for example in x + y
-        # try applying to x
-        # try applying to y
-        # for child in children:
-        #     if str(child) not in already_tried:
-        #         logger.info("Trying to apply: " + self.name +
-        #                     " directly to child: " + str(child))
-        #         analysis = self.analyzer.analyze(
-        #             template, self.conditions, child)
-        #         if analysis.expression_match_template:
-        #             application_possibilities.append(TheoremApplication(
-        #                 child, self.transform_side(to_side, analysis.equalities)))
-        #         # children of children
-        #         children_of_children_result = self.apply_to_children(child, from_side, to_side)
-        #         application_possibilities += children_of_children_result
-        #         already_tried.add(str(child))
-
         # try applying to groups of children
         # for example in x + y + z
         # try with: x + y ; x + z : y + z
-
         if expression.can_group_children():
             logger.info("Trying to apply: " + self.name +
                         " to a group children: " + str(expression))

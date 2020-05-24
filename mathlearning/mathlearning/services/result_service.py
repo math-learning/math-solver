@@ -63,6 +63,7 @@ class ResultService:
                         subtrees.append(SolutionTreeNode(case, theorem, subtrees_result[0]))
                         already_seen |= subtrees_result[1]
 
+        # Try solving derivatives
         derivatives_solving_possibilities = expression.derivatives_solving_possibilities()
         for derivatives_solving_possibility in derivatives_solving_possibilities:
             if not derivatives_solving_possibility.is_equivalent_to(expression):
