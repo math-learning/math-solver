@@ -3,6 +3,7 @@ import sympy
 from sympy import Symbol
 from sympy.parsing.latex import parse_latex
 from sympy.core.basic import preorder_traversal
+from sympy import Integral
 from sympy.core.function import Derivative, UndefinedFunction
 from sympy.parsing.sympy_parser import parse_expr
 from sympy.simplify import simplify
@@ -21,7 +22,7 @@ def is_sympy_exp(formula):
 
 class Expression:
 
-    def __init__(self, formula: Union['Expression', str], is_latex=True):
+    def __init__(self, formula: Union['Expression', str], u: 'Expression' = None, v: 'Expression' = None, is_latex=True): # TODO: u and v to a dictionary
         self.commutative_group_transformer = CommutativeGroupTransformer()
         self.non_commutative_group_transformer = NonCommutativeGroupTransformer()
         self.commutative_list_size_transformer = ListSizeTransformer(CommutativeGroupTransformer())
@@ -96,6 +97,9 @@ class Expression:
 
     def is_derivative(self) -> bool:
         return isinstance(self.sympy_expr, Derivative)
+
+    def is_integral(self) -> bool:
+        return isinstance(self.sympy_expr, Integral)
 
     def apply_derivative(self) -> 'Expression':
         deriv = Derivative(self.sympy_expr.args[0], self.sympy_expr.args[1])
