@@ -108,3 +108,26 @@ class TestExpression(unittest.TestCase):
     def test_get_simplifications(self):
         exp  = Expression('x**2*cos(x) + 2*x*sin(x) + x*Derivative(exp(x), x) + exp(x)', is_latex=False)
         exp.get_simplifications()
+
+    def test_apply_integral(self):
+        expression = Expression('Integral(x+x**2,x)', is_latex=False)
+        result = expression.apply_integral()
+        self.assertEquals(result, Expression('x**2/2 + x**3/3', is_latex=False))
+
+
+    def test_integrate_is_integral(self):
+        expression = Expression('Integral(x+x**2,x)', is_latex=False)
+        self.assertTrue(expression.is_integral())
+
+    def test_integrate_is_integral_false(self):
+        expression = Expression('Derivative(x+x**2,x)', is_latex=False)
+        self.assertFalse(expression.is_integral())
+
+
+    def test_integrate_solving_possibilities(self):
+        expression = Expression('Integral(x,x) + Integral(x**2,x) - Integral(cos(x),x)', is_latex=False)
+        result = expression.integrals_solving_possibilities()
+        self.assertEquals(len(result), 3)
+        self.assertTrue(Expression('x**2/2 + Integral(x**2,x) - Integral(cos(x),x)', is_latex=False) in result)
+        self.assertTrue(Expression('Integral(x,x) + x**3/3 - Integral(cos(x),x)', is_latex=False) in result)
+        self.assertTrue(Expression('Integral(x,x) + Integral(x**2,x) - sin(x)', is_latex=False) in result)

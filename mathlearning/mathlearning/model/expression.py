@@ -11,6 +11,7 @@ from mathlearning.utils.list.commutative_group_transformer import CommutativeGro
 from mathlearning.utils.list.non_commutative_group_transformer import NonCommutativeGroupTransformer
 from mathlearning.utils.latex_utils import clean_latex
 from typing import Union, List
+from sympy import integrate
 
 from mathlearning.utils.sympy_utils import SympyUtils
 
@@ -94,12 +95,34 @@ class Expression:
             possibilities.append(derivative_solved)
         return possibilities
 
+    # possibilities of solving just 1 integral
+    def integrals_solving_possibilities(self) -> List['Expression']:
+
+        integrals = []
+        for exp in preorder_traversal(self.sympy_expr):
+            exp = Expression(exp)
+            if exp.is_integral():
+                integrals.append(exp)
+
+        possibilities = []
+        for integral in integrals:
+            integral_solved = self.get_copy()
+            integral_solved.replace(integral, integral.apply_integral())
+            possibilities.append(integral_solved)
+        return possibilities
+
+    def is_integral(self):
+        return isinstance(self.sympy_expr, sympy.Integral)
+
     def is_derivative(self) -> bool:
         return isinstance(self.sympy_expr, Derivative)
 
     def apply_derivative(self) -> 'Expression':
         deriv = Derivative(self.sympy_expr.args[0], self.sympy_expr.args[1])
         return Expression(deriv.doit())
+
+    def apply_integral(self) -> 'Expression':
+        return Expression(integrate(self.sympy_expr.args[0], self.sympy_expr.args[1]))
 
     def simplify(self) -> 'Expression':
         copy = self.get_copy()
