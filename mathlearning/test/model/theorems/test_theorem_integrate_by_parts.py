@@ -1,5 +1,6 @@
 import unittest
 
+from mathlearning.model.ExpressionVariable import ExpressionVariable
 from mathlearning.model.integrate_theorems import IntegrateTheorems
 from test.model.theorems.test_utils import TestUtils
 from mathlearning.model.expression import Expression
@@ -37,8 +38,12 @@ class TestTheoremIntegrateByParts(unittest.TestCase):
 
     def test_parts_replacing_u_v_should_apply(self):
         exp = Expression('\\int (x * \\cos(x))')
+        variables = [
+            ExpressionVariable('u', Expression("x")),
+            ExpressionVariable('v', Expression("sen(x)")),
+        ]
         expected_result = [
-            Expression('u * v - \\int (\\frac{d(u)}{dx} * v)', Expression("x"), Expression("sen(x)"))
+            Expression('u * v - \\int (\\frac{d(u)}{dx} * v)', variables)
         ]
         result = theorem.apply_to(exp)
         self.assertEqual(result, expected_result)

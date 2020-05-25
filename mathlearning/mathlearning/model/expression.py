@@ -22,7 +22,8 @@ def is_sympy_exp(formula):
 
 class Expression:
 
-    def __init__(self, formula: Union['Expression', str], u: 'Expression' = None, v: 'Expression' = None, is_latex=True): # TODO: u and v to a dictionary
+    def __init__(self, formula: Union['Expression', str], variables: List['ExpressionVariables'] = [], is_latex=True):
+        self.variables = variables
         self.commutative_group_transformer = CommutativeGroupTransformer()
         self.non_commutative_group_transformer = NonCommutativeGroupTransformer()
         self.commutative_list_size_transformer = ListSizeTransformer(CommutativeGroupTransformer())
@@ -241,8 +242,24 @@ class Expression:
     def __eq__(self, other):
         """Overrides the default implementation"""
         if isinstance(other, Expression):
-            return self.to_string() == other.to_string()
+            are_formulas_equals = self.to_string() == other.to_string()
+
+            if len(self.variables) != len(other.variables):
+                return False
+
+            if len(self.variables) == 0 and len(other.variables) == 0: # TODO Lucas: add tests for it
+                return are_formulas_equals
+
+            self_variables_set = set((x.tag, x.expression) for x in self.variables)
+            different_values = [x for x in other.variables if (x.tag, x.expression) not in self_variables_set]
+            are_variables_equal = len(different_values) == 0
+
+            return are_formulas_equals and are_variables_equal
+
         return False
+
+    def __hash__(self):
+        return hash(self.sympy_expr)
 
     def __str__(self):
         return str(self.sympy_expr)
