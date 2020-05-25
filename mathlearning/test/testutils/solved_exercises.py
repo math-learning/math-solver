@@ -19,6 +19,14 @@ class SolvedExercise:
             )
         )
 
+    def as_expressions(self, list_to_convert, is_latex):
+        return list(
+            map(
+                lambda expression_string: Expression(expression_string, is_latex=is_latex),
+                list_to_convert
+            )
+        )
+
 
 
 class SolvedExercises:
@@ -134,4 +142,72 @@ class SolvedExercises:
 
         result_non_latex = "x**2*(- sin(x)**2) + (x**2*cos(x) + sin(x)* 2 * x)*cos(x)"
 
+        return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
+
+
+    # INTEGRAL EXERCISES
+
+    @staticmethod
+    def integral_add_x_cosx() -> SolvedExercise:
+        name = "sum of two integrals"
+
+        steps = [
+            '\\int (x + \\cos(x)) dx',
+            '\\int (x) dx + \\int (\\cos(x)) dx',
+            'x^2 / 2 + \\int (\\cos(x)) dx',
+            'x^2 / 2 + \\sin(x)',
+        ]
+
+        result = 'x^2 / 2 + sin(x)'
+
+        non_result_steps = steps[:len(steps) - 1]
+
+        steps_non_latex = [
+            'Integral(x+ cos(x),x)',
+            'Integral(x,x) + Integral(cos(x),x)',
+            'x**2 / 2 + Integral(cos(x),x)',
+            'x**2 / 2 + sin(x)',
+        ]
+
+        result_non_latex = 'x**2 / 2 + sin(x)'
+        return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
+
+    @staticmethod
+    def integral_parts_mult_x_cosx():
+        #   TODO
+        name = "parts rule mult cosx and x"
+
+        steps = [
+            '\\int (x * \\cos(x)) dx',
+            'x*\\sin(x) + \\cos(x)'
+        ]
+
+        result = 'x*\\sin(x) + \\cos(x)'
+
+        non_result_steps = steps[:len(steps) - 1]
+
+        steps_non_latex = [
+
+        ]
+
+        result_non_latex = ''
+        return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
+
+    @staticmethod
+    def integral_substitution():
+        #   TODO
+        name = "substitution"
+
+        steps = [
+        ]
+
+        result = ''
+
+        non_result_steps = steps[:len(steps) - 1]
+
+        steps_non_latex = [
+
+        ]
+
+        result_non_latex = ''
         return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)

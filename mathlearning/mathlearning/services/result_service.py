@@ -80,6 +80,24 @@ class ResultService:
 
                 subtrees.append(branch)
 
+        # Try solving integrals
+        # TODO: fix duplicated code
+        integral_solving_posibbilities = expression.integrals_solving_possibilities()
+        for integral_solving_possibility in integral_solving_posibbilities:
+            if not integral_solving_possibility.is_equivalent_to(expression):
+                if integral_solving_possibility.to_string() in already_seen:
+                    branch = SolutionTreeNode(integral_solving_possibility,
+                                              Theorem('resolver integrales', None, None, []),
+                                              [])
+                else:
+                    subtrees_result = self.subtrees(integral_solving_possibility, theorems, already_seen)
+                    branch = SolutionTreeNode(integral_solving_possibility,
+                                              Theorem('resolver integrales', None, None, []),
+                                              subtrees_result[0])
+                    already_seen |= subtrees_result[1]
+
+                subtrees.append(branch)
+
         return subtrees, already_seen
 
     def resolve(self,

@@ -123,7 +123,6 @@ class TestExpression(unittest.TestCase):
         expression = Expression('Derivative(x+x**2,x)', is_latex=False)
         self.assertFalse(expression.is_integral())
 
-
     def test_integrate_solving_possibilities(self):
         expression = Expression('Integral(x,x) + Integral(x**2,x) - Integral(cos(x),x)', is_latex=False)
         result = expression.integrals_solving_possibilities()

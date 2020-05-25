@@ -75,6 +75,31 @@ class SolutionTreeAPITest(APITestCase):
         self.assertEquals(result['exerciseStatus'], 'resolved')
 
 
+    def test_only_result(self, exercise: SolvedExercise):
+        # get solution tree
+        theorems = load_theorems("test/jsons/theorems.json")
+        data = {
+            'problem_input': exercise.steps[0],
+            'theorems': theorems,
+        }
+
+        response = self.client.post(path='/results/solution-tree', data=data, format='json')
+
+        tree_str = json.loads(response.content)
+        #broken_nodes = get_solution_tree_broken_nodes(tree_dict)
+
+        resolve_data = {'problem_input': exercise.steps[0], 'math_tree': tree_str, 'type': 'derivative',
+                        'theorems': theorems, 'step_list': json.dumps(exercise.steps),
+                        'current_expression': exercise.steps[-1]}
+
+        # the result should be resolved
+        response = self.client.post(path='/resolve', data=resolve_data, format='json')
+
+        result = json.loads(response.content)
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
+        self.assertEquals(result['exerciseStatus'], 'resolved')
+
+
 
     def test_solution_tree_cases_sum_of_two_derivatives(self):
         self.solve_exercise_with_solution_tree(SolvedExercises.derivative_e_plus_sin())
@@ -87,3 +112,9 @@ class SolutionTreeAPITest(APITestCase):
 
     def test_solution_tree_cases_sum_derivative_x2_derivative_sum_x_cos(self):
         self.solve_exercise_with_solution_tree(SolvedExercises.sum_derivative_x2_derivative_sum_x_cos())
+
+    def test_integral_solution_sum_of_two(self):
+        self.test_only_result(SolvedExercises.integral_add_x_cosx())
+
+    def test_integral_solution_parts(self):
+        self.test_only_result(SolvedExercises.integral_parts_mult_x_cosx())
