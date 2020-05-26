@@ -16,7 +16,7 @@ class TheoremMapper:
     @staticmethod
     def theorem(theo: dict) -> List[Theorem]:
         if theo.get("name") == 'IntegrateByPartsTheorem':
-            return IntegrateByPartsTheorem(theo.get("name"), theo.get("conditions"))
+            return IntegrateByPartsTheorem()
 
         return Theorem(theo.get("name"), theo.get("left"), theo.get("right"), theo.get("conditions"))
 

@@ -1,4 +1,4 @@
-from mathlearning.model.ExpressionVariable import ExpressionVariable
+from mathlearning.model.expression_variable import ExpressionVariable
 from mathlearning.model.theorem import Theorem
 from mathlearning.model.template_match_analyzer import TemplateMatchAnalyzer
 from mathlearning.model.expression import Expression
@@ -12,9 +12,10 @@ from sympy.integrals.manualintegrate import (integral_steps, parts_rule, Integra
 logger = Logger.getLogger()
 
 class IntegrateByPartsTheorem(Theorem):
-    def __init__(self, name: str, conditions: dict):
-        self.name = name
-        self.conditions = conditions
+    def __init__(self):
+        self.name = 'IntegrateByPartsTheorem'
+        self.left = None
+        self.right = None
         self.analyzer = TemplateMatchAnalyzer() # TODO: que rayos es esto?
 
     def there_is_a_chance_to_apply_to(self, expression: Expression):
@@ -48,10 +49,8 @@ class IntegrateByPartsTheorem(Theorem):
 
         main_expression = Expression('u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', variables)
 
-        main_expression == Expression('x * cos(x) - \\int (\\frac{d(x)}{dx} * cos(x)) dx')
-
-
-        main_expression = Expression('x * cos(x) - \\int (\\frac{d(x)}{dx} * cos(x)) dx', variables)
+        #main_expression == Expression('x * cos(x) - \\int (\\frac{d(x)}{dx} * cos(x)) dx')
+        #main_expression = Expression('x * cos(x) - \\int (\\frac{d(x)}{dx} * cos(x)) dx', variables)
         # TODO: investigar dx
 
         #Expression('\\int u * \\frac{d(v)}{dx}', variables)
@@ -61,8 +60,6 @@ class IntegrateByPartsTheorem(Theorem):
         # \\int(x * sen(x)) dx + POR PARTES(\\int(x * cos(x)) dx)
 
         # POR PARTES(\\int(x * sen(x)) dx) + \\int(x * cos(x)) dx
-
-
 
         return [main_expression]
 

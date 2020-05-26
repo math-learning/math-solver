@@ -1,7 +1,7 @@
 from mathlearning.mappers.solution_tree_mapper import SolutionTreeMapper
 from mathlearning.mappers.theorem_mapper import TheoremMapper
 from mathlearning.mappers.validate_mapper import ValidateMapper, ValidateMapperException
-from mathlearning.model.ExpressionVariable import ExpressionVariable
+from mathlearning.model.expression_variable import ExpressionVariable
 from mathlearning.services.result_service import ResultService
 from mathlearning.utils.logger import Logger
 from mathlearning.model.expression import Expression
@@ -52,7 +52,7 @@ def resolve(request: Request):
         step_list = list(map(lambda expression: Expression(expression), json.loads(body['step_list'])))
 
         # Current expression
-        body_variables = json.loads(body['current_expression']['variables'])
+        body_variables = body['current_expression']['variables']
         variables = list(map(lambda variable: ExpressionVariable(variable['tag'], Expression(variable['value'])), body_variables if body_variables is not None else []))
         current_expression = Expression(body['current_expression']['expression'], variables)
 

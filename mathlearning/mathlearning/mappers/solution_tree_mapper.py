@@ -1,9 +1,8 @@
 import json
-
 from mathlearning.mappers.theorem_mapper import TheoremMapper
 from mathlearning.model.expression import Expression
+from mathlearning.model.expression_variable import ExpressionVariable
 from mathlearning.services.result_service import SolutionTreeNode
-
 
 class SolutionTreeMapper:
 
@@ -17,6 +16,16 @@ class SolutionTreeMapper:
         branches = []
         for branch in node_dictionary['branches']:
             branches.append(SolutionTreeMapper.parse_node(branch))
-        expression = Expression(node_dictionary['expression'], is_latex=False)
+
+        json_expression = json.loads(node_dictionary['expression'])
+        expression = SolutionTreeMapper.parse_expression(json_expression)
         theorem_applied = TheoremMapper.theorem(node_dictionary['theorem_applied'])
         return SolutionTreeNode(expression, theorem_applied, branches)
+
+    @staticmethod
+    def parse_expression(json_expression):
+        main_expression = json_expression['expression']
+        json_variables = json_expression['variables']
+        variables = list(map(lambda variable: ExpressionVariable(variable['tag'], SolutionTreeMapper.parse_expression(json.loads(variable['expression']))), json_variables))
+
+        return Expression(main_expression, variables, is_latex=False)

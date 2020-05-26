@@ -1,5 +1,6 @@
 import inspect
 import sympy
+import json
 from sympy import Symbol
 from sympy.parsing.latex import parse_latex
 from sympy.core.basic import preorder_traversal
@@ -114,7 +115,11 @@ class Expression:
         return isinstance(self.sympy_expr.func, UndefinedFunction) and not self.is_derivative()
 
     def to_string(self) -> str:
-        return str(self.sympy_expr)
+        return json.dumps({
+            'expression': str(self.sympy_expr),
+            'variables': list(map(lambda variable: variable.to_json(), self.variables))
+        })
+        #return str(self.sympy_expr)
 
     def to_latex(self) -> str:
         return sympy.latex(self.sympy_expr)
