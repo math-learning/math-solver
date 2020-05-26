@@ -174,11 +174,16 @@ class SolvedExercises:
 
     @staticmethod
     def integral_parts_mult_x_cosx():
-        #   TODO
         name = "parts rule mult cosx and x"
 
+        # TODO: check again the steps
         steps = [
             '\\int (x * \\cos(x)) dx',
+            '\\int (u(x) * \\frac{v(x)}{dx}) dx', # TODO think if this step should be included
+            'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', # u = x; v = sin(x)
+            'x * \\sin(x) - \\int (\\frac{d(x)}{dx} * \\sin(x)) dx',
+            'x * \\sin(x) - \\int (1 * \\sin(x)) dx',
+            'x * \\sin(x) - \\int (\\sin(x)) dx',
             'x*\\sin(x) + \\cos(x)'
         ]
 
@@ -199,9 +204,21 @@ class SolvedExercises:
         name = "substitution"
 
         steps = [
+            '\\int ( x^2 / (\\sqrt[3]{1+2x}) ) dx', # 1+2x = t^3 => x = ( t^3 - 1 ) / 2 ; 2dx = 3t^2 dt dx = (3t^2 dt)/2
+            '\\int ( \\frac{ (( t^3 - 1 ) / 2)^2}{t} * (3*t^2)/2 ) dt',
+            '(3/2) * \\int ( (t^6-2t^3+1)/4 *t ) dt',
+            '3/8 * (\\int (t^7 - 2t^4 + t) dt)',
+            '3/8 * (\\int (t^7) dt - \\int( 2t^4 + t) dt)',
+            '3/8 * (\\int (t^7) dt - \\int( 2t^4) dt + \\int (t) dt)',
+            '3/8 * (\\int (t^7) dt - \\int( 2t^4) dt + t^2/2)',
+            '3/8 * (\\int (t^7) dt - 2t^5/5 + t^2/2)',
+            '3/8 * (t^8/8 - 2t^5/5 + t^2/2)', # t = \\sqrt[3]{1 +2x}
+            '3/8 * ((\\sqrt[3]{1 +2x})^8/8 - 2(\\sqrt[3]{1 +2x})^5/5 + (\\sqrt[3]{1 +2x})^2/2)',
+            '3/64 * (\\sqrt[3]{1 +2x})^8 - 6/40 * (\\sqrt[3]{1 +2x})^5 + 3/16 *(\\sqrt[3]{1 +2x})^2',
+            '3/64 * (\\sqrt[3]{1 +2x})^8 - 3/20 * (\\sqrt[3]{1 +2x})^5 + 3/16 *(\\sqrt[3]{1 +2x})^2',
         ]
 
-        result = ''
+        result = '3/64 * (\\sqrt[3]{1 +2x})^8 - 3/20 * (\\sqrt[3]{1 +2x})^5 + 3/16 *(\\sqrt[3]{1 +2x})^2'
 
         non_result_steps = steps[:len(steps) - 1]
 
