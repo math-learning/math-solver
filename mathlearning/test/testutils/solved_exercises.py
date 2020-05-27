@@ -199,7 +199,7 @@ class SolvedExercises:
         return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
 
     @staticmethod
-    def integral_substitution():
+    def integral_substitution_division_of_polynomials():
         #   TODO
         name = "substitution"
 
@@ -224,6 +224,50 @@ class SolvedExercises:
 
         steps_non_latex = [
 
+        ]
+
+        result_non_latex = ''
+        return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
+
+    @staticmethod
+    def integral_substitution_sin_with_polynomials() -> SolvedExercise:
+        # TODO check why the result is different
+        name = "sin with polynomials"
+
+        steps = [
+            '\\int(\\sin(3*x + 5))dx',# u = 3x+5 du=3dx
+            '1/3 * \\int(\\sin(3x+5)) * 3 dx',
+            '1/3 * \\int(\\sin(u)) * du',
+            '- 1/3 * \\cos(u)',
+            '- 1/3 * \\cos(3x+5)'
+        ]
+
+        result = '- 1/3 * \\cos(3x+5)'
+
+        non_result_steps = steps[:len(steps) - 1]
+
+        steps_non_latex = [
+        ]
+
+        result_non_latex = ''
+        return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
+
+    @staticmethod
+    def integral_substitution_multiplication() -> SolvedExercise:
+        name = "substitution multiplication"
+
+        steps = [
+            '\\int(2 * x \\sqrt[2]{1+x^2}) dx',  # u = 1+x^2 du=2x dx
+            '\\int(\\sqrt[2]{u}) du',
+            '2/3 * u^{3/2}',
+            '2/3 * (1+x^2)^{3/2}',
+        ]
+
+        result = '2/3 * (1+x^2)^{3/2}'
+
+        non_result_steps = steps[:len(steps) - 1]
+
+        steps_non_latex = [
         ]
 
         result_non_latex = ''

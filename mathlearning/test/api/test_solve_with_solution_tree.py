@@ -119,5 +119,11 @@ class SolutionTreeAPITest(APITestCase):
     def test_integral_solution_parts(self):
         self.test_only_result(SolvedExercises.integral_parts_mult_x_cosx())
 
-    def test_integral_solution_substitution(self):
-        self.test_only_result(SolvedExercises.integral_substitution())
+    def test_integral_substitution_division_of_polynomials(self):
+        self.test_only_result(SolvedExercises.integral_substitution_division_of_polynomials())
+
+    def test_integral_substitution_sin_with_polynomials(self):
+        self.test_only_result(SolvedExercises.integral_substitution_sin_with_polynomials())
+
+    def test_integral_substitution_multiplication(self):
+        self.test_only_result(SolvedExercises.integral_substitution_multiplication())
