@@ -272,3 +272,79 @@ class SolvedExercises:
 
         result_non_latex = ''
         return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
+
+
+    # https://www.intmath.com/methods-integration/7-integration-by-parts.php
+    @staticmethod
+    def integral_parts_example_one():
+        name = "parts example one"
+
+        steps = [
+            '\\int( x * \\sin(2*x)) dx',  # u = x  dv = sin(2x) dx ; v -cos(2x)/2
+            '\\int (u(x) * \\frac{v(x)}{dx}) dx', # TODO think if this step should be included
+            'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx',
+            'x * (- \\cos(2x)/2) - \\int (\\frac{d(x)}{dx} * (-\\cos(2x)/2) ) dx',
+            'x * (- \\cos(2x)/2) - \\int ( 1 * (-\\cos(2x)/2) ) dx',
+            'x * (- \\cos(2x)/2) - \\int ((-\\cos(2x)/2) ) dx',
+            'x * (- \\cos(2x)/2) + 1/2 * \\int (\\cos(2x) ) dx',
+            'x * (- \\cos(2x)/2) + 1/2 * \\sin(2x)/2',
+            'x * (- \\cos(2x)/2) + 1/2 * \\sin(2x)/2'
+        ]
+
+        result = 'x * (- \\cos(2x)/2) + 1/2 * \\sin(2x)/2'
+
+        non_result_steps = steps[:len(steps) - 1]
+
+        steps_non_latex = [
+        ]
+
+        result_non_latex = ''
+        return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
+
+    @staticmethod
+    def integral_parts_example_two():
+        name = "parts example two"
+
+        steps = [
+            '\\int ( x * \\sqrt[2]{x+1} ) dx',
+            '\\int (u(x) * \\frac{v(x)}{dx}) dx',  # TODO think if this step should be included
+            'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx',
+            'x * (2/3 * (x+1)^{3/2}) - \\int (2/3 * (x+1)^{3/2}) dx',
+            'x * (2/3 * (x+1)^{3/2}) - 2/3 * \\int ((x+1)^{3/2}) dx',
+            'x * (2/3 * (x+1)^{3/2}) - 2/3 * 2/5 * (x+1)^{5/2}',
+            'x * (2/3 * (x+1)^{3/2}) - 4/15 * (x+1)^{5/2}',
+        ]
+
+        result = 'x * (2/3 * (x+1)^{3/2}) - 4/15 * (x+1)^{5/2}'
+
+        non_result_steps = steps[:len(steps) - 1]
+
+        steps_non_latex = [
+        ]
+
+        result_non_latex = ''
+        return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
+
+    @staticmethod
+    def integral_parts_example_six():
+        name = "parts example six"
+
+        steps = [
+            '\\int (\\ln(x)) dx',
+            '\\int (u(x) * \\frac{v(x)}{dx}) dx',  # TODO think if this step should be included
+            'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx',
+            '\\ln(x) * x - \\int (\\frac{d(\\ln(x))}{dx} * x ) dx',
+            '\\ln(x) * x - \\int (\\frac{1}{x} * x ) dx',
+            '\\ln(x) * x - \\int (1) dx',
+            '\\ln(x) * x - x'
+        ]
+
+        result = '\\ln(x) * x - x'
+
+        non_result_steps = steps[:len(steps) - 1]
+
+        steps_non_latex = [
+        ]
+
+        result_non_latex = ''
+        return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)

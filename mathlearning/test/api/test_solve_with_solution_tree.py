@@ -127,3 +127,12 @@ class SolutionTreeAPITest(APITestCase):
 
     def test_integral_substitution_multiplication(self):
         self.test_only_result(SolvedExercises.integral_substitution_multiplication())
+
+    def test_integral_parts_example_one(self):
+        self.test_only_result(SolvedExercises.integral_parts_example_one())
+
+    def test_integral_parts_example_two(self):
+        self.test_only_result(SolvedExercises.integral_parts_example_two())
+
+    def test_integral_parts_example_six(self):
+        self.test_only_result(SolvedExercises.integral_parts_example_six())
