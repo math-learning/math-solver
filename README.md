@@ -10,6 +10,7 @@ Correr el siguiente comando en una terminal estando posicionado en el mismo dire
 
 Primera vez:
 
+    $ source ./bin/activate
     $ pip3 install -r mathlearning/requirements.txt 
     $ docker-compose up --build
     
