@@ -33,7 +33,7 @@ def solve_derivative(request: Request):
 def calculate_solution_tree(request: Request):
     if request.method == 'POST':
         body = json.loads(request.body)
-        expression = Expression(body['problem_input'])
+        expression = Expression(body['problem_input']['expression'], body['problem_input']['variables'])
         theorems = theoremMapper.theorems(body['theorems'])
         result = result_service.solution_tree(expression, theorems)
         result = result.to_json()
@@ -46,10 +46,10 @@ def resolve(request: Request):
     if request.method == 'POST':
         body = json.loads(request.body)
 
-        problem_input = Expression(body['problem_input'])
+        problem_input = Expression(body['problem_input']['expression'], body['problem_input']['variables'])
         solution_tree = solutionTreeMapper.parse(body['math_tree'])
         exercise_type = body['type']
-        step_list = list(map(lambda expression: Expression(expression), json.loads(body['step_list'])))
+        step_list = list(map(lambda step: Expression(step['expression'], step['variables']), json.loads(body['step_list'])))
 
         # Current expression
         body_variables = body['current_expression']['variables']

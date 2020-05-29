@@ -75,7 +75,7 @@ class SolutionTreeAPITest(APITestCase):
         self.assertEquals(result['exerciseStatus'], 'resolved')
 
 
-    def test_only_result(self, exercise: SolvedExercise):
+    def sub_test_only_result(self, exercise: SolvedExercise):
         # get solution tree
         theorems = load_theorems("test/jsons/theorems.json")
         data = {
@@ -114,25 +114,25 @@ class SolutionTreeAPITest(APITestCase):
         self.solve_exercise_with_solution_tree(SolvedExercises.sum_derivative_x2_derivative_sum_x_cos())
 
     def test_integral_solution_sum_of_two(self):
-        self.test_only_result(SolvedExercises.integral_add_x_cosx())
+        self.sub_test_only_result(SolvedExercises.integral_add_x_cosx())
 
     def test_integral_solution_parts(self):
-        self.test_only_result(SolvedExercises.integral_parts_mult_x_cosx())
+        self.sub_test_only_result(SolvedExercises.integral_parts_mult_x_cosx())
 
     def test_integral_substitution_division_of_polynomials(self):
-        self.test_only_result(SolvedExercises.integral_substitution_division_of_polynomials())
+        self.sub_test_only_result(SolvedExercises.integral_substitution_division_of_polynomials())
 
     def test_integral_substitution_sin_with_polynomials(self):
-        self.test_only_result(SolvedExercises.integral_substitution_sin_with_polynomials())
+        self.sub_test_only_result(SolvedExercises.integral_substitution_sin_with_polynomials())
 
     def test_integral_substitution_multiplication(self):
-        self.test_only_result(SolvedExercises.integral_substitution_multiplication())
+        self.sub_test_only_result(SolvedExercises.integral_substitution_multiplication())
 
     def test_integral_parts_example_one(self):
-        self.test_only_result(SolvedExercises.integral_parts_example_one())
+        self.sub_test_only_result(SolvedExercises.integral_parts_example_one())
 
     def test_integral_parts_example_two(self):
-        self.test_only_result(SolvedExercises.integral_parts_example_two())
+        self.sub_test_only_result(SolvedExercises.integral_parts_example_two())
 
     def test_integral_parts_example_six(self):
-        self.test_only_result(SolvedExercises.integral_parts_example_six())
+        self.sub_test_only_result(SolvedExercises.integral_parts_example_six())

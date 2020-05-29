@@ -35,31 +35,31 @@ class SolvedExercises:
     def derivative_e_plus_sin() -> SolvedExercise:
         name = "e + sen"
         steps = [
-            "\\frac{d\\left(e^x.\\ x\\right)}{dx}\\ +\\ \\frac{d\\left(sen\\left(x\\right)\\cdot x^2\\right)}{dx}",
-            "\\frac{d\\left(e^x\\right)}{dx}\\cdot x\\ +\\ \\frac{d\\left(x\\right)}{dx}\\cdot e^x\\ +\\ \\frac{d\\left(\\sin \\left(x\\right)\\cdot x^2\\right)}{dx}",
-            "e^x\\cdot x\\ +\\ \\frac{d\\left(x\\right)}{dx}\\cdot e^x\\ +\\ \\frac{d\\left(\\sin \\left(x\\right)\\cdot x^2\\right)}{dx}",
-            "e^x\\cdot x\\ +\\ e^x\\ +\\ \\frac{d\\left(\\sin \\left(x\\right)\\cdot x^2\\right)}{dx}",
-            "e^x\\cdot x\\ +\\ e^x\\ +\\ \\frac{d\\left(\\sin \\left(x\\right)\\right)}{dx}\\cdot x^2+\\sin \\left(x\\right)\\cdot \\frac{d\\left(x^2\\right)}{dx}",
-            "e^x\\cdot x\\ +\\ e^x\\ +\\ \\frac{d\\left(\\sin \\left(x\\right)\\right)}{dx}\\cdot x^2+\\sin \\left(x\\right)\\cdot 2\\ \\cdot x",
-            "e^x\\cdot x\\ +\\ e^x\\ +\\ \\cos \\left(x\\right)\\cdot x^2+\\sin \\left(x\\right)\\cdot 2\\ \\cdot x",
-            "e^x\\cdot \\left(1\\ +x\\right)+\\ \\cos \\left(x\\right)\\cdot x^2+\\sin \\left(x\\right)\\cdot 2\\ \\cdot x"
+            {'expression': '\\frac{d(e^x.\\ x)}{dx}\\ +\\ \\frac{d(sen(x)* x^2)}{dx}', 'variables': []},
+            {'expression': '\\frac{d(e^x)}{dx}* x\\ +\\ \\frac{d(x)}{dx}* e^x\\ +\\ \\frac{d(\\sin(x)* x^2)}{dx}', 'variables': []},
+            {'expression': 'e^x* x\\ +\\ \\frac{d(x)}{dx}* e^x\\ +\\ \\frac{d(\\sin(x)* x^2)}{dx}', 'variables': []},
+            {'expression': 'e^x* x\\ +\\ e^x\\ +\\ \\frac{d(\\sin(x)* x^2)}{dx}', 'variables': []},
+            {'expression': 'e^x* x\\ +\\ e^x\\ +\\ \\frac{d(\\sin(x))}{dx}* x^2+\\sin(x)* \\frac{d(x^2)}{dx}', 'variables': []},
+            {'expression': 'e^x* x\\ +\\ e^x\\ +\\ \\frac{d(\\sin(x))}{dx}* x^2+\\sin(x)* 2\\ * x', 'variables': []},
+            {'expression': 'e^x* x\\ +\\ e^x\\ +\\ \\cos(x)* x^2+\\sin(x)* 2\\ * x', 'variables': []},
+            {'expression': 'e^x* (1\\ +x)+\\ \\cos(x)* x^2+\\sin(x)* 2\\ * x', 'variables': []}
         ]
 
         non_result_steps = steps[:len(steps) - 2]
 
-        result = "e^x\\cdot \\left(1\\ +x\\right)+\\ \\cos \\left(x\\right)\\cdot x^2+\\sin \\left(x\\right)\\cdot 2\\ \\cdot x"
+        result = {'expression': 'e^x* (1\\ +x)+\\ \\cos(x)* x^2+\\sin(x)* 2\\ * x', 'variables': []}
 
         steps_non_latex = [
-            "Derivative(x*exp(x), x) + Derivative(x**2*sin(x), x)",
-            "x*Derivative(exp(x), x) + exp(x)*Derivative(x, x) + Derivative(x**2*sin(x), x)",
-            "x*exp(x) + exp(x)*Derivative(x, x) + Derivative(x**2*sin(x), x)",
-            "x*exp(x) + exp(x) + Derivative(x**2*sin(x), x)",
-            "x*exp(x) + exp(x) + x**2 * Derivative(sin(x), x) + sin(x) * Derivative(x**2, x)",
-            "x*exp(x) + exp(x) + x**2 * Derivative(sin(x), x) + sin(x) * 2 * x",
-            "x**2*cos(x) + x*2*sin(x) + (x + 1)*exp(x)"
+            {'expression': 'Derivative(x*exp(x), x) + Derivative(x**2*sin(x), x)', 'variables': []},
+            {'expression': 'x*Derivative(exp(x), x) + exp(x)*Derivative(x, x) + Derivative(x**2*sin(x), x)', 'variables': []},
+            {'expression': 'x*exp(x) + exp(x)*Derivative(x, x) + Derivative(x**2*sin(x), x)', 'variables': []},
+            {'expression': 'x*exp(x) + exp(x) + Derivative(x**2*sin(x), x)', 'variables': []},
+            {'expression': 'x*exp(x) + exp(x) + x**2 * Derivative(sin(x), x) + sin(x) * Derivative(x**2, x)', 'variables': []},
+            {'expression': 'x*exp(x) + exp(x) + x**2 * Derivative(sin(x), x) + sin(x) * 2 * x', 'variables': []},
+            {'expression': 'x**2*cos(x) + x*2*sin(x) + (x + 1)*exp(x)', 'variables': []}
         ]
 
-        result_non_latex = "x**2*cos(x) + x*(2*sin(x)) + (x + 1)*exp(x)"
+        result_non_latex = {'expression': 'x**2*cos(x) + x*(2*sin(x)) + (x + 1)*exp(x)', 'variables': []}
 
         return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
 
@@ -67,23 +67,23 @@ class SolvedExercises:
     def derivative_sin_divided_by_cos() -> SolvedExercise:
         name = "sen / cos"
         steps = [
-            "\\frac{d(\\frac{sen(x)}{\\cos(x)})} {dx}",
-            "\\frac{\\frac{d\\left(sen\\left(x\\right)\\right)}{dx}\\cdot \\cos \\left(x\\right)\\ -\\ sen\\left(x\\right)\\ \\cdot \\ \\frac{d\\left(\\cos \\left(x\\right)\\right)}{dx}}{\\cos ^2\\left(x\\right)}",
-            "\\frac{\\cos^2\\left(x\\right)\\ +\\ sen^2\\left(x\\right)\\ }{\\cos ^2\\left(x\\right)}",
-            "\\frac{1}{\\cos^2\\left(x\\right)}"
+            {'expression': '\\frac{d(\\frac{sen(x)}{\\cos(x)})} {dx}', 'variables': []},
+            {'expression': '\\frac{\\frac{d(sen(x))}{dx}* \\cos(x)\\ -\\ sen(x)\\ * \\ \\frac{d(\\cos(x))}{dx}}{\\cos ^2(x)}', 'variables': []},
+            {'expression': '\\frac{\\cos^2(x)\\ +\\ sen^2(x)\\ }{\\cos ^2(x)}', 'variables': []},
+            {'expression': '\\frac{1}{\\cos^2(x)}', 'variables': []}
         ]
-        result = "\\frac{1}{\\cos^2\\left(x\\right)}"
+        result = {'expression': '\\frac{1}{\\cos^2(x)}', 'variables': []}
 
         non_result_steps = steps[:len(steps) - 2]
 
         steps_non_latex = [
-            "Derivative(sin(x)/cos(x), x)",
-            "(-sin(x)*Derivative(cos(x), x) + cos(x)*Derivative(sin(x), x))/cos(x)**2",
-            "(sin(x)**2 + cos(x)**2)/cos(x)**2",
-            "1/(cos(x)**2)"
+            {'expression': 'Derivative(sin(x)/cos(x), x)', 'variables': []},
+            {'expression': '(-sin(x)*Derivative(cos(x), x) + cos(x)*Derivative(sin(x), x))/cos(x)**2', 'variables': []},
+            {'expression': '(sin(x)**2 + cos(x)**2)/cos(x)**2', 'variables': []},
+            {'expression': '1/(cos(x)**2)', 'variables': []}
         ]
 
-        result_non_latex = "1/(cos(x)**2)"
+        result_non_latex = {'expression': '1/(cos(x)**2)', 'variables': []}
 
         return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
 
@@ -92,23 +92,23 @@ class SolvedExercises:
         name = "deriv x**2 + dervi suma x + cos"
 
         steps = [
-            "\\frac{d\\left(x^2\\right)}{dx}+\\frac{d\\left(x\\ +\\cos \\left(x\\right)\\right)}{dx}",
-            "\\frac{d\\left(x^2\\right)}{dx}+\\frac{d\\left(x\\right)}{dx}+\\frac{d\\left(\\cos \\left(x\\right)\\right)}{dx}",
-            "2\\cdot x+\\frac{d\\left(x\\right)}{dx}+\\frac{d\\left(\\cos \\left(x\\right)\\right)}{dx}",
-            "2\\cdot x+1+\\frac{d\\left(\\cos \\left(x\\right)\\right)}{dx}",
-            "2\\cdot x+1-\\sin \\left(x\\right)"
+            {'expression': '\\frac{d(x^2)}{dx}+\\frac{d(x\\ +\\cos(x))}{dx}', 'variables': []},
+            {'expression': '\\frac{d(x^2)}{dx}+\\frac{d(x)}{dx}+\\frac{d(\\cos(x))}{dx}', 'variables': []},
+            {'expression': '2* x+\\frac{d(x)}{dx}+\\frac{d(\\cos(x))}{dx}', 'variables': []},
+            {'expression': '2* x+1+\\frac{d(\\cos(x))}{dx}', 'variables': []},
+            {'expression': '2* x+1-\\sin(x)', 'variables': []}
         ]
-        result = "2\\cdot x+1-\\sin \\left(x\\right)"
+        result = {'expression': '2  * x+1-\\sin(x)', 'variables': []}
 
         non_result_steps = steps[:len(steps) - 1]
 
-        result_non_latex = "2*x + 1 - sin(x)"
+        result_non_latex = {'expression': '2*x + 1 - sin(x)', 'variables': []}
         steps_non_latex = [
-            "Derivative(x**2, x) + Derivative(x + cos(x), x)",
-            "Derivative(x, x) + Derivative(x**2, x) + Derivative(cos(x), x)",
-            "2*x + Derivative(x, x) + Derivative(cos(x), x)",
-            "2*x + 1 + Derivative(cos(x), x)",
-            "2*x + 1 - sin(x)"
+            {'expression': 'Derivative(x**2, x) + Derivative(x + cos(x), x)', 'variables': []},
+            {'expression': 'Derivative(x, x) + Derivative(x**2, x) + Derivative(cos(x), x)', 'variables': []},
+            {'expression': '2*x + Derivative(x, x) + Derivative(cos(x), x)', 'variables': []},
+            {'expression': '2*x + 1 + Derivative(cos(x), x)', 'variables': []},
+            {'expression': '2*x + 1 - sin(x)', 'variables': []}
         ]
 
         return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
@@ -119,28 +119,28 @@ class SolvedExercises:
         name = "multiplication of 3 elem"
 
         steps = [
-            "x^2\\sin (x)\\frac{d\\left(\\cos \\left(x\\right)\\right)}{dx}+\\cos (x)\\frac{d\\left(x^2\\sin (x)\\right)}{dx}",
-            "x^2\\sin (x)\\ \\left(-\\sin \\left(x\\right)\\right)+\\cos (x)\\frac{d\\left(x^2\\sin (x)\\right)}{dx}",
-            "-\\ x^2\\sin ^2(x)\\ +\\cos (x)\\frac{d\\left(x^2\\sin (x)\\right)}{dx}",
-            '- x^{2} \\sin^{2}{\\left(x \\right)} + \\left(x^{2} \\frac{d}{d x} \\sin{\\left(x \\right)} + \\sin(x) \\frac{d}{d x} x^{2}\\right) \\cos{\\left(x \\right)}',
-            '- x^{2} \\sin^{2}{\\left(x \\right)} + \\left(x^{2} \\frac{d}{d x} \\sin{\\left(x \\right)} + 2 x \\sin{\\left(x \\right)}\\right) \\cos{\\left(x \\right)}',
-            '- x^{2} \\sin^{2}{\\left(x \\right)} + \\left(x^{2} \\cos{\\left(x \\right)} + 2 x \\sin{\\left(x \\right)}\\right) \\cos{\\left(x \\right)}'
+            {'expression': 'x^2\\sin(x)\\frac{d(\\cos(x))}{dx}+\\cos(x)\\frac{d(x^2\\sin(x))}{dx}', 'variables': []},
+            {'expression': 'x^2\\sin(x)\\ (-\\sin(x))+\\cos(x)\\frac{d(x^2\\sin(x))}{dx}', 'variables': []},
+            {'expression': '-\\ x^2\\sin ^2(x)\\ +\\cos(x)\\frac{d(x^2\\sin(x))}{dx}', 'variables': []},
+            {'expression': '- x^{2} \\sin^{2}{(x )} + (x^{2} \\frac{d}{d x} \\sin{(x )} + \\sin(x) \\frac{d}{d x} x^{2}) \\cos{(x )}', 'variables': []},
+            {'expression': '- x^{2} \\sin^{2}{(x )} + (x^{2} \\frac{d}{d x} \\sin{(x )} + 2 x \\sin{(x )}) \\cos{(x )}', 'variables': []},
+            {'expression': '- x^{2} \\sin^{2}{(x )} + (x^{2} \\cos{(x )} + 2 x \\sin{(x )}) \\cos{(x )}', 'variables': []}
         ]
 
-        result = '- x^{2} \\sin^{2}{\\left(x \\right)} + \\left(x^{2} \\cos{\\left(x \\right)} + 2 x \\sin{\\left(x \\right)}\\right) \\cos{\\left(x \\right)}'
+        result = {'expression': '- x^{2} \\sin^{2}{(x )} + (x^{2} \\cos{(x )} + 2 x \\sin{(x )}) \\cos{(x )}', 'variables': []}
 
         non_result_steps = steps[:len(steps) - 1]
 
         steps_non_latex = [
-            "x**2*(sin(x)*Derivative(cos(x), x)) + cos(x)*Derivative(x**2*sin(x), x)",
-            "x**2*((-sin(x))*sin(x)) + cos(x)*Derivative(x**2*sin(x), x)",
-            "-x**2*sin(x)**2 + cos(x)*Derivative(x**2*sin(x), x)",
-            "-x**2*sin(x)**2 + (x**2*Derivative(sin(x), x) + sin(x)*Derivative(x**2, x))*cos(x)",
-            "-x**2*sin(x)**2 + (x**2*Derivative(sin(x), x) + sin(x)* 2 * x)*cos(x)",
-            "-x**2*sin(x)**2 + (x**2*cos(x) + sin(x)* 2 * x)*cos(x)"
+            {'expression': 'x**2*(sin(x)*Derivative(cos(x), x)) + cos(x)*Derivative(x**2*sin(x), x)', 'variables': []},
+            {'expression': 'x**2*((-sin(x))*sin(x)) + cos(x)*Derivative(x**2*sin(x), x)', 'variables': []},
+            {'expression': '-x**2*sin(x)**2 + cos(x)*Derivative(x**2*sin(x), x)', 'variables': []},
+            {'expression': '-x**2*sin(x)**2 + (x**2*Derivative(sin(x), x) + sin(x)*Derivative(x**2, x))*cos(x)', 'variables': []},
+            {'expression': '-x**2*sin(x)**2 + (x**2*Derivative(sin(x), x) + sin(x)* 2 * x)*cos(x)', 'variables': []},
+            {'expression': '-x**2*sin(x)**2 + (x**2*cos(x) + sin(x)* 2 * x)*cos(x)', 'variables': []}
         ]
 
-        result_non_latex = "x**2*(- sin(x)**2) + (x**2*cos(x) + sin(x)* 2 * x)*cos(x)"
+        result_non_latex = {'expression': "x**2*(- sin(x)**2) + (x**2*cos(x) + sin(x)* 2 * x)*cos(x)", 'variables': []}
 
         return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
 
@@ -152,24 +152,24 @@ class SolvedExercises:
         name = "sum of two integrals"
 
         steps = [
-            '\\int (x + \\cos(x)) dx',
-            '\\int (x) dx + \\int (\\cos(x)) dx',
-            'x^2 / 2 + \\int (\\cos(x)) dx',
-            'x^2 / 2 + \\sin(x)',
+            {'expression': '\\int (x + \\cos(x)) dx', 'variables': []},
+            {'expression': '\\int (x) dx + \\int (\\cos(x)) dx', 'variables': []},
+            {'expression': 'x^2 / 2 + \\int (\\cos(x)) dx', 'variables': []},
+            {'expression': 'x^2 / 2 + \\sin(x)', 'variables': []}
         ]
 
-        result = 'x^2 / 2 + sin(x)'
+        result = {'expression': 'x^2 / 2 + sin(x)', 'variables': []}
 
         non_result_steps = steps[:len(steps) - 1]
 
         steps_non_latex = [
-            'Integral(x+ cos(x),x)',
-            'Integral(x,x) + Integral(cos(x),x)',
-            'x**2 / 2 + Integral(cos(x),x)',
-            'x**2 / 2 + sin(x)',
+            {'expression': 'Integral(x+ cos(x),x)', 'variables': []},
+            {'expression': 'Integral(x,x) + Integral(cos(x),x)', 'variables': []},
+            {'expression': 'x**2 / 2 + Integral(cos(x),x)', 'variables': []},
+            {'expression': 'x**2 / 2 + sin(x)', 'variables': []}
         ]
 
-        result_non_latex = 'x**2 / 2 + sin(x)'
+        result_non_latex = {'expression': 'x**2 / 2 + sin(x)', 'variables': []}
         return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
 
     @staticmethod
@@ -178,16 +178,16 @@ class SolvedExercises:
 
         # TODO: check again the steps
         steps = [
-            '\\int (x * \\cos(x)) dx',
-            '\\int (u(x) * \\frac{v(x)}{dx}) dx', # TODO think if this step should be included
-            'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', # u = x; v = sin(x)
-            'x * \\sin(x) - \\int (\\frac{d(x)}{dx} * \\sin(x)) dx',
-            'x * \\sin(x) - \\int (1 * \\sin(x)) dx',
-            'x * \\sin(x) - \\int (\\sin(x)) dx',
-            'x*\\sin(x) + \\cos(x)'
+            {'expression': '\\int (x * \\cos(x)) dx', 'variables': []},
+            {'expression': '\\int (u(x) * \\frac{v(x)}{dx}) dx', 'variables': []}, # TODO think if this step should be included
+            {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', 'variables': []}, # u = x; v = sin(x)
+            {'expression': 'x * \\sin(x) - \\int (\\frac{d(x)}{dx} * \\sin(x)) dx', 'variables': []},
+            {'expression': 'x * \\sin(x) - \\int (1 * \\sin(x)) dx', 'variables': []},
+            {'expression': 'x * \\sin(x) - \\int (\\sin(x)) dx', 'variables': []},
+            {'expression': 'x*\\sin(x) + \\cos(x)', 'variables': []}
         ]
 
-        result = 'x*\\sin(x) + \\cos(x)'
+        result = {'expression': 'x*\\sin(x) + \\cos(x)', 'variables': []}
 
         non_result_steps = steps[:len(steps) - 1]
 
@@ -204,21 +204,21 @@ class SolvedExercises:
         name = "substitution"
 
         steps = [
-            '\\int ( x^2 / (\\sqrt[3]{1+2x}) ) dx', # 1+2x = t^3 => x = ( t^3 - 1 ) / 2 ; 2dx = 3t^2 dt dx = (3t^2 dt)/2
-            '\\int ( \\frac{ (( t^3 - 1 ) / 2)^2}{t} * (3*t^2)/2 ) dt',
-            '(3/2) * \\int ( (t^6-2t^3+1)/4 *t ) dt',
-            '3/8 * (\\int (t^7 - 2t^4 + t) dt)',
-            '3/8 * (\\int (t^7) dt - \\int( 2t^4 + t) dt)',
-            '3/8 * (\\int (t^7) dt - \\int( 2t^4) dt + \\int (t) dt)',
-            '3/8 * (\\int (t^7) dt - \\int( 2t^4) dt + t^2/2)',
-            '3/8 * (\\int (t^7) dt - 2t^5/5 + t^2/2)',
-            '3/8 * (t^8/8 - 2t^5/5 + t^2/2)', # t = \\sqrt[3]{1 +2x}
-            '3/8 * ((\\sqrt[3]{1 +2x})^8/8 - 2(\\sqrt[3]{1 +2x})^5/5 + (\\sqrt[3]{1 +2x})^2/2)',
-            '3/64 * (\\sqrt[3]{1 +2x})^8 - 6/40 * (\\sqrt[3]{1 +2x})^5 + 3/16 *(\\sqrt[3]{1 +2x})^2',
-            '3/64 * (\\sqrt[3]{1 +2x})^8 - 3/20 * (\\sqrt[3]{1 +2x})^5 + 3/16 *(\\sqrt[3]{1 +2x})^2',
+            {'expression': '\\int ( x^2 / (\\sqrt[3]{1+2x}) ) dx', 'variables': []}, # 1+2x = t^3 => x = ( t^3 - 1 ) / 2 ; 2dx = 3t^2 dt dx = (3t^2 dt)/2
+            {'expression': '\\int ( \\frac{ (( t^3 - 1 ) / 2)^2}{t} * (3*t^2)/2 ) dt', 'variables': []},
+            {'expression': '(3/2) * \\int ( (t^6-2t^3+1)/4 *t ) dt', 'variables': []},
+            {'expression': '3/8 * (\\int (t^7 - 2t^4 + t) dt)', 'variables': []},
+            {'expression': '3/8 * (\\int (t^7) dt - \\int( 2t^4 + t) dt)', 'variables': []},
+            {'expression': '3/8 * (\\int (t^7) dt - \\int( 2t^4) dt + \\int (t) dt)', 'variables': []},
+            {'expression': '3/8 * (\\int (t^7) dt - \\int( 2t^4) dt + t^2/2)', 'variables': []},
+            {'expression': '3/8 * (\\int (t^7) dt - 2t^5/5 + t^2/2)', 'variables': []},
+            {'expression': '3/8 * (t^8/8 - 2t^5/5 + t^2/2)', 'variables': []}, # t = \\sqrt[3]{1 +2x}
+            {'expression': '3/8 * ((\\sqrt[3]{1 +2x})^8/8 - 2(\\sqrt[3]{1 +2x})^5/5 + (\\sqrt[3]{1 +2x})^2/2)', 'variables': []},
+            {'expression': '3/64 * (\\sqrt[3]{1 +2x})^8 - 6/40 * (\\sqrt[3]{1 +2x})^5 + 3/16 *(\\sqrt[3]{1 +2x})^2', 'variables': []},
+            {'expression': '3/64 * (\\sqrt[3]{1 +2x})^8 - 3/20 * (\\sqrt[3]{1 +2x})^5 + 3/16 *(\\sqrt[3]{1 +2x})^2', 'variables': []}
         ]
 
-        result = '3/64 * (\\sqrt[3]{1 +2x})^8 - 3/20 * (\\sqrt[3]{1 +2x})^5 + 3/16 *(\\sqrt[3]{1 +2x})^2'
+        result = {'expression': '3/64 * (\\sqrt[3]{1 +2x})^8 - 3/20 * (\\sqrt[3]{1 +2x})^5 + 3/16 *(\\sqrt[3]{1 +2x})^2', 'variables': []}
 
         non_result_steps = steps[:len(steps) - 1]
 
@@ -235,14 +235,14 @@ class SolvedExercises:
         name = "sin with polynomials"
 
         steps = [
-            '\\int(\\sin(3*x + 5))dx',# u = 3x+5 du=3dx
-            '1/3 * \\int(\\sin(3x+5)) * 3 dx',
-            '1/3 * \\int(\\sin(u)) * du',
-            '- 1/3 * \\cos(u)',
-            '- 1/3 * \\cos(3x+5)'
+            {'expression': '\\int(\\sin(3*x + 5))dx', 'variables': []},# u = 3x+5 du=3dx
+            {'expression': '1/3 * \\int(\\sin(3x+5)) * 3 dx', 'variables': []},
+            {'expression': '1/3 * \\int(\\sin(u)) * du', 'variables': []},
+            {'expression': '- 1/3 * \\cos(u)', 'variables': []},
+            {'expression': '- 1/3 * \\cos(3x+5)', 'variables': []}
         ]
 
-        result = '- 1/3 * \\cos(3x+5)'
+        result = {'expression': '- 1/3 * \\cos(3x+5)', 'variables': []}
 
         non_result_steps = steps[:len(steps) - 1]
 
@@ -257,13 +257,13 @@ class SolvedExercises:
         name = "substitution multiplication"
 
         steps = [
-            '\\int(2 * x \\sqrt[2]{1+x^2}) dx',  # u = 1+x^2 du=2x dx
-            '\\int(\\sqrt[2]{u}) du',
-            '2/3 * u^{3/2}',
-            '2/3 * (1+x^2)^{3/2}',
+            {'expression': '\\int(2 * x \\sqrt[2]{1+x^2}) dx', 'variables': []},  # u = 1+x^2 du=2x dx
+            {'expression': '\\int(\\sqrt[2]{u}) du', 'variables': []},
+            {'expression': '2/3 * u^{3/2}', 'variables': []},
+            {'expression': '2/3 * (1+x^2)^{3/2}', 'variables': []}
         ]
 
-        result = '2/3 * (1+x^2)^{3/2}'
+        result = {'expression': '2/3 * (1+x^2)^{3/2}', 'variables': []}
 
         non_result_steps = steps[:len(steps) - 1]
 
@@ -280,18 +280,18 @@ class SolvedExercises:
         name = "parts example one"
 
         steps = [
-            '\\int( x * \\sin(2*x)) dx',  # u = x  dv = sin(2x) dx ; v -cos(2x)/2
-            '\\int (u(x) * \\frac{v(x)}{dx}) dx', # TODO think if this step should be included
-            'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx',
-            'x * (- \\cos(2x)/2) - \\int (\\frac{d(x)}{dx} * (-\\cos(2x)/2) ) dx',
-            'x * (- \\cos(2x)/2) - \\int ( 1 * (-\\cos(2x)/2) ) dx',
-            'x * (- \\cos(2x)/2) - \\int ((-\\cos(2x)/2) ) dx',
-            'x * (- \\cos(2x)/2) + 1/2 * \\int (\\cos(2x) ) dx',
-            'x * (- \\cos(2x)/2) + 1/2 * \\sin(2x)/2',
-            'x * (- \\cos(2x)/2) + 1/2 * \\sin(2x)/2'
+            {'expression': '\\int( x * \\sin(2*x)) dx', 'variables': []},  # u = x  dv = sin(2x) dx ; v -cos(2x)/2
+            {'expression': '\\int (u(x) * \\frac{v(x)}{dx}) dx', 'variables': []}, # TODO think if this step should be included
+            {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', 'variables': []},
+            {'expression': 'x * (- \\cos(2x)/2) - \\int (\\frac{d(x)}{dx} * (-\\cos(2x)/2) ) dx', 'variables': []},
+            {'expression': 'x * (- \\cos(2x)/2) - \\int ( 1 * (-\\cos(2x)/2) ) dx', 'variables': []},
+            {'expression': 'x * (- \\cos(2x)/2) - \\int ((-\\cos(2x)/2) ) dx', 'variables': []},
+            {'expression': 'x * (- \\cos(2x)/2) + 1/2 * \\int (\\cos(2x) ) dx', 'variables': []},
+            {'expression': 'x * (- \\cos(2x)/2) + 1/2 * \\sin(2x)/2', 'variables': []},
+            {'expression': 'x * (- \\cos(2x)/2) + 1/2 * \\sin(2x)/2', 'variables': []}
         ]
 
-        result = 'x * (- \\cos(2x)/2) + 1/2 * \\sin(2x)/2'
+        result = {'expression': 'x * (- \\cos(2x)/2) + 1/2 * \\sin(2x)/2', 'variables': []}
 
         non_result_steps = steps[:len(steps) - 1]
 
@@ -306,16 +306,16 @@ class SolvedExercises:
         name = "parts example two"
 
         steps = [
-            '\\int ( x * \\sqrt[2]{x+1} ) dx',
-            '\\int (u(x) * \\frac{v(x)}{dx}) dx',  # TODO think if this step should be included
-            'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx',
-            'x * (2/3 * (x+1)^{3/2}) - \\int (2/3 * (x+1)^{3/2}) dx',
-            'x * (2/3 * (x+1)^{3/2}) - 2/3 * \\int ((x+1)^{3/2}) dx',
-            'x * (2/3 * (x+1)^{3/2}) - 2/3 * 2/5 * (x+1)^{5/2}',
-            'x * (2/3 * (x+1)^{3/2}) - 4/15 * (x+1)^{5/2}',
+            {'expression': '\\int ( x * \\sqrt[2]{x+1} ) dx', 'variables': []},
+            {'expression': '\\int (u(x) * \\frac{v(x)}{dx}) dx', 'variables': []},  # TODO think if this step should be included
+            {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', 'variables': []},
+            {'expression': 'x * (2/3 * (x+1)^{3/2}) - \\int (2/3 * (x+1)^{3/2}) dx', 'variables': []},
+            {'expression': 'x * (2/3 * (x+1)^{3/2}) - 2/3 * \\int ((x+1)^{3/2}) dx', 'variables': []},
+            {'expression': 'x * (2/3 * (x+1)^{3/2}) - 2/3 * 2/5 * (x+1)^{5/2}', 'variables': []},
+            {'expression': 'x * (2/3 * (x+1)^{3/2}) - 4/15 * (x+1)^{5/2}', 'variables': []}
         ]
 
-        result = 'x * (2/3 * (x+1)^{3/2}) - 4/15 * (x+1)^{5/2}'
+        result = {'expression': 'x * (2/3 * (x+1)^{3/2}) - 4/15 * (x+1)^{5/2}', 'variables': []}
 
         non_result_steps = steps[:len(steps) - 1]
 
@@ -330,16 +330,16 @@ class SolvedExercises:
         name = "parts example six"
 
         steps = [
-            '\\int (\\ln(x)) dx',
-            '\\int (u(x) * \\frac{v(x)}{dx}) dx',  # TODO think if this step should be included
-            'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx',
-            '\\ln(x) * x - \\int (\\frac{d(\\ln(x))}{dx} * x ) dx',
-            '\\ln(x) * x - \\int (\\frac{1}{x} * x ) dx',
-            '\\ln(x) * x - \\int (1) dx',
-            '\\ln(x) * x - x'
+            {'expression': '\\int (\\ln(x)) dx', 'variables': []},
+            {'expression': '\\int (u(x) * \\frac{v(x)}{dx}) dx', 'variables': []},  # TODO think if this step should be included
+            {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', 'variables': []},
+            {'expression': '\\ln(x) * x - \\int (\\frac{d(\\ln(x))}{dx} * x ) dx', 'variables': []},
+            {'expression': '\\ln(x) * x - \\int (\\frac{1}{x} * x ) dx', 'variables': []},
+            {'expression': '\\ln(x) * x - \\int (1) dx', 'variables': []},
+            {'expression': '\\ln(x) * x - x', 'variables': []}
         ]
 
-        result = '\\ln(x) * x - x'
+        result = {'expression': '\\ln(x) * x - x', 'variables': []}
 
         non_result_steps = steps[:len(steps) - 1]
 
