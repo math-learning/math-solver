@@ -39,6 +39,7 @@ const possible_theorems = {
   'f+g': {
     text: 'f+g',
     input: '\\frac{d(f1+g1)}{dx}',
+    type: 'derivative',
     steps: [
       { expression: '\\frac{d(f1+g1)}{dx}', status: 'valid' },
       { expression: '\\frac{d(f1)}{dx} + \\frac{d(g1)}{dx}', status: 'valid' },
@@ -56,6 +57,7 @@ const possible_theorems = {
   'f-g': {
     text: 'f1-g1',
     input: '\\frac{d(f1-g1)}{dx}',
+    type: 'derivative',
     steps: [
       { expression: '\\frac{d(f1-g1)}{dx}', status: 'valid' },
       { expression: '\\frac{d(f1)}{dx} - dg1', status: 'valid' },
@@ -72,6 +74,7 @@ const possible_theorems = {
   'f*g': {
     text: 'f*g',
     input: '\\frac{d(f1*g1)}{dx}',
+    type: 'derivative',
     steps: [
       { expression: '\\frac{d(f1*g1)}{dx}', status: 'valid' },
       { expression: '\\frac{d(f1)}{dx}*g1 + f1*\\frac{d(g1)}{dx}', status: 'valid' },
@@ -88,6 +91,7 @@ const possible_theorems = {
   'f/g': {
     text: 'f1/g1',
     input: '\\frac{d(\\frac{f1}{g1})}{dx}',
+    type: 'derivative',
     steps: [
       { expression: '\\frac{d(\\frac{f1}{g1})}{dx}', status: 'valid' },
       { expression: '\\frac{\\frac{d(f1)}{dx}*g1 - f1*\\frac{d(g1)}{dx}}{{g1}^{2}}', status: 'valid' },
@@ -103,6 +107,7 @@ const possible_theorems = {
   'f(g)': {
     text: 'f(g)',
     input: '\\frac{d(fr1)}{dx}',
+    type: 'derivative',
     steps: [
       { expression: '\\frac{d(fr1)}{dx}', status: 'valid' },
       { expression: 'dfr1*\\frac{d(g1)}{dx}', status: 'valid' },
@@ -118,6 +123,7 @@ const possible_theorems = {
   'f+g+h': {
     text: 'f+g+h',
     input: '\\frac{d(f1+g1+h1)}{dx}',
+    type: 'derivative',
     steps: [
       { expression: '\\frac{d(f1+g1+h1)}{dx}', status: 'valid' },
       { expression: '\\frac{d(f1)}{dx} + \\frac{d(g1)}{dx} + \\frac{d(h1)}{dx}', status: 'valid' },
@@ -126,10 +132,26 @@ const possible_theorems = {
       { expression: 'df1 + dg1 + dh1', status: 'resolved' }
     ]
   },
+  'intf*g': {
+    text: 'f*g',
+    input: '\\int f1*g1',
+    type: 'integrate',
+    steps: [
+      // { expression: '\\int u*v', variables: { u: 'f1', v: 'dg1' }, status: 'valid' },
+      {
+        expression: 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x))',
+        variables: [
+          { tag: 'u(x)', value: 'f1' },
+          { tag: 'v(x)', value: 'dg1' }
+        ],
+        status: 'valid'
+      }
+    ]
+  }
 }
 
 const executeExpression = async (theoreme, functions, stepCount) => {
-  const { input, steps } = theoreme;
+  const { input, steps, type } = theoreme;
 
   // making problem input
   const problem_input = replaceFunctions(input, functions);
@@ -139,26 +161,29 @@ const executeExpression = async (theoreme, functions, stepCount) => {
   const problem_steps = steps.map((step) => ({ ...step, expression: replaceFunctions(step.expression, functions) }));
 
   // getting problem theorems
-  const theorems = JSON.parse(fs.readFileSync(path.resolve(__dirname, './derivative-theorems.json')));
+  const theorems = type === 'derivative' ?
+    JSON.parse(fs.readFileSync(path.resolve(__dirname, './derivative-theorems.json'))) :
+    JSON.parse(fs.readFileSync(path.resolve(__dirname, './integrate-theorems.json')));
 
   // generating math tree
-  const math_tree = await generateMathTree({ problem_input, theorems, type: 'derivative' });
+  const math_tree = await generateMathTree({ problem_input, theorems, type });
 
   // testing each step
   for (let pos = 0; pos < problem_steps.length; pos += 1) {
-    const current_expression = problem_steps[pos].expression;
+    // const current_expression = problem_steps[pos].expression;
+    const current_expression = problem_steps[pos];
     const expected_status = problem_steps[pos].status;
     const step_list = problem_steps.slice(0, pos).filter((ps) => ['valid', 'resolved'].includes(ps.status)).map((ps) => ps.expression);
 
     // Hitting math solver
-    const result = await testStep({ problem_input, math_tree, theorems, current_expression, step_list, type: 'derivative' });
+    const result = await testStep({ problem_input, math_tree, theorems, current_expression, step_list, type });
 
     if (result.exerciseStatus !== expected_status) {
       failedCount += 1;
-      console.log(`\x1b[31m[FAIL] ${current_expression}. Result: ${result.exerciseStatus} !== ${expected_status}`);
+      console.log(`\x1b[31m[FAIL] ${current_expression.expression}. Result: ${result.exerciseStatus} !== ${expected_status}`);
     } else {
       successCount += 1;
-      console.log(`\x1b[32m[OK] ${current_expression}. Result: ${expected_status}`);
+      console.log(`\x1b[32m[OK] ${current_expression.expression}. Result: ${expected_status}`);
     }
   }
   console.log('\x1b[0m');
@@ -186,7 +211,7 @@ const testStep = async ({ problem_input, math_tree, theorems, current_expression
   return response.json();
 }
 
-const generateMathTree = async ({ problem_input, theorems, type = 'derivative' }) => {
+const generateMathTree = async ({ problem_input, theorems, type }) => {
   const fullPath = `${mathSolverBasePath}/results/solution-tree`;
 
   const response = await fetch(fullPath, {
@@ -247,23 +272,24 @@ const makeFunctionsToExecute = ({ fs: { f, g, h }, variables: { a = 1, b = 1 } }
 let successCount = 0;
 let failedCount = 0;
 
-const a = 2;
-const b = 3;
+const a = 1;
+const b = 1;
 const theoremesToTest = [
-  'f+g',
-  'f-g',
-  'f*g',
-  'f/g',
-  'f(g)',
-  // 'f+g+h'
+  // 'f+g',
+  // 'f-g',
+  // 'f*g',
+  // 'f/g',
+  // 'f(g)',
+  // 'f+g+h',
+  'intf*g'
 ];
 const functionsToTest = [
   'x',
   'cosx',
-  'senx',
-  'tagx',
-  'sqrt',
-  '1/x',
+  // 'senx',
+  // 'tagx',
+  // 'sqrt',
+  // '1/x',
   // expx
 ];
 

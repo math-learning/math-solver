@@ -1,8 +1,10 @@
 import inspect
 import sympy
+import json
 from sympy import Symbol
 from sympy.parsing.latex import parse_latex
 from sympy.core.basic import preorder_traversal
+from sympy import Integral
 from sympy.core.function import Derivative, UndefinedFunction
 from sympy.parsing.sympy_parser import parse_expr
 from sympy.simplify import simplify
@@ -22,7 +24,8 @@ def is_sympy_exp(formula):
 
 class Expression:
 
-    def __init__(self, formula: Union['Expression', str], is_latex=True):
+    def __init__(self, formula: Union['Expression', str], variables: List['ExpressionVariables'] = [], is_latex=True):
+        self.variables = variables
         self.commutative_group_transformer = CommutativeGroupTransformer()
         self.non_commutative_group_transformer = NonCommutativeGroupTransformer()
         self.commutative_list_size_transformer = ListSizeTransformer(CommutativeGroupTransformer())
@@ -117,6 +120,9 @@ class Expression:
     def is_derivative(self) -> bool:
         return isinstance(self.sympy_expr, Derivative)
 
+    def is_integral(self) -> bool:
+        return isinstance(self.sympy_expr, Integral)
+
     def apply_derivative(self) -> 'Expression':
         deriv = Derivative(self.sympy_expr.args[0], self.sympy_expr.args[1])
         return Expression(deriv.doit())
@@ -132,7 +138,11 @@ class Expression:
         return isinstance(self.sympy_expr.func, UndefinedFunction) and not self.is_derivative()
 
     def to_string(self) -> str:
-        return str(self.sympy_expr)
+        return json.dumps({
+            'expression': str(self.sympy_expr),
+            'variables': list(map(lambda variable: variable.to_json(), self.variables))
+        })
+        #return str(self.sympy_expr)
 
     def to_latex(self) -> str:
         return sympy.latex(self.sympy_expr)
@@ -260,8 +270,24 @@ class Expression:
     def __eq__(self, other):
         """Overrides the default implementation"""
         if isinstance(other, Expression):
-            return self.to_string() == other.to_string()
+            are_formulas_equals = self.to_string() == other.to_string()
+
+            if len(self.variables) != len(other.variables):
+                return False
+
+            if len(self.variables) == 0 and len(other.variables) == 0: # TODO Lucas: add tests for it
+                return are_formulas_equals
+
+            self_variables_set = set((x.tag, x.expression) for x in self.variables)
+            different_values = [x for x in other.variables if (x.tag, x.expression) not in self_variables_set]
+            are_variables_equal = len(different_values) == 0
+
+            return are_formulas_equals and are_variables_equal
+
         return False
+
+    def __hash__(self):
+        return hash(self.sympy_expr)
 
     def __str__(self):
         return str(self.sympy_expr)
