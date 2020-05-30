@@ -22,6 +22,28 @@ sympy_classes = tuple(x[1] for x in inspect.getmembers(sympy, inspect.isclass))
 def is_sympy_exp(formula):
     return isinstance(formula, sympy_classes)
 
+def make_sympy_expr(formula, is_latex):
+    if isinstance(formula, str) and is_latex:
+        clean_formula = clean_latex(formula)
+        sympy_expr = parse_latex(clean_formula)
+        sympy_expr = sympy_expr.subs(simplify(parse_expr("e")), parse_expr("exp(1)"))
+    elif is_sympy_exp(formula):
+        sympy_expr = formula
+    elif isinstance(formula, str):
+        sympy_expr = parse_expr(formula)
+    else:
+        raise (Exception("error while trying to create an Expression, unsuported formula type" + str(formula)))
+    return sympy_expr
+
+def make_complete_sympy_expr(sympy_expr, variables):
+    complete_sympy_expr = sympy_expr
+
+    for variable in variables:
+        complete_sympy_expr = complete_sympy_expr.subs(parse_expr(variable.tag), variable.expression.sympy_expr)
+
+    return complete_sympy_expr
+
+
 class Expression:
 
     def __init__(self, formula: Union['Expression', str], variables: List['ExpressionVariables'] = [], is_latex=True):
@@ -30,16 +52,8 @@ class Expression:
         self.non_commutative_group_transformer = NonCommutativeGroupTransformer()
         self.commutative_list_size_transformer = ListSizeTransformer(CommutativeGroupTransformer())
         self.non_commutative_list_size_transformer = ListSizeTransformer(NonCommutativeGroupTransformer())
-        if isinstance(formula, str) and is_latex:
-            clean_formula = clean_latex(formula)
-            self.sympy_expr = parse_latex(clean_formula)
-            self.sympy_expr = self.sympy_expr.subs(simplify(parse_expr("e")), parse_expr("exp(1)"))
-        elif is_sympy_exp(formula):
-            self.sympy_expr = formula
-        elif isinstance(formula, str):
-            self.sympy_expr = parse_expr(formula)
-        else:
-            raise (Exception("error while trying to create an Expression, unsuported formula type" + str(formula)))
+        self.sympy_expr = make_sympy_expr(formula, is_latex)
+        self.sympy_expr = make_complete_sympy_expr(self.sympy_expr, variables)
 
     def is_leaf(self) -> bool:
         return len(self.sympy_expr.args) == 0

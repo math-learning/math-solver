@@ -7,11 +7,13 @@ const mathSolverBasePath = 'http://localhost:5000';
 const functions = {
   x: {
     'func': 'a1*x^{b1}',
-    'deriv': 'a1*b1*x^{b1-1}'
+    'deriv': 'a1*b1*x^{b1-1}',
+    'int': '\\frac{a1}{b1+1}*x^{b1+1}'
   },
   cosx: {
     'func': 'a1*\\cos(x)',
-    'deriv': '-a1*\\sin{\\left(x \\right)}'
+    'deriv': '-a1*\\sin{\\left(x \\right)}',
+    'int': 'a1*\\sin(x)'
   },
   senx: {
     'func': 'a1*\\sin(x)',
@@ -132,19 +134,39 @@ const possible_theorems = {
       { expression: 'df1 + dg1 + dh1', status: 'resolved' }
     ]
   },
-  'intf*g': {
+  'intpartsf*g': {
     text: 'f*g',
     input: '\\int f1*g1',
     type: 'integrate',
     steps: [
-      // { expression: '\\int u*v', variables: { u: 'f1', v: 'dg1' }, status: 'valid' },
+      {
+        expression: '\\int u(x)*\\frac{d(v(x))}{dx}',
+        variables: [
+          { tag: 'u(x)', value: 'f1' },
+          { tag: 'v(x)', value: 'ig1' }
+        ],
+        status: 'valid'
+      },
       {
         expression: 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x))',
         variables: [
           { tag: 'u(x)', value: 'f1' },
-          { tag: 'v(x)', value: 'dg1' }
+          { tag: 'v(x)', value: 'ig1' }
         ],
         status: 'valid'
+      },
+      {
+        expression: 'f1 * ig1 - \\int (\\frac{d(f1)}{dx} * ig1)',
+        variables: [],
+        status: 'valid'
+      },
+      {
+        expression: 'c(x) * c(x) - \\int (\\frac{d(u(x))}{dx} * v(x))',
+        variables: [
+          { tag: 'u(x)', value: 'f1' },
+          { tag: 'v(x)', value: 'dg1' }
+        ],
+        status: 'invalid'
       }
     ]
   }
@@ -158,7 +180,11 @@ const executeExpression = async (theoreme, functions, stepCount) => {
   console.log('problem_input to analyze:', problem_input);
 
   // making problem steps
-  const problem_steps = steps.map((step) => ({ ...step, expression: replaceFunctions(step.expression, functions) }));
+  const problem_steps = steps.map((step) => ({
+    ...step,
+    expression: replaceFunctions(step.expression, functions),
+    variables: (step.variables || []).map((v) => ({ ...v, value: replaceFunctions(v.value, functions) }))
+  }));
 
   // getting problem theorems
   const theorems = type === 'derivative' ?
@@ -240,6 +266,8 @@ const makeFunctionsToExecute = ({ fs: { f, g, h }, variables: { a = 1, b = 1 } }
   const variableB = new RegExp('b1', 'g');
 
   // for +-*/ theoremes
+  const ifTarget = f['int'].replace(variableA, a).replace(variableB, b);
+  const igTarget = g['int'].replace(variableA, a).replace(variableB, b);
   const dfTarget = f['deriv'].replace(variableA, a).replace(variableB, b);
   const dgTarget = g['deriv'].replace(variableA, a).replace(variableB, b);
   const fTarget = f['func'].replace(variableA, a).replace(variableB, b);
@@ -254,6 +282,8 @@ const makeFunctionsToExecute = ({ fs: { f, g, h }, variables: { a = 1, b = 1 } }
   const grTarget = g['func'].replace(variableA, a).replace(variableB, b).replace('x', `{${fTarget}}`);
 
   return [
+    { source: 'if1', target: ifTarget },
+    { source: 'ig1', target: igTarget },
     { source: 'df1', target: dfTarget },
     { source: 'dg1', target: dgTarget },
     { source: 'f1', target:  fTarget  },
@@ -281,7 +311,7 @@ const theoremesToTest = [
   // 'f/g',
   // 'f(g)',
   // 'f+g+h',
-  'intf*g'
+  'intpartsf*g'
 ];
 const functionsToTest = [
   'x',
@@ -325,6 +355,12 @@ const execute = async () => {
         const f = functions[keyf];
         const g = functions[keyg];
         const fs = { f, g }
+
+        if (theoreme == 'intpartsf*g') { // it is special, there are combinations that dont work
+          if (! (keyf == 'x' && (['cosx', 'senx'].includes(keyg)))) {
+            continue;
+          }
+        }
 
         if (theoreme.includes('h')) {
           for (const keyh of functionsToTest) {

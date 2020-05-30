@@ -43,7 +43,8 @@ class TestTheoremIntegrateByParts(unittest.TestCase):
             ExpressionVariable('v(x)', Expression("sen(x)")),
         ]
         expected_result = [
-            Expression('u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x))', variables)
+            Expression('u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x))', variables),
+            Expression('\\int u(x) * \\frac{d(v(x))}{dx}', variables)
         ]
         result = theorem.apply_to(exp)
         self.assertEqual(result, expected_result)
