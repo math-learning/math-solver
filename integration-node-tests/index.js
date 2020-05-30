@@ -139,35 +139,50 @@ const possible_theorems = {
     input: '\\int f1*g1',
     type: 'integrate',
     steps: [
+      // {
+      //   expression: '\\int u(x)*\\frac{d(v(x))}{dx}',
+      //   variables: [
+      //     { tag: 'u(x)', value: 'f1' },
+      //     { tag: 'v(x)', value: 'ig1' }
+      //   ],
+      //   status: 'valid'
+      // },
+      // {
+      //   expression: 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x))',
+      //   variables: [
+      //     { tag: 'u(x)', value: 'f1' },
+      //     { tag: 'v(x)', value: 'ig1' }
+      //   ],
+      //   status: 'valid'
+      // },
+      // {
+      //   expression: 'f1 * ig1 - \\int (\\frac{d(f1)}{dx} * ig1)',
+      //   variables: [],
+      //   status: 'valid'
+      // },
+      // {
+      //   expression: 'f1 * ig1 - \\int (df1 * ig1)',
+      //   variables: [],
+      //   status: 'valid'
+      // },
       {
-        expression: '\\int u(x)*\\frac{d(v(x))}{dx}',
-        variables: [
-          { tag: 'u(x)', value: 'f1' },
-          { tag: 'v(x)', value: 'ig1' }
-        ],
-        status: 'valid'
-      },
-      {
-        expression: 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x))',
-        variables: [
-          { tag: 'u(x)', value: 'f1' },
-          { tag: 'v(x)', value: 'ig1' }
-        ],
-        status: 'valid'
-      },
-      {
-        expression: 'f1 * ig1 - \\int (\\frac{d(f1)}{dx} * ig1)',
+        expression: 'f1 * ig1 - ig1', // TODO: solo para el caso de x.cos(x) funciona
         variables: [],
-        status: 'valid'
+        status: 'resolved'
       },
-      {
-        expression: 'c(x) * c(x) - \\int (\\frac{d(u(x))}{dx} * v(x))',
-        variables: [
-          { tag: 'u(x)', value: 'f1' },
-          { tag: 'v(x)', value: 'dg1' }
-        ],
-        status: 'invalid'
-      }
+      // {
+      //   expression: 'ig1 * (f1 - 1)', // TODO: solo para el caso de x.cos(x) funciona
+      //   variables: [],
+      //   status: 'resolved'
+      // },
+      // {
+      //   expression: 'c(x) * c(x) - \\int (\\frac{d(u(x))}{dx} * v(x))',
+      //   variables: [
+      //     { tag: 'u(x)', value: 'f1' },
+      //     { tag: 'v(x)', value: 'dg1' }
+      //   ],
+      //   status: 'invalid'
+      // }
     ]
   }
 }
@@ -222,7 +237,10 @@ const testStep = async ({ problem_input, math_tree, theorems, current_expression
     method: 'post',
     body: JSON.stringify({
       type,
-      problem_input,
+      problem_input: {
+        expression: problem_input,
+        variables: []
+      },
       step_list: JSON.stringify(step_list),
       math_tree,
       theorems,
@@ -242,7 +260,14 @@ const generateMathTree = async ({ problem_input, theorems, type }) => {
 
   const response = await fetch(fullPath, {
     method: 'post',
-    body: JSON.stringify({ problem_input, type, theorems }),
+    body: JSON.stringify({
+      problem_input: {
+        expression: problem_input,
+        variables: []
+      },
+      type,
+      theorems
+    }),
     headers: {
       'Content-Type': 'application/json'
     }
