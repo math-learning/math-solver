@@ -49,7 +49,14 @@ def resolve(request: Request):
         problem_input = Expression(body['problem_input']['expression'], body['problem_input']['variables'])
         solution_tree = solutionTreeMapper.parse(body['math_tree'])
         exercise_type = body['type']
-        step_list = list(map(lambda step: Expression(step['expression'], step['variables']), json.loads(body['step_list'])))
+
+        step_list = []
+        for step in json.loads(body['step_list']):
+            # TODO: I will find a more more pythonable to do that
+            step_expr = step['expression']
+            variables = step['variables']
+            step_vars = list(map(lambda variable: ExpressionVariable(variable['tag'], Expression(variable['value'])), variables if variables is not None else []))
+            step_list.append(Expression(step_expr, step_vars))
 
         # Current expression
         body_variables = body['current_expression']['variables']
