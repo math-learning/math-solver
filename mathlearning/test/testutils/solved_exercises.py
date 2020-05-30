@@ -14,7 +14,7 @@ class SolvedExercise:
     def get_results_as_expressions(self):
         return list(
             map(
-                lambda expression_string: Expression(expression_string, is_latex=False),
+                lambda step: Expression(step['expression'], step['variables'], is_latex=False),
                 self.steps_non_latex
             )
         )

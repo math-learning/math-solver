@@ -14,7 +14,7 @@ class TestExpression(unittest.TestCase):
     def test_solve_derivatives(self):
         exp = Expression("\\frac{d(x)}{dx}")
         exp = exp.solve_derivatives()
-        self.assertEqual(exp.to_string(), '1')
+        self.assertEqual(exp.to_expression_string(), '1')
 
     def test_compare(self):
         exp_one = Expression("x + x")

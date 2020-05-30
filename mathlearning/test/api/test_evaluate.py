@@ -3,24 +3,26 @@ import json
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from mathlearning.model.expression import Expression
+
 success_cases = [{
-  'problem_input': 'x\ ^\ 2',
-  'derivative': '2 x'
+  'problem_input': {'expression': 'x^2', 'variables': []},
+  'derivative': {'expression': '2 x', 'variables': []}
 }, {
-  'problem_input': 'x^3',
-  'derivative': '3 x^{2}'
+  'problem_input': {'expression': 'x^3', 'variables': []},
+  'derivative': {'expression': '3 x^{2}', 'variables': []}
 }, {
-  'problem_input': '\sin(x)',
-  'derivative': '\cos{\left(x \\right)}'
+  'problem_input': {'expression': '\\sin(x)', 'variables': []},
+  'derivative': {'expression': '\\cos(x)', 'variables': []}
 }, {
-  'problem_input': '\exp(x)',
-  'derivative': '\\frac{d}{d x} \operatorname{exp}{\left(x \\right)}'
+  'problem_input': {'expression': '\\exp(x)', 'variables': []},
+  'derivative': {'expression': '\\frac{d(exp(x))}{dx}', 'variables': []}
 }, {
-  'problem_input': '\cos(x)',
-  'derivative': '- \sin{\left(x \\right)}'
+  'problem_input': {'expression': '\\cos(x)', 'variables': []},
+  'derivative': {'expression': '-\\sin(x)', 'variables': []}
 }, {
-  'problem_input': 'e^x*x + \sen(x)*x^2',
-  'derivative': 'e^{x} x \log{\left(e \\right)} + e^{x} + x^{2} \\frac{d}{d x} \operatorname{sen}{\left(x \\right)} + 2 x \operatorname{sen}{\left(x \\right)}'
+  'problem_input': {'expression': 'e^x*x + \\sen(x)*x^2', 'variables': []},
+  'derivative': {'expression': 'e^{x} x \\log{(exp(1)} + exp(x) + x^{2} \\frac{d(\\sin(x))}{dx} + 2 x \\sin(x)', 'variables': []}
 }]
 
 # problem_input = "\\frac{d(e^x*x)}{dx} + \\frac{d(sen(x)* x^2)}{dx}"
@@ -37,12 +39,15 @@ class APITests(APITestCase):
         response = self.client.post(path='/validations/evaluate', data=data, format='json')
 
         body = json.loads(response.content)
+        result_expression = Expression(body['result']['expression'], body['result']['variables'])
+        expected_expression = Expression(problem['derivative']['expression'], problem['derivative']['variables'])
         self.assertEquals(response.status_code, status.HTTP_200_OK)
-        self.assertEquals(body['result'], problem['derivative'])
+
+        self.assertEquals(result_expression.to_string(), expected_expression.to_string())
 
     def test_evaluate_fails_because_expression(self):
         data = {
-          'problem_input': '//x',
+          'problem_input': {'expression': '//x', 'variables': []},
           'type': 'derivative'
         }
 
@@ -54,7 +59,7 @@ class APITests(APITestCase):
 
     def test_evaluate_fails_because_type(self):
         data = {
-          'problem_input': 'x^2',
+          'problem_input': {'expression': 'x^2', 'variables': []},
           'type': 'pepe'
         }
 

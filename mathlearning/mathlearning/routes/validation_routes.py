@@ -47,11 +47,11 @@ def evaluate(request: Request):
     if request.method == 'POST':
         body = json.loads(request.body)
         (problem_input, problem_type) = validateMapper.parse_evaluate(body)
-        expression = Expression(problem_input)
+        expression = Expression(problem_input['expression'], problem_input['variables'])
 
         try:
             result = evaluate_service.evaluate_problem_input(expression, problem_type)
-            data = { 'result': result }
+            data = { 'result': {'expression': result, 'variables': []}}
 
             logger.info('Returning the following response: {}'.format(result))
             return Response(data, status=status.HTTP_200_OK)

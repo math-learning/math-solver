@@ -33,30 +33,26 @@ D_DIVISION = "derivada de la division"
 
 sum_of_two_derivatives = {
     "name": "d(e) + d(sen)",
-    "problemInput": "\\frac{d(e^x*x)}{dx}*+*\\frac{d(sen(x)*x^2)}{dx}",
+    "problemInput": {'expression': '\\frac{d(e^x*x)}{dx}*+*\\frac{d(sen(x)*x^2)}{dx}', 'variables': []},
     "theorems": {D_PRODUCTO, RESOLVER_DERIV},
-    "result": "e^x* (1+x)+\\cos (x)* x^2+\\sin(x)* 2** x",
 }
 
 derivative_sen_divided_by_cos = {
     "name": "sen / cos",
-    "problemInput": "\\frac{d(\\frac{sen(x)}{\\cos(x)})} {dx}",
+    "problemInput": {'expression': '\\frac{d(\\frac{sen(x)}{\\cos(x)})} {dx}', 'variables': []},
     "theorems": {D_DIVISION, D_PRODUCTO, SIMPLIFICACION, RESOLVER_DERIV},
-    "result": "\\frac{1}{\\cos^2(x)}",
 }
 
 derivative_of_a_multiplication = {
     "name": "deriv suma x + x2 + cos",
-    "problemInput": "\\frac{d(x^2)}{dx} +\\frac{d(x*\\cos(x))}{dx}",
+    "problemInput": {'expression': '\\frac{d(x^2)}{dx} +\\frac{d(x*\\cos(x))}{dx}', 'variables': []},
     "theorems": {D_PRODUCTO, RESOLVER_DERIV},
-    "result": "2* x+1-\\sin (x)",
 }
 
 derivative_multiplication_of_three_elem = {
     "name": "multiplication of 3 elem",
-    "problemInput": "x^2 * \\sin(x) * \\frac{d(\\cos(x))}{dx} + \\cos(x) * \\frac{d(x^2 * \\sin(x))}{dx}",
+    "problemInput": {'expression': 'x^2 * \\sin(x) * \\frac{d(\\cos(x))}{dx} + \\cos(x) * \\frac{d(x^2 * \\sin(x))}{dx}', 'variables': []},
     "theorems": {D_PRODUCTO, RESOLVER_DERIV, SIMPLIFICACION},
-    "result": "x^2\\sin(x)\\frac{d(\\cos(x))}{dx} + \\cos(x) * (\\frac{d(x^2)}{dx} * \\sin(x) + \\frac{d(\\sin(x))}{dx} * x^2)"
 }
 
 
@@ -64,7 +60,7 @@ class SolutionTreeAPITest(APITestCase):
 
     def test_solution_tree(self):
         derivative_theorems = load_theorems()
-        problem_input = "\\frac{d(e^x*x)}{dx} + \\frac{d(sen(x)* x^2)}{dx}"
+        problem_input = {'expression': '\\frac{d(e^x*x)}{dx} + \\frac{d(sen(x)* x^2)}{dx}', 'variables': []}
         data = {
             'problem_input': problem_input,
             'theorems': derivative_theorems
@@ -78,7 +74,7 @@ class SolutionTreeAPITest(APITestCase):
 
     def test_solution_tree_derivative_part(self):
         derivative_theorems = load_theorems()
-        problem_input = "\\frac{d(x)}{dx}"
+        problem_input = {'expression': '\\frac{d(x)}{dx}', 'variables': []}
         data = {
             'problemInput': problem_input,
             'theorems': derivative_theorems
@@ -93,7 +89,7 @@ class SolutionTreeAPITest(APITestCase):
 
     def test_solution_tree_derivative_part(self):
         derivative_theorems = load_theorems()
-        problem_input = "\\frac{d(x)}{dx}"
+        problem_input = {'expression': '\\frac{d(x)}{dx}', 'variables': []}
         data = {
             'problem_input': problem_input,
             'theorems': derivative_theorems
@@ -120,8 +116,8 @@ class SolutionTreeAPITest(APITestCase):
         tree = SolutionTreeMapper.parse(json.loads(response.content))
         theorem_names = tree.get_theorem_names()
 
-        print('Test case: ' + case['name'] + '\n')
-        print('Resulting theorems: ' + str(theorem_names) + '\n')
+        # print('Test case: ' + case['name'] + '\n')
+        # print('Resulting theorems: ' + str(theorem_names) + '\n')
         # f = open(case['name']+'.txt', "w+")
         # f.write(json.loads(response.content))
         self.assertEquals(response.status_code, status.HTTP_200_OK)

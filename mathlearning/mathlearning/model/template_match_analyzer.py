@@ -82,7 +82,7 @@ class TemplateMatchAnalyzer:
         # Handle two simpy expressions
         if not template.contains_user_defined_funct() and not expression.contains_user_defined_funct():
             # TODO: REFACTOR
-            conditions = template_conditions.get(template.to_string())
+            conditions = template_conditions.get(template.to_expression_string())
             if conditions != None and "IS_CONSTANT" in conditions:
                 match = expression.is_constant()
             else:

@@ -142,7 +142,9 @@ class Expression:
             'expression': str(self.sympy_expr),
             'variables': list(map(lambda variable: variable.to_json(), self.variables))
         })
-        #return str(self.sympy_expr)
+
+    def to_expression_string(self):
+        return str(self.sympy_expr)
 
     def to_latex(self) -> str:
         return sympy.latex(self.sympy_expr)
