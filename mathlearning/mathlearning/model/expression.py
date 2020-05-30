@@ -142,6 +142,9 @@ class Expression:
         return Expression(deriv.doit())
 
     def apply_integral(self) -> 'Expression':
+        integrand = Expression(self.sympy_expr.args[0])
+        if self.contains_derivative() or integrand.contains_integral():
+            return self
         return Expression(integrate(self.sympy_expr.args[0], self.sympy_expr.args[1]))
 
     def simplify(self) -> 'Expression':
@@ -417,4 +420,18 @@ class Expression:
     def can_group_children(self):
         if self.sympy_expr.func in [sympy.Add, sympy.Mul]:
             return True
+        return False
+
+    def contains_derivative(self):
+        for exp in preorder_traversal(self.sympy_expr):
+            expression = Expression(exp)
+            if expression.is_derivative():
+                return True
+        return False
+
+    def contains_integral(self):
+        for exp in preorder_traversal(self.sympy_expr):
+            expression = Expression(exp)
+            if expression.is_integral():
+                return True
         return False
