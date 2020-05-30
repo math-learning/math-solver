@@ -24,7 +24,7 @@ class EvaluateService:
         try:
             if problem_type == 'derivative':
                 derivative = Derivative(expression.sympy_expr, 'x')
-                return latex(derivative.doit())
+                return Expression(derivative.doit()).solve_derivatives().to_latex_with_derivatives()
 
             integral = Integral(expression.sympy_expr, x)
             return latex(integral.doit())

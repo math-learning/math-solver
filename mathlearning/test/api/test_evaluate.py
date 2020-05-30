@@ -15,14 +15,14 @@ success_cases = [{
   'problem_input': {'expression': '\\sin(x)', 'variables': []},
   'derivative': {'expression': '\\cos(x)', 'variables': []}
 }, {
-  'problem_input': {'expression': '\\exp(x)', 'variables': []},
-  'derivative': {'expression': '\\frac{d(exp(x))}{dx}', 'variables': []}
+  'problem_input': {'expression': 'e^x', 'variables': []},
+  'derivative': {'expression': 'e^x', 'variables': []}
 }, {
   'problem_input': {'expression': '\\cos(x)', 'variables': []},
   'derivative': {'expression': '-\\sin(x)', 'variables': []}
 }, {
-  'problem_input': {'expression': 'e^x*x + \\sen(x)*x^2', 'variables': []},
-  'derivative': {'expression': 'e^{x} x \\log{(exp(1)} + exp(x) + x^{2} \\frac{d(\\sin(x))}{dx} + 2 x \\sin(x)', 'variables': []}
+  'problem_input': {'expression': '\\e^x * x + \\sin(x) * x^{2}', 'variables': []},
+  'derivative': {'expression': 'x^2 * \\cos(x) + 2*x*\\sin(x) + x * e^x + e^x', 'variables': []}
 }]
 
 # problem_input = "\\frac{d(e^x*x)}{dx} + \\frac{d(sen(x)* x^2)}{dx}"
@@ -43,7 +43,7 @@ class APITests(APITestCase):
         expected_expression = Expression(problem['derivative']['expression'], problem['derivative']['variables'])
         self.assertEquals(response.status_code, status.HTTP_200_OK)
 
-        self.assertEquals(result_expression.to_string(), expected_expression.to_string())
+        self.assertTrue(expected_expression.is_equivalent_to(result_expression))
 
     def test_evaluate_fails_because_expression(self):
         data = {
