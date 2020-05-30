@@ -48,20 +48,21 @@ class IntegrateByPartsTheorem(Theorem):
         ]
 
         main_expression = Expression('u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', variables)
+        equivalent_expression = Expression('\\int (u(x) * \\frac{d(v(x))}{dx}) dx', variables)
 
         #main_expression == Expression('x * cos(x) - \\int (\\frac{d(x)}{dx} * cos(x)) dx')
         #main_expression = Expression('x * cos(x) - \\int (\\frac{d(x)}{dx} * cos(x)) dx', variables)
         # TODO: investigar dx
 
         #Expression('\\int u * \\frac{d(v)}{dx}', variables)
-
         # \\int(x * sen(x)) dx + \\int(x * cos(x)) dx
-
         # \\int(x * sen(x)) dx + POR PARTES(\\int(x * cos(x)) dx)
-
         # POR PARTES(\\int(x * sen(x)) dx) + \\int(x * cos(x)) dx
 
-        return [main_expression]
+        return [
+            main_expression,
+            equivalent_expression
+        ]
 
     def __str__(self):
         return self.name
