@@ -235,6 +235,11 @@ class Expression:
         to_replace_sympy = to_replace.sympy_expr
         replacement_sympy = simplify(replacement.sympy_expr)
         new_sympy_expr = self.sympy_expr.subs({to_replace_sympy: replacement_sympy})
+
+        if (new_sympy_expr == self.sympy_expr and self.contains_derivative()):
+            # TODO: workaround because sympy issue https://github.com/sympy/sympy/issues/5670
+            new_sympy_expr = self.sympy_expr.xreplace({ to_replace_sympy: replacement_sympy })
+
         if new_sympy_expr == self.sympy_expr:
             to_replace_sympy = simplify(to_replace.sympy_expr)
             self.sympy_expr = self.sympy_expr.subs({to_replace_sympy: replacement_sympy})
