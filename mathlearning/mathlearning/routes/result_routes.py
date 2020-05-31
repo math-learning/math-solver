@@ -37,8 +37,11 @@ def calculate_solution_tree(request: Request):
         body = json.loads(request.body)
         expression = Expression(body['problem_input']['expression'], body['problem_input']['variables'])
         result = result_service.solution_tree(expression)
+        logger.info(f'tree')
+        logger.info(f'${result.print_tree()}')
         result = result.to_json()
         logger.info('Returning the following response: {}'.format(result))
+
         return Response(json.dumps(result), status=status.HTTP_200_OK, content_type='application/json')
 
 

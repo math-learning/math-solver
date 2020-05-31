@@ -1,9 +1,9 @@
 import unittest
 
 from mathlearning.model.expression import Expression
-from mathlearning.model.integral_theorems import IntegralTheorems
+from mathlearning.model.integrate_theorems import IntegrateTheorems
 
-theorem = IntegralTheorems.integral_multiply_for_constant()
+theorem = IntegrateTheorems.integrate_multiply_for_constant()
 
 class TestTheoremIntegralMultiplyForConstant(unittest.TestCase):
 

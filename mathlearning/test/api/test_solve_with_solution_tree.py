@@ -53,17 +53,21 @@ class SolutionTreeAPITest(APITestCase):
         for i in range(1, len(exercise.non_result_steps)):
             previous_steps = []
             previous_steps += exercise.non_result_steps[:i]
-            # remove problem_input
             previous_steps.pop()
+
             current_step = exercise.non_result_steps[i]
             resolve_data['step_list'] = previous_steps
             resolve_data['current_expression'] = current_step
+
             response = self.client.post(path='/resolve', data=resolve_data, format='json')
+
             result = json.loads(response.content)
+
             if result['exerciseStatus'] == 'resolved':
-                print(Expression(current_step['expression'], current_step['variables']).to_string())
+                print(Expression(current_step['expression']).to_string())
             if result['exerciseStatus'] == 'invalid':
-                print(Expression(current_step['expression'], current_step['variables']).to_string())
+                print(Expression(current_step['expression']).to_string())
+
             self.assertEquals(response.status_code, status.HTTP_200_OK)
             self.assertEquals(result['exerciseStatus'], 'valid')
 
@@ -111,7 +115,7 @@ class SolutionTreeAPITest(APITestCase):
         self.solve_exercise_with_solution_tree(SolvedExercises.sum_derivative_x2_derivative_sum_x_cos())
 
     def test_integral_solution_sum_of_two(self):
-        self.sub_test_only_result(SolvedExercises.integral_add_x_cosx())
+        self.solve_exercise_with_solution_tree(SolvedExercises.integral_add_x_cosx())
 
     def test_integral_solution_parts(self):
         self.solve_exercise_with_solution_tree(SolvedExercises.integral_parts_mult_x_cosx())

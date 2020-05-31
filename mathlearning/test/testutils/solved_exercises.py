@@ -19,11 +19,11 @@ class SolvedExercise:
                 self.steps_non_latex
             )
         )
-
-    def as_expressions(self, list_to_convert, is_latex):
+    @staticmethod
+    def as_expressions(list_to_convert, is_latex=True):
         return list(
             map(
-                lambda expression_string: Expression(expression_string, is_latex=is_latex),
+                lambda expression_string: Expression(expression_string['expression'], is_latex=is_latex),
                 list_to_convert
             )
         )
@@ -153,8 +153,8 @@ class SolvedExercises:
         name = "sum of two integrals"
 
         steps = [
-            {'expression': '\\int (x + \\cos(x)) dx', 'variables': []},
-            {'expression': '\\int (x) dx + \\int (\\cos(x)) dx', 'variables': []},
+            {'expression': '\\int x + \\cos(x) dx', 'variables': []},
+            {'expression': '(\\int x dx) + (\\int \\cos(x) dx)', 'variables': []},
             {'expression': 'x^2 / 2 + \\int (\\cos(x)) dx', 'variables': []},
             {'expression': 'x^2 / 2 + \\sin(x)', 'variables': []}
         ]

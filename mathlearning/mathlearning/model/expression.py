@@ -186,11 +186,15 @@ class Expression:
             return True
         self_simplifications = self.get_simplifications()
         expression_simplifications = expression.get_simplifications()
+
+        # simplify both expressions and compare them
+        # TODO use a set to reduce time complexity
         for self_simplification in self_simplifications:
             for expression_simplification in expression_simplifications:
                 simplifications_match = str(self_simplification.sympy_expr) == str(expression_simplification.sympy_expr)
                 if simplifications_match:
                     return True
+
         return False
 
     def contains_user_defined_funct(self) -> bool:
@@ -289,12 +293,22 @@ class Expression:
         return results
 
     def get_simplifications(self) -> List['Expression']:
-        simplifications = [
+        simplifications = []
+        posible_simplifications = [
             Expression(sympy.expand(self.sympy_expr)),
             Expression(sympy.cancel(self.sympy_expr)),
             Expression(sympy.simplify(self.sympy_expr)),
             Expression(sympy.factor(self.sympy_expr))
         ]
+
+        original_integral_amount = self.amount_of_integrals()
+
+        # TODO check how to do this (Integral(x,x) + Integral(cos(x), x) is simplified to Integral(x+cos(x))
+        # This workaround solves that problem
+        for posible_simplification in posible_simplifications:
+            if posible_simplification.amount_of_integrals() == original_integral_amount:
+                simplifications.append(posible_simplification)
+
         return simplifications
 
     def __eq__(self, other):
@@ -446,3 +460,11 @@ class Expression:
             if expression.is_integral():
                 return True
         return False
+
+    def amount_of_integrals(self):
+        count = 0
+        for exp in preorder_traversal(self.sympy_expr):
+            expression = Expression(exp)
+            if expression.is_integral():
+                count += 1
+        return count

@@ -9,7 +9,7 @@ class IntegrateTheorems:
     return Theorem(
       "Integral de la suma",
       "\\int (f(x) + g(x)) dx",
-      "\\int (f(x)) dx + \\int (g(x)) dx",
+      "(\\int (f(x)) dx) + (\\int (g(x)) dx)",
       {}
     )
 

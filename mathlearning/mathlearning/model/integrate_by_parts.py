@@ -42,7 +42,7 @@ class IntegrateByPartsTheorem(Theorem):
 
         u = by_parts_rule.u
         dv = by_parts_rule.dv
-        v = Integral(dv).doit() # TODO Lucas: Buscar si hay una manera menos cochina de hacer esto
+        v = Integral(dv, by_parts_rule.symbol).doit() # TODO Lucas: Buscar si hay una manera menos cochina de hacer esto
         variables = [
             ExpressionVariable('u(x)', Expression(u)),
             ExpressionVariable('v(x)', Expression(v)),
