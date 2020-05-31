@@ -38,8 +38,8 @@ def make_sympy_expr(formula, is_latex):
 def make_complete_sympy_expr(sympy_expr, variables):
     complete_sympy_expr = sympy_expr
 
-    for variable in variables:
-        complete_sympy_expr = complete_sympy_expr.subs(parse_expr(variable.tag), variable.expression.sympy_expr)
+    # for variable in variables:
+    #    complete_sympy_expr = complete_sympy_expr.subs(parse_expr(variable.tag), variable.expression.sympy_expr)
 
     return complete_sympy_expr
 
@@ -54,6 +54,12 @@ class Expression:
         self.non_commutative_list_size_transformer = ListSizeTransformer(NonCommutativeGroupTransformer())
         self.sympy_expr = make_sympy_expr(formula, is_latex)
         self.sympy_expr = make_complete_sympy_expr(self.sympy_expr, variables)
+
+    def replace_variables(self) -> 'Expression':
+        complete_sympy_expr = self.get_copy().sympy_expr
+        for variable in self.variables:
+            complete_sympy_expr = complete_sympy_expr.subs(parse_expr(variable.tag), variable.expression.sympy_expr)
+        return Expression(complete_sympy_expr)
 
     def is_leaf(self) -> bool:
         return len(self.sympy_expr.args) == 0

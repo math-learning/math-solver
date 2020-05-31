@@ -13,7 +13,7 @@ logger = Logger.getLogger()
 
 class IntegrateByPartsTheorem(Theorem):
     def __init__(self):
-        self.name = 'IntegrateByPartsTheorem'
+        self.name = 'Integrar por partes definir U y V'
         self.left = None
         self.right = None
         self.conditions = {}
@@ -48,7 +48,6 @@ class IntegrateByPartsTheorem(Theorem):
             ExpressionVariable('v(x)', Expression(v)),
         ]
 
-        main_expression = Expression('u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', variables)
         equivalent_expression = Expression('\\int (u(x) * \\frac{d(v(x))}{dx}) dx', variables)
 
         #main_expression == Expression('x * cos(x) - \\int (\\frac{d(x)}{dx} * cos(x)) dx')
@@ -61,9 +60,41 @@ class IntegrateByPartsTheorem(Theorem):
         # POR PARTES(\\int(x * sen(x)) dx) + \\int(x * cos(x)) dx
 
         return [
-            main_expression,
             equivalent_expression
         ]
 
     def __str__(self):
         return self.name
+
+class IntegrateByPartsSecondStepTheorem(Theorem):
+    def __init__(self):
+        self.name = 'Integrar por partes reemplazar la formula usando la igualdad de partes'
+        self.left = None
+        self.right = None
+        self.conditions = {}
+        self.analyzer = TemplateMatchAnalyzer() # TODO: que rayos es esto?
+
+    def there_is_a_chance_to_apply_to(self, expression: Expression):
+        return expression.to_expression_string() == 'Integral(u(x)*Derivative(v(x), x), x)'
+
+    def apply_to(self, expression: Expression) -> List[Expression]:
+        if expression.to_expression_string() == 'Integral(u(x)*Derivative(v(x), x), x)':
+            return [Expression('u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', expression.variables)]
+        return []
+
+
+class IntegrateByPartsReplaceUVTheorem(Theorem):
+    def __init__(self):
+        self.name = 'Integrar por partes reemplazar U y V en la formula'
+        self.left = None
+        self.right = None
+        self.conditions = {}
+        self.analyzer = TemplateMatchAnalyzer() # TODO: que rayos es esto?
+
+    def there_is_a_chance_to_apply_to(self, expression: Expression):
+        return expression.to_expression_string() == 'u(x)*v(x) - Integral(v(x)*Derivative(u(x), x), x)'
+
+    def apply_to(self, expression: Expression) -> List[Expression]:
+        if expression.to_expression_string() == 'u(x)*v(x) - Integral(v(x)*Derivative(u(x), x), x)':
+            return [expression.replace_variables()]
+        return []

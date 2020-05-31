@@ -1,8 +1,7 @@
 from mathlearning.mappers.solution_tree_mapper import SolutionTreeMapper
 from mathlearning.mappers.theorem_mapper import TheoremMapper
-from mathlearning.mappers.validate_mapper import ValidateMapper, ValidateMapperException
+from mathlearning.mappers.validate_mapper import ValidateMapper
 from mathlearning.model.expression_variable import ExpressionVariable
-from mathlearning.model.theorems import Theorems
 from mathlearning.services.result_service import ResultService
 from mathlearning.utils.logger import Logger
 from mathlearning.model.expression import Expression

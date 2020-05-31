@@ -138,7 +138,7 @@ class SolutionTreeNode:
 
     # for debugging purposes
     def print_tree(self, level=0):
-        ret = "\t" * level + self.expression.to_string() + "\n"
+        ret = "\t" * level + self.expression.to_expression_string() + "\n"
         for branch in self.branches:
             ret += branch.print_tree(level + 1)
         return ret

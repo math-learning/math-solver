@@ -1,4 +1,5 @@
-from mathlearning.model.integrate_by_parts import IntegrateByPartsTheorem
+from mathlearning.model.integrate_by_parts import IntegrateByPartsTheorem, IntegrateByPartsSecondStepTheorem, \
+  IntegrateByPartsReplaceUVTheorem
 from mathlearning.model.theorem import Theorem
 
 
@@ -32,9 +33,19 @@ class IntegrateTheorems:
     return IntegrateByPartsTheorem()
 
   @staticmethod
+  def integrate_by_parts_second_step():
+    return IntegrateByPartsSecondStepTheorem()
+
+  @staticmethod
+  def integrate_by_parts_replace_uv():
+    return IntegrateByPartsReplaceUVTheorem()
+
+  @staticmethod
   def get_all():
     return [
         IntegrateTheorems.integrate_by_parts(),
         IntegrateTheorems.integrate_multiply_for_constant(),
-        IntegrateTheorems.integrate_of_a_sum()
+        IntegrateTheorems.integrate_of_a_sum(),
+        IntegrateTheorems.integrate_by_parts_replace_uv(),
+        IntegrateTheorems.integrate_by_parts_second_step()
     ]
