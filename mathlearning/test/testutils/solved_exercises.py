@@ -173,6 +173,26 @@ class SolvedExercises:
         result_non_latex = {'expression': 'x**2 / 2 + sin(x)', 'variables': []}
         return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
 
+    @staticmethod
+    def integral_add_x_x2() -> SolvedExercise:
+        name = "sum of two integrals"
+
+        steps = [
+            {'expression': '\\int x + x^2 dx', 'variables': []},
+            {'expression': '(\\int x dx) + (\\int x^2 dx)', 'variables': []},
+            {'expression': 'x^2 / 2 + \\int x^2 dx', 'variables': []},
+            {'expression': 'x^2 / 2 + x^3/3', 'variables': []}
+        ]
+
+        result = {'expression': 'x^2 / 2 + x^3/3', 'variables': []}
+
+        non_result_steps = steps[:len(steps) - 1]
+
+        steps_non_latex = [
+        ]
+
+        result_non_latex = ''
+        return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
 
     @staticmethod
     def integral_substitution_division_of_polynomials():

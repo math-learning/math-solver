@@ -117,6 +117,9 @@ class SolutionTreeAPITest(APITestCase):
     def test_integral_solution_sum_of_two(self):
         self.solve_exercise_with_solution_tree(SolvedExercises.integral_add_x_cosx())
 
+    def test_integral_solution_sum_of_two_x_x2(self):
+        self.solve_exercise_with_solution_tree(SolvedExercises.integral_add_x_x2())
+
     # INTEGRATE BY SUBSTITUTION EXERCISES
 
     def test_integral_substitution_division_of_polynomials(self):
