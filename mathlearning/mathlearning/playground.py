@@ -6,8 +6,8 @@ from sympy.integrals.manualintegrate import (
    manualintegrate, _manualintegrate, integral_steps, evaluates,
    ConstantRule, ConstantTimesRule, PowerRule, AddRule, URule,
    PartsRule, CyclicPartsRule, TrigRule, ExpRule, ArctanRule,
-   AlternativeRule, DontKnowRule, RewriteRule, integral_steps, parts_rule, IntegralInfo
-)
+   AlternativeRule, DontKnowRule, RewriteRule, integral_steps, parts_rule, IntegralInfo,
+   substitution_rule)
 
 steps = integral_steps(parse_expr('(exp(x) / (1 + exp(2 * x))+ x**2 ) - x'), parse_expr('x'))
 steps_other = integral_steps(parse_expr('exp(x) / (1 + exp(2 * x))'), parse_expr('x'))
@@ -27,3 +27,7 @@ x = str(a.symbol)
 res_step = parse_expr(f'{u} * Integral({v},{x}) - Integral(Derivative({u},{x})* Integral({v},{x}), {x})')
 print(f'res_step: {res_step}')
 print(steps)
+
+
+subs = substitution_rule(IntegralInfo(parse_expr('sin(3*x + 5)'), parse_expr('x')))
+print(subs)

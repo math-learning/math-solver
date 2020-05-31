@@ -8,6 +8,7 @@ from sympy import Integral
 from sympy.core.function import Derivative, UndefinedFunction
 from sympy.parsing.sympy_parser import parse_expr
 from sympy.simplify import simplify
+
 from mathlearning.utils.list.list_size_transformer import ListSizeTransformer
 from mathlearning.utils.list.commutative_group_transformer import CommutativeGroupTransformer
 from mathlearning.utils.list.non_commutative_group_transformer import NonCommutativeGroupTransformer
@@ -47,7 +48,7 @@ def make_complete_sympy_expr(sympy_expr, variables):
 
 class Expression:
 
-    def __init__(self, formula: Union['Expression', str], variables: List['ExpressionVariables'] = [], is_latex=True):
+    def __init__(self, formula: Union['Expression', str], variables: List['ExpressionVariable'] = [], is_latex=True):
         self.variables = variables
         self.commutative_group_transformer = CommutativeGroupTransformer()
         self.non_commutative_group_transformer = NonCommutativeGroupTransformer()
@@ -76,7 +77,7 @@ class Expression:
         return True
 
     def get_copy(self) -> 'Expression':
-        return Expression(parse_expr(str(self.sympy_expr)))
+        return Expression(parse_expr(str(self.sympy_expr)),self.variables)
 
     # Search and derivate expressions
     def solve_derivatives(self) -> 'Expression':
