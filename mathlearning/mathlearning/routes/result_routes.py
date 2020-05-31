@@ -2,6 +2,7 @@ from mathlearning.mappers.solution_tree_mapper import SolutionTreeMapper
 from mathlearning.mappers.theorem_mapper import TheoremMapper
 from mathlearning.mappers.validate_mapper import ValidateMapper, ValidateMapperException
 from mathlearning.model.expression_variable import ExpressionVariable
+from mathlearning.model.theorems import Theorems
 from mathlearning.services.result_service import ResultService
 from mathlearning.utils.logger import Logger
 from mathlearning.model.expression import Expression
@@ -29,13 +30,13 @@ def solve_derivative(request: Request):
         logger.info('Returning the following response: {}'.format(result))
         return Response(result.to_latex(), status=status.HTTP_200_OK)
 
+
 @api_view(['POST'])
 def calculate_solution_tree(request: Request):
     if request.method == 'POST':
         body = json.loads(request.body)
         expression = Expression(body['problem_input']['expression'], body['problem_input']['variables'])
-        theorems = theoremMapper.theorems(body['theorems'])
-        result = result_service.solution_tree(expression, theorems)
+        result = result_service.solution_tree(expression)
         result = result.to_json()
         logger.info('Returning the following response: {}'.format(result))
         return Response(json.dumps(result), status=status.HTTP_200_OK, content_type='application/json')
@@ -48,25 +49,32 @@ def resolve(request: Request):
 
         problem_input = Expression(body['problem_input']['expression'], body['problem_input']['variables'])
         solution_tree = solutionTreeMapper.parse(body['math_tree'])
-        exercise_type = body['type']
 
         step_list = []
-        for step in json.loads(body['step_list']):
+        for step in body['step_list']:
             # TODO: I will find a more more pythonable to do that
             step_expr = step['expression']
             variables = step['variables']
-            step_vars = list(map(lambda variable: ExpressionVariable(variable['tag'], Expression(variable['value'])), variables if variables is not None else []))
+            step_vars = list(map(lambda variable:
+                                 ExpressionVariable(
+                                     variable['tag'],
+                                     Expression(
+                                         variable['expression']['expression']
+                                     )
+                                 ),
+                                 variables if variables is not None else []))
+
             step_list.append(Expression(step_expr, step_vars))
 
         # Current expression
         body_variables = body['current_expression']['variables']
-        variables = list(map(lambda variable: ExpressionVariable(variable['tag'], Expression(variable['value'])), body_variables if body_variables is not None else []))
+        variables = list(map(lambda variable: ExpressionVariable(variable['tag'],
+                                                                 Expression(variable['expression']['expression'])),
+                             body_variables if body_variables is not None else []))
         current_expression = Expression(body['current_expression']['expression'], variables)
 
-        theorems = theoremMapper.theorems(body['theorems'])
+        (result, hints) = result_service.resolve(problem_input, solution_tree, step_list, current_expression)
 
-        (result, hints) = result_service.resolve(problem_input, solution_tree, exercise_type, step_list,
-                                                 current_expression, theorems)
         logger.info('Returning the following response: {} {}'.format(result, json.dumps(hints)))
 
         response_data = {

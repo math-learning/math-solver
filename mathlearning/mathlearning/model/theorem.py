@@ -16,7 +16,12 @@ class TheoremApplication:
 
 class Theorem:
     # left and right could be expressions or str
-    def __init__(self, name: str, left: Union['Expression', str], right: Union['Expression', str], conditions: dict):
+    def __init__(self,
+                 name: str,
+                 left: Union['Expression', str],
+                 right: Union['Expression', str],
+                 conditions: dict):
+
         self.name = name
         if left is not None and right is not None:
             self.left = Expression(left)
@@ -35,7 +40,12 @@ class Theorem:
             left = self.left.to_latex_with_derivatives()
         if self.right is not None:
             right = self.right.to_latex_with_derivatives()
-        return {'name': self.name, 'right': right, 'left': left}
+        return {
+            'name': self.name,
+            'right': right,
+            'left': left,
+            'conditions': self.conditions if 'conditions' is not None else {}
+        }
 
     # Returns the application possibilities (could be more than 1)
     def apply_reverse_to(self, expression: Expression) -> List[Expression]:

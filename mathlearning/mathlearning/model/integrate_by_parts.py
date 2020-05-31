@@ -16,6 +16,7 @@ class IntegrateByPartsTheorem(Theorem):
         self.name = 'IntegrateByPartsTheorem'
         self.left = None
         self.right = None
+        self.conditions = {}
         self.analyzer = TemplateMatchAnalyzer() # TODO: que rayos es esto?
 
     def there_is_a_chance_to_apply_to(self, expression: Expression):

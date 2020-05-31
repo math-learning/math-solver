@@ -11,5 +11,7 @@ def load_exercises(exercises_path):
             exercises.append(exercise)
         return exercises
 
-
+def load_theorems():
+    with open("test/jsons/theorems.json", 'r') as theorems_file:
+        return json.load(theorems_file)
 

@@ -1,4 +1,5 @@
 from mathlearning.model.expression import Expression
+from mathlearning.model.expression_variable import ExpressionVariable
 
 
 class SolvedExercise:
@@ -145,7 +146,7 @@ class SolvedExercises:
         return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
 
 
-    # INTEGRAL EXERCISES
+    # INTEGRAL EXERCISES ---------------------------------------------------------------------
 
     @staticmethod
     def integral_add_x_cosx() -> SolvedExercise:
@@ -172,31 +173,6 @@ class SolvedExercises:
         result_non_latex = {'expression': 'x**2 / 2 + sin(x)', 'variables': []}
         return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
 
-    @staticmethod
-    def integral_parts_mult_x_cosx():
-        name = "parts rule mult cosx and x"
-
-        # TODO: check again the steps
-        steps = [
-            {'expression': '\\int (x * \\cos(x)) dx', 'variables': []},
-            {'expression': '\\int (u(x) * \\frac{v(x)}{dx}) dx', 'variables': []}, # TODO think if this step should be included
-            {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', 'variables': []}, # u = x; v = sin(x)
-            {'expression': 'x * \\sin(x) - \\int (\\frac{d(x)}{dx} * \\sin(x)) dx', 'variables': []},
-            {'expression': 'x * \\sin(x) - \\int (1 * \\sin(x)) dx', 'variables': []},
-            {'expression': 'x * \\sin(x) - \\int (\\sin(x)) dx', 'variables': []},
-            {'expression': 'x*\\sin(x) + \\cos(x)', 'variables': []}
-        ]
-
-        result = {'expression': 'x*\\sin(x) + \\cos(x)', 'variables': []}
-
-        non_result_steps = steps[:len(steps) - 1]
-
-        steps_non_latex = [
-
-        ]
-
-        result_non_latex = ''
-        return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
 
     @staticmethod
     def integral_substitution_division_of_polynomials():
@@ -236,6 +212,9 @@ class SolvedExercises:
 
         steps = [
             {'expression': '\\int(\\sin(3*x + 5))dx', 'variables': []},# u = 3x+5 du=3dx
+            {'expression': '\\int(\\sin(3*x + 5))dx', 'variables': [
+                ExpressionVariable('u(x)', Expression('3x+5')).to_json()
+            ]},  # u = 3x+5 du=3dx
             {'expression': '1/3 * \\int(\\sin(3x+5)) * 3 dx', 'variables': []},
             {'expression': '1/3 * \\int(\\sin(u)) * du', 'variables': []},
             {'expression': '- 1/3 * \\cos(u)', 'variables': []},
@@ -273,6 +252,41 @@ class SolvedExercises:
         result_non_latex = ''
         return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
 
+    @staticmethod
+    def integral_parts_mult_x_cosx():
+        name = "parts rule mult cosx and x"
+
+        # TODO: check again the steps
+        steps = [
+            {'expression': '\\int (x * \\cos(x)) dx', 'variables': []},
+            {'expression': '\\int (u(x) * \\frac{d(v(x))}{dx}) dx',
+             'variables': [
+                 ExpressionVariable('u(x)', Expression('x')).to_json(),
+                 ExpressionVariable('v(x)', Expression('\\sin(x)')).to_json()
+             ]
+             },
+            {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx',
+             'variables': [
+                 ExpressionVariable('u(x)', Expression('x')).to_json(),
+                 ExpressionVariable('v(x)', Expression('\\sin(x)')).to_json()
+             ]
+             },
+            {'expression': 'x * \\sin(x) - \\int (\\frac{d(x)}{dx} * \\sin(x)) dx', 'variables': []},
+            {'expression': 'x * \\sin(x) - \\int (1 * \\sin(x)) dx', 'variables': []},
+            {'expression': 'x * \\sin(x) - \\int (\\sin(x)) dx', 'variables': []},
+            {'expression': 'x*\\sin(x) + \\cos(x)', 'variables': []}
+        ]
+
+        result = {'expression': 'x*\\sin(x) + \\cos(x)', 'variables': []}
+
+        non_result_steps = steps[:len(steps) - 1]
+
+        steps_non_latex = [
+
+        ]
+
+        result_non_latex = ''
+        return SolvedExercise(name, steps, result, non_result_steps, result_non_latex, steps_non_latex)
 
     # https://www.intmath.com/methods-integration/7-integration-by-parts.php
     @staticmethod
@@ -281,8 +295,14 @@ class SolvedExercises:
 
         steps = [
             {'expression': '\\int( x * \\sin(2*x)) dx', 'variables': []},  # u = x  dv = sin(2x) dx ; v -cos(2x)/2
-            {'expression': '\\int (u(x) * \\frac{v(x)}{dx}) dx', 'variables': []}, # TODO think if this step should be included
-            {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', 'variables': []},
+            {'expression': '\\int (u(x) * \\frac{d(v(x))}{dx}) dx', 'variables': [
+                ExpressionVariable('u(x)', Expression('x')).to_json(),
+                ExpressionVariable('v(x)', Expression('-cos(2x)/2')).to_json()
+            ]}, # TODO think if this step should be included
+            {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', 'variables': [
+                ExpressionVariable('u(x)', Expression('x')).to_json(),
+                ExpressionVariable('v(x)', Expression('-cos(2x)/2')).to_json()
+            ]},
             {'expression': 'x * (- \\cos(2x)/2) - \\int (\\frac{d(x)}{dx} * (-\\cos(2x)/2) ) dx', 'variables': []},
             {'expression': 'x * (- \\cos(2x)/2) - \\int ( 1 * (-\\cos(2x)/2) ) dx', 'variables': []},
             {'expression': 'x * (- \\cos(2x)/2) - \\int ((-\\cos(2x)/2) ) dx', 'variables': []},
@@ -307,8 +327,14 @@ class SolvedExercises:
 
         steps = [
             {'expression': '\\int ( x * \\sqrt[2]{x+1} ) dx', 'variables': []},
-            {'expression': '\\int (u(x) * \\frac{v(x)}{dx}) dx', 'variables': []},  # TODO think if this step should be included
-            {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', 'variables': []},
+            {'expression': '\\int (u(x) * \\frac{d(v(x))}{dx}) dx', 'variables': [
+                ExpressionVariable('u(x)', Expression('x')).to_json(),
+                ExpressionVariable('v(x)', Expression('(2/3 * (x+1)^{3/2})')).to_json()
+            ]},  # TODO think if this step should be included
+            {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', 'variables': [
+                ExpressionVariable('u(x)', Expression('x')).to_json(),
+                ExpressionVariable('v(x)', Expression('(2/3 * (x+1)^{3/2})')).to_json()
+            ]},
             {'expression': 'x * (2/3 * (x+1)^{3/2}) - \\int (2/3 * (x+1)^{3/2}) dx', 'variables': []},
             {'expression': 'x * (2/3 * (x+1)^{3/2}) - 2/3 * \\int ((x+1)^{3/2}) dx', 'variables': []},
             {'expression': 'x * (2/3 * (x+1)^{3/2}) - 2/3 * 2/5 * (x+1)^{5/2}', 'variables': []},
@@ -331,8 +357,14 @@ class SolvedExercises:
 
         steps = [
             {'expression': '\\int (\\ln(x)) dx', 'variables': []},
-            {'expression': '\\int (u(x) * \\frac{v(x)}{dx}) dx', 'variables': []},  # TODO think if this step should be included
-            {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', 'variables': []},
+            {'expression': '\\int (u(x) * \\frac{v(x)}{dx}) dx', 'variables': [
+                ExpressionVariable('u(x)', Expression('ln(x)')).to_json(),
+                ExpressionVariable('v(x)', Expression('x')).to_json()
+            ]},  # TODO think if this step should be included
+            {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', 'variables': [
+                ExpressionVariable('u(x)', Expression('ln(x)')).to_json(),
+                ExpressionVariable('v(x)', Expression('x')).to_json()
+            ]},
             {'expression': '\\ln(x) * x - \\int (\\frac{d(\\ln(x))}{dx} * x ) dx', 'variables': []},
             {'expression': '\\ln(x) * x - \\int (\\frac{1}{x} * x ) dx', 'variables': []},
             {'expression': '\\ln(x) * x - \\int (1) dx', 'variables': []},

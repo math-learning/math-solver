@@ -27,7 +27,7 @@ class DerivativeTheorems:
             "derivada del producto",
             "\\frac{d(f(x) * g(x))}{dx}",
             "\\frac{d(f(x))}{dx} * g(x) + \\frac{d(g(x))}{dx} * f(x)",
-            {}
+            {},
         )
 
     @staticmethod

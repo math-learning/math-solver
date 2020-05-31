@@ -14,9 +14,14 @@ class TheoremMapper:
         return parsed_theorems
 
     @staticmethod
-    def theorem(theo: dict) -> List[Theorem]:
+    def theorem(theo: dict) -> Theorem:
         if theo.get("name") == 'IntegrateByPartsTheorem':
             return IntegrateByPartsTheorem()
 
-        return Theorem(theo.get("name"), theo.get("left"), theo.get("right"), theo.get("conditions"))
+        return Theorem(
+            theo.get("name"),
+            theo.get("left") if 'left' in theo else None,
+            theo.get("right")if 'right' in theo else None,
+            theo.get("conditions") if 'conditions' in theo else {}
+        )
 

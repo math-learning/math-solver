@@ -6,15 +6,15 @@ from typing import List
 logger = Logger.getLogger()
 
 class SolutionTreeNode:
-    def __init__(self, expression: Expression, theorem_applied: Theorem, branches: List):
+    def __init__(self, expression: Expression, theorem_applied_name: str, branches: List):
         self.expression = expression
-        self.theorem_applied = theorem_applied
+        self.theorem_applied_name = theorem_applied_name
         self.branches = branches
 
     def explain_solution(self, depth):
         theorem = "None"
-        if self.theorem_applied is not None:
-            theorem = self.theorem_applied.name
+        if self.theorem_applied_name is not None:
+            theorem = self.theorem_applied_name
         print(depth, ". Expression: " + self.expression.to_string(), ". Teorema aplicado: " + theorem)
 
         for branch in self.branches:
@@ -30,14 +30,14 @@ class SolutionTreeNode:
         for branch in self.branches:
             branches.append(branch.to_json())
 
-        if self.theorem_applied is not None:
-            theorem = self.theorem_applied.to_json()
+        if self.theorem_applied_name is not None:
+            theorem = self.theorem_applied_name
         else:
-            theorem = {'name': 'none'}
+            theorem = 'none'
 
         return {
             'expression': self.expression.to_string(),
-            'theorem_applied': theorem,
+            'theorem_applied_name': theorem,
             'branches': branches
         }
 
@@ -47,8 +47,7 @@ class SolutionTreeNode:
         return names
 
     def get_theorem_names_rec(self, accum):
-        if self.theorem_applied is not None:
-            accum.add(self.theorem_applied.name)
+        accum.add(self.theorem_applied_name)
         children_names = set()
         for branch in self.branches:
             children_names |= branch.get_theorem_names_rec(set())
@@ -56,7 +55,7 @@ class SolutionTreeNode:
         return accum
 
     def __str__(self):
-        return self.expression.to_string() + str(self.theorem_applied)
+        return self.expression.to_string() + self.theorem_applied_name
 
     def new_expression_is_valid(self, previous_step, new_expression):
         # TODO: fix going backwards bug
@@ -75,12 +74,12 @@ class SolutionTreeNode:
         hints = self.get_hints(new_expression)
         return 'valid', hints
 
-    def get_hints(self, current_expression):
+    def get_hints(self, current_expression) -> List[str]:
         current_expression_subtrees = self.get_sub_trees_with_root(current_expression)
         hints = []
         for current_expression_subtree in current_expression_subtrees:
             for children in current_expression_subtree.branches:
-                hints.append(children.theorem_applied)
+                hints.append(children.theorem_applied_name)
 
         return hints
 
@@ -110,7 +109,7 @@ class SolutionTreeNode:
     def is_pre_simplification_step(self):
         if len(self.branches) == 1:
             branch = self.branches[0]
-            if branch.theorem_applied.name == 'simplificacion' and len(branch.branches) == 0:
+            if branch.theorem_applied_name == 'simplificacion' and len(branch.branches) == 0:
                 return True
         return False
 

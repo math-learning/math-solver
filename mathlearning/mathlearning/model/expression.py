@@ -160,6 +160,12 @@ class Expression:
             'variables': list(map(lambda variable: variable.to_json(), self.variables))
         })
 
+    def to_json(self):
+        return {
+            'expression': str(self.sympy_expr),
+            'variables': list(map(lambda variable: variable.to_json(), self.variables))
+        }
+
     def to_expression_string(self):
         return str(self.sympy_expr)
 

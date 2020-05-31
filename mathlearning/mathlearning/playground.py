@@ -1,5 +1,7 @@
 from sympy.parsing.sympy_parser import parse_expr
 
+from mathlearning.model.expression import Expression
+
 from sympy.integrals.manualintegrate import (
    manualintegrate, _manualintegrate, integral_steps, evaluates,
    ConstantRule, ConstantTimesRule, PowerRule, AddRule, URule,

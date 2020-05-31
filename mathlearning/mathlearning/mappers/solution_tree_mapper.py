@@ -19,13 +19,13 @@ class SolutionTreeMapper:
 
         json_expression = json.loads(node_dictionary['expression'])
         expression = SolutionTreeMapper.parse_expression(json_expression)
-        theorem_applied = TheoremMapper.theorem(node_dictionary['theorem_applied'])
+        theorem_applied = node_dictionary['theorem_applied_name']
         return SolutionTreeNode(expression, theorem_applied, branches)
 
     @staticmethod
     def parse_expression(json_expression):
         main_expression = json_expression['expression']
         json_variables = json_expression['variables']
-        variables = list(map(lambda variable: ExpressionVariable(variable['tag'], SolutionTreeMapper.parse_expression(json.loads(variable['expression']))), json_variables))
+        variables = list(map(lambda variable: ExpressionVariable(variable['tag'], SolutionTreeMapper.parse_expression(variable['expression'])), json_variables))
 
         return Expression(main_expression, variables, is_latex=False)
