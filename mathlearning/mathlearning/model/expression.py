@@ -477,3 +477,14 @@ class Expression:
             if expression.is_integral():
                 count += 1
         return count
+
+    def compare_variables(self, variables):
+        for self_variable in self.variables:
+            contained = False
+            for variable in variables:
+                if self_variable == variable:
+                    contained = True
+            if not contained:
+                return False
+
+        return True

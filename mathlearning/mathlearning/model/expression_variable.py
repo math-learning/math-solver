@@ -13,3 +13,6 @@ class ExpressionVariable:
 
     def to_string(self) -> str:
         return json.dumps({'tag': self.tag, 'expression': self.expression.to_string() })
+
+    def __eq__(self, other):
+        return self.tag == other.tag and self.expression == other.expression

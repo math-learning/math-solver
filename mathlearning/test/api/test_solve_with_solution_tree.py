@@ -64,9 +64,9 @@ class SolutionTreeAPITest(APITestCase):
             result = json.loads(response.content)
 
             if result['exerciseStatus'] == 'resolved':
-                print(Expression(current_step['expression']).to_string())
+                print(Expression(current_step['expression']).to_expression_string() + ' - ' + json.dumps(current_step['variables']))
             if result['exerciseStatus'] == 'invalid':
-                print(Expression(current_step['expression']).to_string())
+                print(Expression(current_step['expression']).to_expression_string() + ' - ' + json.dumps(current_step['variables']))
 
             self.assertEquals(response.status_code, status.HTTP_200_OK)
             self.assertEquals(result['exerciseStatus'], 'valid')

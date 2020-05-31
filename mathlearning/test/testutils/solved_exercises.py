@@ -258,12 +258,14 @@ class SolvedExercises:
 
         steps = [
             {'expression': '\\int(\\sin(3*x + 5))dx', 'variables': []},# u = 3x+5 du=3dx
-            {'expression': '\\int(\\sin(3*x + 5))dx', 'variables': [
-                ExpressionVariable('u(x)', Expression('3x+5')).to_json()
-            ]},  # u = 3x+5 du=3dx
-            {'expression': '1/3 * \\int(\\sin(3x+5)) * 3 dx', 'variables': []},
-            {'expression': '1/3 * \\int(\\sin(u)) * du', 'variables': []},
-            {'expression': '- 1/3 * \\cos(u)', 'variables': []},
+            {'expression': '1/3 * \\int(\\sin(u)) * du', 'variables': [
+                ExpressionVariable('u', Expression('3x+5')).to_json(),
+                ExpressionVariable('du', Expression('3')).to_json()
+            ]},
+            {'expression': '- 1/3 * \\cos(u)', 'variables': [
+                ExpressionVariable('u', Expression('3x+5')).to_json(),
+                ExpressionVariable('du', Expression('3')).to_json()
+            ]},
             {'expression': '- 1/3 * \\cos(3x+5)', 'variables': []}
         ]
 
@@ -283,8 +285,14 @@ class SolvedExercises:
 
         steps = [
             {'expression': '\\int(2 * x \\sqrt[2]{1+x^2}) dx', 'variables': []},  # u = 1+x^2 du=2x dx
-            {'expression': '\\int(\\sqrt[2]{u}) du', 'variables': []},
-            {'expression': '2/3 * u^{3/2}', 'variables': []},
+            {'expression': '\\int(\\sqrt[2]{u}) du', 'variables': [
+                {'tag': 'u', 'expression': {'expression': '1+x^2', 'variables': []}},
+                {'tag': 'du', 'expression': {'expression': '2x', 'variables': []}}
+            ]},
+            {'expression': '2/3 * u^{3/2}', 'variables': [
+                {'tag': 'u', 'expression': {'expression': '1+x^2', 'variables': []}},
+                {'tag': 'du', 'expression': {'expression': '2x', 'variables': []}}
+            ]},
             {'expression': '2/3 * (1+x^2)^{3/2}', 'variables': []}
         ]
 
