@@ -307,7 +307,6 @@ class SolvedExercises:
             {'expression': 'x * (- \\cos(2x)/2) - \\int ( 1 * (-\\cos(2x)/2) ) dx', 'variables': []},
             {'expression': 'x * (- \\cos(2x)/2) - \\int ((-\\cos(2x)/2) ) dx', 'variables': []},
             {'expression': 'x * (- \\cos(2x)/2) + 1/2 * \\int (\\cos(2x) ) dx', 'variables': []},
-            {'expression': 'x * (- \\cos(2x)/2) + 1/2 * \\sin(2x)/2', 'variables': []},
             {'expression': 'x * (- \\cos(2x)/2) + 1/2 * \\sin(2x)/2', 'variables': []}
         ]
 
@@ -337,7 +336,7 @@ class SolvedExercises:
             ]},
             {'expression': 'x * (2/3 * (x+1)^{3/2}) - \\int (2/3 * (x+1)^{3/2}) dx', 'variables': []},
             {'expression': 'x * (2/3 * (x+1)^{3/2}) - 2/3 * \\int ((x+1)^{3/2}) dx', 'variables': []},
-            {'expression': 'x * (2/3 * (x+1)^{3/2}) - 2/3 * 2/5 * (x+1)^{5/2}', 'variables': []},
+            # {'expression': 'x * (2/3 * (x+1)^{3/2}) - 2/3 * 2/5 * (x+1)^{5/2}', 'variables': []},
             {'expression': 'x * (2/3 * (x+1)^{3/2}) - 4/15 * (x+1)^{5/2}', 'variables': []}
         ]
 
@@ -357,16 +356,16 @@ class SolvedExercises:
 
         steps = [
             {'expression': '\\int (\\ln(x)) dx', 'variables': []},
-            {'expression': '\\int (u(x) * \\frac{v(x)}{dx}) dx', 'variables': [
-                ExpressionVariable('u(x)', Expression('ln(x)')).to_json(),
-                ExpressionVariable('v(x)', Expression('x')).to_json()
+            {'expression': '\\int (u(x) * \\frac{d(v(x))}{dx}) dx', 'variables': [
+                {'tag': 'u(x)', 'expression': {'expression': '\\ln(x)', 'variables': []}},
+                {'tag': 'v(x)', 'expression': {'expression': 'x', 'variables': []}}
             ]},  # TODO think if this step should be included
             {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', 'variables': [
-                ExpressionVariable('u(x)', Expression('ln(x)')).to_json(),
-                ExpressionVariable('v(x)', Expression('x')).to_json()
+                {'tag': 'u(x)', 'expression': {'expression': '\\ln(x)', 'variables': []}},
+                {'tag': 'v(x)', 'expression': {'expression': 'x', 'variables': []}}
             ]},
             {'expression': '\\ln(x) * x - \\int (\\frac{d(\\ln(x))}{dx} * x ) dx', 'variables': []},
-            {'expression': '\\ln(x) * x - \\int (\\frac{1}{x} * x ) dx', 'variables': []},
+            # {'expression': '\\ln(x) * x - \\int (\\frac{1}{x} * x ) dx', 'variables': []},
             {'expression': '\\ln(x) * x - \\int (1) dx', 'variables': []},
             {'expression': '\\ln(x) * x - x', 'variables': []}
         ]

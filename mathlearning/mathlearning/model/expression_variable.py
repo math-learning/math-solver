@@ -9,7 +9,7 @@ class ExpressionVariable:
         self.expression = expression
 
     def to_json(self):
-        return {'tag': self.tag, 'expression': self.expression.to_json() } # TODO: que onda esto de mandarlo a json asi?
+        return {'tag': self.tag, 'expression': self.expression.to_json()} # TODO: que onda esto de mandarlo a json asi?
 
     def to_string(self) -> str:
         return json.dumps({'tag': self.tag, 'expression': self.expression.to_string() })

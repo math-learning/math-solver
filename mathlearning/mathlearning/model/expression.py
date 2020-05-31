@@ -27,6 +27,7 @@ def make_sympy_expr(formula, is_latex):
         clean_formula = clean_latex(formula)
         sympy_expr = parse_latex(clean_formula)
         sympy_expr = sympy_expr.subs(simplify(parse_expr("e")), parse_expr("exp(1)"))
+        sympy_expr = sympy_expr.xreplace({parse_latex("\\ln(x)"): parse_expr('log(x,E)')})
     elif is_sympy_exp(formula):
         sympy_expr = formula
     elif isinstance(formula, str):
@@ -116,6 +117,7 @@ class Expression:
             derivative_solved = self.get_copy()
             derivative_solved.replace(derivative, derivative.apply_derivative())
             possibilities.append(derivative_solved)
+
         return possibilities
 
     # possibilities of solving just 1 integral
@@ -254,7 +256,7 @@ class Expression:
 
         if (new_sympy_expr == self.sympy_expr and self.contains_derivative()):
             # TODO: workaround because sympy issue https://github.com/sympy/sympy/issues/5670
-            new_sympy_expr = self.sympy_expr.xreplace({ to_replace_sympy: replacement_sympy })
+            new_sympy_expr = new_sympy_expr.xreplace({to_replace_sympy: replacement_sympy})
 
         if new_sympy_expr == self.sympy_expr:
             to_replace_sympy = simplify(to_replace.sympy_expr)

@@ -117,23 +117,28 @@ class SolutionTreeAPITest(APITestCase):
     def test_integral_solution_sum_of_two(self):
         self.solve_exercise_with_solution_tree(SolvedExercises.integral_add_x_cosx())
 
+    # INTEGRATE BY SUBSTITUTION EXERCISES
+
+    def test_integral_substitution_division_of_polynomials(self):
+        self.solve_exercise_with_solution_tree(SolvedExercises.integral_substitution_division_of_polynomials())
+
+    def test_integral_substitution_sin_with_polynomials(self):
+        self.solve_exercise_with_solution_tree(SolvedExercises.integral_substitution_sin_with_polynomials())
+
+    def test_integral_substitution_multiplication(self):
+        self.solve_exercise_with_solution_tree(SolvedExercises.integral_substitution_multiplication())
+
+    # INTEGRATE BY PARTS EXERCISES
+
     def test_integral_solution_parts(self):
         self.solve_exercise_with_solution_tree(SolvedExercises.integral_parts_mult_x_cosx())
 
-    def test_integral_substitution_division_of_polynomials(self):
-        self.sub_test_only_result(SolvedExercises.integral_substitution_division_of_polynomials())
-
-    def test_integral_substitution_sin_with_polynomials(self):
-        self.sub_test_only_result(SolvedExercises.integral_substitution_sin_with_polynomials())
-
-    def test_integral_substitution_multiplication(self):
-        self.sub_test_only_result(SolvedExercises.integral_substitution_multiplication())
-
     def test_integral_parts_example_one(self):
-        self.sub_test_only_result(SolvedExercises.integral_parts_example_one())
+        self.solve_exercise_with_solution_tree(SolvedExercises.integral_parts_example_one())
 
-    def test_integral_parts_example_two(self):
-        self.sub_test_only_result(SolvedExercises.integral_parts_example_two())
+    # TODO: analyze sqrt with by parts from sympy
+    # def test_integral_parts_example_two(self):
+    #     self.solve_exercise_with_solution_tree(SolvedExercises.integral_parts_example_two())
 
     def test_integral_parts_example_six(self):
-        self.sub_test_only_result(SolvedExercises.integral_parts_example_six())
+        self.solve_exercise_with_solution_tree(SolvedExercises.integral_parts_example_six())

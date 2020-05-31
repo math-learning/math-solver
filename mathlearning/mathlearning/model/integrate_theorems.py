@@ -47,5 +47,5 @@ class IntegrateTheorems:
         IntegrateTheorems.integrate_multiply_for_constant(),
         IntegrateTheorems.integrate_of_a_sum(),
         IntegrateTheorems.integrate_by_parts_replace_uv(),
-        IntegrateTheorems.integrate_by_parts_second_step()
+        IntegrateTheorems.integrate_by_parts_apply()
     ]

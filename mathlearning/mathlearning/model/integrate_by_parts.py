@@ -73,7 +73,7 @@ class IntegrateByPartsApplyTheorem(Theorem):
         self.left = None
         self.right = None
         self.conditions = {}
-        self.analyzer = TemplateMatchAnalyzer() # TODO: que rayos es esto?
+        self.analyzer = None
 
     def there_is_a_chance_to_apply_to(self, expression: Expression):
         return expression.to_expression_string() == 'Integral(u(x)*Derivative(v(x), x), x)'
@@ -90,7 +90,7 @@ class IntegrateByPartsReplaceUVTheorem(Theorem):
         self.left = None
         self.right = None
         self.conditions = {}
-        self.analyzer = TemplateMatchAnalyzer() # TODO: que rayos es esto?
+        self.analyzer = None
 
     def there_is_a_chance_to_apply_to(self, expression: Expression):
         return expression.to_expression_string() == 'u(x)*v(x) - Integral(v(x)*Derivative(u(x), x), x)'
