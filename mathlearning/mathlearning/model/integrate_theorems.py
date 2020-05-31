@@ -1,4 +1,4 @@
-from mathlearning.model.integrate_by_parts import IntegrateByPartsTheorem, IntegrateByPartsSecondStepTheorem, \
+from mathlearning.model.integrate_by_parts import IntegrateByPartsTheorem, IntegrateByPartsApplyTheorem, \
   IntegrateByPartsReplaceUVTheorem
 from mathlearning.model.theorem import Theorem
 
@@ -33,8 +33,8 @@ class IntegrateTheorems:
     return IntegrateByPartsTheorem()
 
   @staticmethod
-  def integrate_by_parts_second_step():
-    return IntegrateByPartsSecondStepTheorem()
+  def integrate_by_parts_apply():
+    return IntegrateByPartsApplyTheorem()
 
   @staticmethod
   def integrate_by_parts_replace_uv():

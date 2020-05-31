@@ -1,4 +1,5 @@
-from mathlearning.model.integrate_by_parts import IntegrateByPartsTheorem
+from mathlearning.model.integrate_by_parts import IntegrateByPartsTheorem, IntegrateByPartsApplyTheorem, \
+    IntegrateByPartsReplaceUVTheorem
 from mathlearning.model.theorem import Theorem
 from typing import List
 
@@ -15,8 +16,12 @@ class TheoremMapper:
 
     @staticmethod
     def theorem(theo: dict) -> Theorem:
-        if theo.get("name") == 'IntegrateByPartsTheorem':
+        if theo.get("name") == IntegrateByPartsTheorem().name:
             return IntegrateByPartsTheorem()
+        elif theo.get("name") == IntegrateByPartsApplyTheorem().name:
+            return IntegrateByPartsApplyTheorem()
+        elif theo.get("name") == IntegrateByPartsReplaceUVTheorem().name:
+            return IntegrateByPartsReplaceUVTheorem()
 
         return Theorem(
             theo.get("name"),

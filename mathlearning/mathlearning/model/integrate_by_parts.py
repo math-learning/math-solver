@@ -66,9 +66,10 @@ class IntegrateByPartsTheorem(Theorem):
     def __str__(self):
         return self.name
 
-class IntegrateByPartsSecondStepTheorem(Theorem):
+
+class IntegrateByPartsApplyTheorem(Theorem):
     def __init__(self):
-        self.name = 'Integrar por partes reemplazar la formula usando la igualdad de partes'
+        self.name = 'Integrar por partes aplicacion'
         self.left = None
         self.right = None
         self.conditions = {}
