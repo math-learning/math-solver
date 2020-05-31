@@ -40,21 +40,16 @@ class IntegrateBySubstitutionDefineUAndDUTheorem(Theorem):
             # Can not be applied by parts
             return []
 
-        context = subs_rule.context
         u = subs_rule.u_func
-        # https://stackoverflow.com/questions/29645999/sympy-express-variable-in-terms-of-another
-        symbol_in_terms_of_u = subs_rule.u_func - parse_expr('u')
-        symbol_in_terms_of_u = solve(symbol_in_terms_of_u, subs_rule.symbol)[0]
-        du = Derivative(u, subs_rule.symbol)
-        constant = subs_rule.constant
+        du = Derivative(u, subs_rule.symbol).doit()
         variables = [
             ExpressionVariable('u', Expression(u)),
             ExpressionVariable('du', Expression(du)),
         ]
 
-        equivalent_expression = context.xreplace({u: parse_expr('u')})
-        equivalent_expression = equivalent_expression.xreplace({subs_rule.symbol: symbol_in_terms_of_u})
-        equivalent_expression = equivalent_expression * constant
+        equivalent_expression = subs_rule.substep.context.xreplace({subs_rule.u_var: parse_expr('u')})
+        equivalent_expression = equivalent_expression * subs_rule.constant
+
 
         result = Expression(f'Integral({str(equivalent_expression)}, u)', variables, is_latex=False)
 

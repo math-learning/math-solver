@@ -196,19 +196,45 @@ class SolvedExercises:
 
     @staticmethod
     def integral_substitution_division_of_polynomials():
-        #   TODO
+        #   TODO check if the steps are the correct ones
         name = "substitution"
 
         steps = [
-            {'expression': '\\int ( x^2 / (\\sqrt[3]{1+2x}) ) dx', 'variables': []}, # 1+2x = t^3 => x = ( t^3 - 1 ) / 2 ; 2dx = 3t^2 dt dx = (3t^2 dt)/2
-            {'expression': '\\int ( \\frac{ (( t^3 - 1 ) / 2)^2}{t} * (3*t^2)/2 ) dt', 'variables': []},
-            {'expression': '(3/2) * \\int ( (t^6-2t^3+1)/4 *t ) dt', 'variables': []},
-            {'expression': '3/8 * (\\int (t^7 - 2t^4 + t) dt)', 'variables': []},
-            {'expression': '3/8 * (\\int (t^7) dt - \\int( 2t^4 + t) dt)', 'variables': []},
-            {'expression': '3/8 * (\\int (t^7) dt - \\int( 2t^4) dt + \\int (t) dt)', 'variables': []},
-            {'expression': '3/8 * (\\int (t^7) dt - \\int( 2t^4) dt + t^2/2)', 'variables': []},
-            {'expression': '3/8 * (\\int (t^7) dt - 2t^5/5 + t^2/2)', 'variables': []},
-            {'expression': '3/8 * (t^8/8 - 2t^5/5 + t^2/2)', 'variables': []}, # t = \\sqrt[3]{1 +2x}
+            {'expression': '\\int ( x^2 / (\\sqrt[3]{1+2x}) ) dx', 'variables': []}, # 1+2x = u^3 => x = ( u^3 - 1 ) / 2 ; 2dx = 3u^2 du dx = (3u^2 du)/2
+
+            {'expression': '\\int ( \\frac{ (( u^3 - 1 ) / 2)^2}{u} * (3*u^2)/2 ) du', 'variables': [
+                {'tag': 'u', 'expression': {'expression': '\\sqrt[3]{1+2x}', 'variables': []}},
+                {'tag': 'du', 'expression': {'expression': '2/(3*(2*x + 1)^(2/3))', 'variables': []}}
+            ]},
+            {'expression': '(3/2) * \\int ( (u^6-2u^3+1)/4 *u ) du', 'variables': [
+                {'tag': 'u', 'expression': {'expression': '\\sqrt[3]{1+2x}', 'variables': []}},
+                {'tag': 'du', 'expression': {'expression': '2/(3*(2*x + 1)^(2/3))', 'variables': []}}
+            ]},
+            {'expression': '3/8 * (\\int (u^7 - 2u^4 + u) du)', 'variables': [
+                {'tag': 'u', 'expression': {'expression': '\\sqrt[3]{1+2x}', 'variables': []}},
+                {'tag': 'du', 'expression': {'expression': '2/(3*(2*x + 1)^(2/3))', 'variables': []}}
+            ]},
+            {'expression': '3/8 * (\\int (u^7) du - \\int( 2u^4 + u) du)', 'variables': [
+                {'tag': 'u', 'expression': {'expression': '\\sqrt[3]{1+2x}', 'variables': []}},
+                {'tag': 'du', 'expression': {'expression': '2/(3*(2*x + 1)^(2/3))', 'variables': []}}
+            ]},
+            {'expression': '3/8 * (\\int (u^7) du - \\int( 2u^4) du + \\int (u) du)', 'variables': [
+                {'tag': 'u', 'expression': {'expression': '\\sqrt[3]{1+2x}', 'variables': []}},
+                {'tag': 'du', 'expression': {'expression': '2/(3*(2*x + 1)^(2/3))', 'variables': []}}
+            ]},
+            {'expression': '3/8 * (\\int (u^7) du - \\int( 2u^4) du + u^2/2)', 'variables': [
+                {'tag': 'u', 'expression': {'expression': '\\sqrt[3]{1+2x}', 'variables': []}},
+                {'tag': 'du', 'expression': {'expression': '2/(3*(2*x + 1)^(2/3))', 'variables': []}}
+            ]},
+            {'expression': '3/8 * (\\int (u^7) du - 2u^5/5 + u^2/2)', 'variables': [
+                {'tag': 'u', 'expression': {'expression': '\\sqrt[3]{1+2x}', 'variables': []}},
+                {'tag': 'du', 'expression': {'expression': '2/(3*(2*x + 1)^(2/3))', 'variables': []}}
+            ]},
+            {'expression': '3/8 * (u^8/8 - 2u^5/5 + u^2/2)', 'variables': [
+                {'tag': 'u', 'expression': {'expression': '\\sqrt[3]{1+2x}', 'variables': []}},
+                {'tag': 'du', 'expression': {'expression': '2/(3*(2*x + 1)^(2/3))', 'variables': []}}
+            ]},
+
             {'expression': '3/8 * ((\\sqrt[3]{1 +2x})^8/8 - 2(\\sqrt[3]{1 +2x})^5/5 + (\\sqrt[3]{1 +2x})^2/2)', 'variables': []},
             {'expression': '3/64 * (\\sqrt[3]{1 +2x})^8 - 6/40 * (\\sqrt[3]{1 +2x})^5 + 3/16 *(\\sqrt[3]{1 +2x})^2', 'variables': []},
             {'expression': '3/64 * (\\sqrt[3]{1 +2x})^8 - 3/20 * (\\sqrt[3]{1 +2x})^5 + 3/16 *(\\sqrt[3]{1 +2x})^2', 'variables': []}
