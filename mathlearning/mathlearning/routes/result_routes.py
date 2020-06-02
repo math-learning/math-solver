@@ -61,7 +61,7 @@ def resolve(request: Request):
                                  ExpressionVariable(
                                      variable['tag'],
                                      Expression(
-                                         variable['expression']['expression']
+                                         variable['expression']
                                      )
                                  ),
                                  variables if variables is not None else []))
@@ -71,7 +71,7 @@ def resolve(request: Request):
         # Current expression
         body_variables = body['current_expression']['variables']
         variables = list(map(lambda variable: ExpressionVariable(variable['tag'],
-                                                                 Expression(variable['expression']['expression'])),
+                                                                 Expression(variable['expression'])),
                              body_variables if body_variables is not None else []))
         current_expression = Expression(body['current_expression']['expression'], variables)
 

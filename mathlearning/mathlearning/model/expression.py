@@ -40,8 +40,8 @@ def make_sympy_expr(formula, is_latex):
 def make_complete_sympy_expr(sympy_expr, variables):
     complete_sympy_expr = sympy_expr
 
-    # for variable in variables:
-    #    complete_sympy_expr = complete_sympy_expr.subs(parse_expr(variable.tag), variable.expression.sympy_expr)
+    for variable in variables:
+        complete_sympy_expr = complete_sympy_expr.subs(parse_expr(variable.tag), variable.expression.sympy_expr)
 
     return complete_sympy_expr
 

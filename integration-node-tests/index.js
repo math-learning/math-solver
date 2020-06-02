@@ -236,7 +236,7 @@ const testStep = async ({ problem_input, math_tree, theorems, current_expression
         expression: problem_input,
         variables: []
       },
-      step_list: JSON.stringify(step_list),
+      step_list: step_list,
       math_tree,
       theorems,
       current_expression
@@ -325,13 +325,13 @@ let failedCount = 0;
 const a = 1;
 const b = 1;
 const theoremesToTest = [
-  // 'f+g',
+  'f+g',
   // 'f-g',
   // 'f*g',
   // 'f/g',
   // 'f(g)',
   // 'f+g+h',
-  'intpartsf*g'
+  // 'intpartsf*g'
 ];
 const functionsToTest = [
   'x',
