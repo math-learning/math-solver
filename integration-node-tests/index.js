@@ -142,16 +142,16 @@ const possible_theorems = {
       {
         expression: '\\int u(x)*\\frac{d(v(x))}{dx}',
         variables: [
-          { tag: 'u(x)', value: 'f1' },
-          { tag: 'v(x)', value: 'ig1' }
+          { tag: 'u(x)', expression: 'f1' },
+          { tag: 'v(x)', expression: 'ig1' }
         ],
         status: 'valid'
       },
       {
         expression: 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x))',
         variables: [
-          { tag: 'u(x)', value: 'f1' },
-          { tag: 'v(x)', value: 'ig1' }
+          { tag: 'u(x)', expression: 'f1' },
+          { tag: 'v(x)', expression: 'ig1' }
         ],
         status: 'valid'
       },
@@ -173,8 +173,8 @@ const possible_theorems = {
       {
         expression: 'c(x) * c(x) - \\int (\\frac{d(u(x))}{dx} * v(x))',
         variables: [
-          { tag: 'u(x)', value: 'f1' },
-          { tag: 'v(x)', value: 'dg1' }
+          { tag: 'u(x)', expression: 'f1' },
+          { tag: 'v(x)', expression: 'dg1' }
         ],
         status: 'invalid'
       }
@@ -193,7 +193,7 @@ const executeExpression = async (theoreme, functions, stepCount) => {
   const problem_steps = steps.map((step) => ({
     ...step,
     expression: replaceFunctions(step.expression, functions),
-    variables: (step.variables || []).map((v) => ({ ...v, value: replaceFunctions(v.value, functions) }))
+    variables: (step.variables || []).map((v) => ({ ...v, expression: replaceFunctions(v.expression, functions) }))
   }));
 
   // getting problem theorems
@@ -325,13 +325,13 @@ let failedCount = 0;
 const a = 1;
 const b = 1;
 const theoremesToTest = [
-  'f+g',
+  // 'f+g',
   // 'f-g',
   // 'f*g',
   // 'f/g',
   // 'f(g)',
   // 'f+g+h',
-  // 'intpartsf*g'
+  'intpartsf*g'
 ];
 const functionsToTest = [
   'x',
