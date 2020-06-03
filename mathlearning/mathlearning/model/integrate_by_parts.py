@@ -68,10 +68,10 @@ class IntegrateByPartsApplyTheorem(Theorem):
         self.analyzer = None
 
     def there_is_a_chance_to_apply_to(self, expression: Expression):
-        return expression.to_expression_string() == 'Integral(u(x)*Derivative(v(x), x), x)'
+        return expression.to_generic_expression_string() == 'Integral(u(x)*Derivative(v(x), x), x)'
 
     def apply_to(self, expression: Expression) -> List[Expression]:
-        if expression.to_expression_string() == 'Integral(u(x)*Derivative(v(x), x), x)':
+        if expression.to_generic_expression_string() == 'Integral(u(x)*Derivative(v(x), x), x)':
             return [Expression('u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', expression.variables)]
         return []
 
@@ -85,9 +85,9 @@ class IntegrateByPartsReplaceUVTheorem(Theorem):
         self.analyzer = None
 
     def there_is_a_chance_to_apply_to(self, expression: Expression):
-        return expression.to_expression_string() == 'u(x)*v(x) - Integral(v(x)*Derivative(u(x), x), x)'
+        return expression.to_generic_expression_string() == 'u(x)*v(x) - Integral(v(x)*Derivative(u(x), x), x)'
 
     def apply_to(self, expression: Expression) -> List[Expression]:
-        if expression.to_expression_string() == 'u(x)*v(x) - Integral(v(x)*Derivative(u(x), x), x)':
+        if expression.to_generic_expression_string() == 'u(x)*v(x) - Integral(v(x)*Derivative(u(x), x), x)':
             return [expression.replace_variables()]
         return []

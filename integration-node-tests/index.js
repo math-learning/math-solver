@@ -142,7 +142,7 @@ const possible_theorems = {
       {
         expression: '\\int u(x)*\\frac{d(v(x))}{dx}',
         variables: [
-          { tag: 'u(x)', expression: 'f1' },
+          { tag: 'u(x)', expression:  'f1' },
           { tag: 'v(x)', expression: 'ig1' }
         ],
         status: 'valid'
@@ -193,7 +193,7 @@ const executeExpression = async (theoreme, functions, stepCount) => {
   const problem_steps = steps.map((step) => ({
     ...step,
     expression: replaceFunctions(step.expression, functions),
-    variables: (step.variables || []).map((v) => ({ ...v, expression: replaceFunctions(v.expression, functions) }))
+    variables: (step.variables || []).map((v) => ({ ...v, expression: { expression: replaceFunctions(v.expression, functions) } }))
   }));
 
   // getting problem theorems

@@ -99,7 +99,8 @@ class SolutionTreeNode:
         while len(to_check) > 0:
             current = to_check.pop()
             if current.expression.to_string() not in already_checked:
-                if current.expression.is_equivalent_to(expression) and current.expression.compare_variables(expression.variables):
+                if current.expression.is_equivalent_to(expression):
+                    # and current.expression.compare_variables(expression.variables):
                     return True
                 for branch in current.branches:
                     to_check.append(branch)

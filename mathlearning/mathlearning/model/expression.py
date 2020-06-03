@@ -40,8 +40,8 @@ def make_sympy_expr(formula, is_latex):
 def make_complete_sympy_expr(sympy_expr, variables):
     complete_sympy_expr = sympy_expr
 
-    #for variable in variables:
-    #    complete_sympy_expr = complete_sympy_expr.subs(parse_expr(variable.tag), variable.expression.sympy_expr)
+    for variable in variables:
+        complete_sympy_expr = complete_sympy_expr.subs(parse_expr(variable.tag), variable.expression.sympy_expr)
 
     return complete_sympy_expr
 
@@ -54,8 +54,8 @@ class Expression:
         self.non_commutative_group_transformer = NonCommutativeGroupTransformer()
         self.commutative_list_size_transformer = ListSizeTransformer(CommutativeGroupTransformer())
         self.non_commutative_list_size_transformer = ListSizeTransformer(NonCommutativeGroupTransformer())
-        self.sympy_expr = make_sympy_expr(formula, is_latex)
-        self.sympy_expr = make_complete_sympy_expr(self.sympy_expr, variables)
+        self.generic_expr = make_sympy_expr(formula, is_latex)
+        self.sympy_expr = make_complete_sympy_expr(self.generic_expr, variables)
 
     def replace_variables(self) -> 'Expression':
         complete_sympy_expr = self.get_copy().sympy_expr
@@ -177,6 +177,9 @@ class Expression:
 
     def to_expression_string(self):
         return str(self.sympy_expr)
+
+    def to_generic_expression_string(self):
+        return str(self.generic_expr)
 
     def to_latex(self) -> str:
         return sympy.latex(self.sympy_expr)

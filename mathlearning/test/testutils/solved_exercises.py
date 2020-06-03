@@ -313,16 +313,16 @@ class SolvedExercises:
         # TODO: check again the steps
         steps = [
             {'expression': '\\int (x * \\cos(x)) dx', 'variables': []},
-            {'expression': '\\int (u(x) * \\frac{d(v(x))}{dx}) dx',
+            {'expression': '\\int u(x)*\\frac{d(v(x))}{dx}',
              'variables': [
-                 ExpressionVariable('u(x)', Expression('x')).to_json(),
-                 ExpressionVariable('v(x)', Expression('\\sin(x)')).to_json()
+                 { 'tag': 'u(x)', 'expression': { 'expression': 'x' } },
+                 {'tag': 'v(x)', 'expression': {'expression': '\\sin(x)'} }
              ]
              },
             {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx',
              'variables': [
-                 ExpressionVariable('u(x)', Expression('x')).to_json(),
-                 ExpressionVariable('v(x)', Expression('\\sin(x)')).to_json()
+                 {'tag': 'u(x)', 'expression': {'expression': 'x'}},
+                 {'tag': 'v(x)', 'expression': {'expression': '\\sin(x)'}}
              ]
              },
             {'expression': 'x * \\sin(x) - \\int (\\frac{d(x)}{dx} * \\sin(x)) dx', 'variables': []},
@@ -350,12 +350,12 @@ class SolvedExercises:
         steps = [
             {'expression': '\\int( x * \\sin(2*x)) dx', 'variables': []},  # u = x  dv = sin(2x) dx ; v -cos(2x)/2
             {'expression': '\\int (u(x) * \\frac{d(v(x))}{dx}) dx', 'variables': [
-                ExpressionVariable('u(x)', Expression('x')).to_json(),
-                ExpressionVariable('v(x)', Expression('-cos(2x)/2')).to_json()
-            ]}, # TODO think if this step should be included
+                {'tag': 'u(x)', 'expression': {'expression': 'x'}},
+                {'tag': 'v(x)', 'expression': {'expression': '-\\cos(2x)/2'}}
+            ]},
             {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', 'variables': [
-                ExpressionVariable('u(x)', Expression('x')).to_json(),
-                ExpressionVariable('v(x)', Expression('-cos(2x)/2')).to_json()
+                {'tag': 'u(x)', 'expression': {'expression': 'x'}},
+                {'tag': 'v(x)', 'expression': {'expression': '-\\cos(2x)/2'}}
             ]},
             {'expression': 'x * (- \\cos(2x)/2) - \\int (\\frac{d(x)}{dx} * (-\\cos(2x)/2) ) dx', 'variables': []},
             {'expression': 'x * (- \\cos(2x)/2) - \\int ( 1 * (-\\cos(2x)/2) ) dx', 'variables': []},
@@ -381,12 +381,12 @@ class SolvedExercises:
         steps = [
             {'expression': '\\int ( x * \\sqrt[2]{x+1} ) dx', 'variables': []},
             {'expression': '\\int (u(x) * \\frac{d(v(x))}{dx}) dx', 'variables': [
-                ExpressionVariable('u(x)', Expression('x')).to_json(),
-                ExpressionVariable('v(x)', Expression('(2/3 * (x+1)^{3/2})')).to_json()
+                {'tag': 'u(x)', 'expression': {'expression': 'x'}},
+                {'tag': 'v(x)', 'expression': {'expression': '(2/3 * (x+1)^{3/2})'}}
             ]},  # TODO think if this step should be included
             {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', 'variables': [
-                ExpressionVariable('u(x)', Expression('x')).to_json(),
-                ExpressionVariable('v(x)', Expression('(2/3 * (x+1)^{3/2})')).to_json()
+                {'tag': 'u(x)', 'expression': {'expression': 'x'}},
+                {'tag': 'v(x)', 'expression': {'expression': '(2/3 * (x+1)^{3/2})'}}
             ]},
             {'expression': 'x * (2/3 * (x+1)^{3/2}) - \\int (2/3 * (x+1)^{3/2}) dx', 'variables': []},
             {'expression': 'x * (2/3 * (x+1)^{3/2}) - 2/3 * \\int ((x+1)^{3/2}) dx', 'variables': []},
@@ -411,12 +411,12 @@ class SolvedExercises:
         steps = [
             {'expression': '\\int (\\ln(x)) dx', 'variables': []},
             {'expression': '\\int (u(x) * \\frac{d(v(x))}{dx}) dx', 'variables': [
-                {'tag': 'u(x)', 'expression': {'expression': '\\ln(x)', 'variables': []}},
-                {'tag': 'v(x)', 'expression': {'expression': 'x', 'variables': []}}
+                {'tag': 'u(x)', 'expression': {'expression': '\\ln(x)'}},
+                {'tag': 'v(x)', 'expression': {'expression': 'x'}}
             ]},  # TODO think if this step should be included
             {'expression': 'u(x) * v(x) - \\int (\\frac{d(u(x))}{dx} * v(x)) dx', 'variables': [
-                {'tag': 'u(x)', 'expression': {'expression': '\\ln(x)', 'variables': []}},
-                {'tag': 'v(x)', 'expression': {'expression': 'x', 'variables': []}}
+                {'tag': 'u(x)', 'expression': {'expression': '\\ln(x)'}},
+                {'tag': 'v(x)', 'expression': {'expression': 'x'}}
             ]},
             {'expression': '\\ln(x) * x - \\int (\\frac{d(\\ln(x))}{dx} * x ) dx', 'variables': []},
             # {'expression': '\\ln(x) * x - \\int (\\frac{1}{x} * x ) dx', 'variables': []},
