@@ -51,7 +51,7 @@ class IntegrateBySubstitutionDefineUAndDUTheorem(Theorem):
         equivalent_expression = equivalent_expression * subs_rule.constant
 
 
-        result = Expression(f'Integral({str(equivalent_expression)}, u)', variables, is_latex=False)
+        result = Expression(f'Integral({str(equivalent_expression)}, u)', variables, is_latex=False, should_replace=False)
 
         return [
             result

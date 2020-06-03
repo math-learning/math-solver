@@ -129,7 +129,13 @@ dmypy.json
 .pyre/
 
 .vscode/settings.json
+.vscode/launch.json
 
 # node
 integration-node-tests/node_modules/*
 /node_modules/*
+.vscode/*
+
+#test
+playground.py
+test.py

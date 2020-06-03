@@ -48,14 +48,19 @@ def make_complete_sympy_expr(sympy_expr, variables):
 
 class Expression:
 
-    def __init__(self, formula: Union['Expression', str], variables: List['ExpressionVariable'] = [], is_latex=True):
+    def __init__(self, formula: Union['Expression', str], variables: List['ExpressionVariable'] = [], is_latex=True, should_replace = True):
         self.variables = variables
+        self.is_generic = should_replace
         self.commutative_group_transformer = CommutativeGroupTransformer()
         self.non_commutative_group_transformer = NonCommutativeGroupTransformer()
         self.commutative_list_size_transformer = ListSizeTransformer(CommutativeGroupTransformer())
         self.non_commutative_list_size_transformer = ListSizeTransformer(NonCommutativeGroupTransformer())
         self.generic_expr = make_sympy_expr(formula, is_latex)
-        self.sympy_expr = make_complete_sympy_expr(self.generic_expr, variables)
+
+        if should_replace:
+            self.sympy_expr = make_complete_sympy_expr(self.generic_expr, variables)
+        else:
+            self.sympy_expr = self.generic_expr
 
     def replace_variables(self) -> 'Expression':
         complete_sympy_expr = self.get_copy().sympy_expr
@@ -77,7 +82,7 @@ class Expression:
         return True
 
     def get_copy(self) -> 'Expression':
-        return Expression(parse_expr(str(self.sympy_expr)),self.variables)
+        return Expression(parse_expr(str(self.sympy_expr)), self.variables, should_replace=self.is_generic)
 
     # Search and derivate expressions
     def solve_derivatives(self) -> 'Expression':
