@@ -6,4 +6,5 @@ def clean_latex(latex: str) -> str:
     clean = clean.replace(".", "*")
     clean = clean.replace("sen", "\\sin")
     clean = clean.replace("\\ ", "")
+    clean = clean.replace("\\int_{}^{}", "\\int ")
     return clean
