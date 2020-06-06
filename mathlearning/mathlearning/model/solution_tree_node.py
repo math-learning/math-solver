@@ -148,6 +148,9 @@ class SolutionTreeNode:
     def print_tree(self, level=0):
         ret = "\t" * level + 'Theorem: ' + self.theorem_applied_name + "\n"
         ret += "\t" * level + self.expression.to_expression_string() + "\n"
+        if len(self.expression.variables) > 0:
+            for variable in self.expression.variables:
+                ret += "\t" * level + variable.to_print() + "\n"
         for branch in self.branches:
             ret += branch.print_tree(level + 1)
         return ret

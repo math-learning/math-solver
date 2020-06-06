@@ -16,3 +16,6 @@ class ExpressionVariable:
 
     def __eq__(self, other):
         return self.tag == other.tag and self.expression == other.expression
+
+    def to_print(self):
+        return f'{self.tag}: {self.expression.to_expression_string()}'
