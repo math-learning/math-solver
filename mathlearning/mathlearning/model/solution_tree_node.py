@@ -102,6 +102,13 @@ class SolutionTreeNode:
                 if current.expression.is_equivalent_to(expression) and \
                         current.expression.compare_variables(expression.variables):
                     return True
+
+                current_replaced = current.expression.replace_variables()
+                expression_replaced = expression.replace_variables()
+
+                if current_replaced.is_equivalent_to(expression_replaced):
+                    return True
+
                 for branch in current.branches:
                     to_check.append(branch)
             already_checked.add(current.expression.to_string())
@@ -141,6 +148,9 @@ class SolutionTreeNode:
     def print_tree(self, level=0):
         ret = "\t" * level + 'Theorem: ' + self.theorem_applied_name + "\n"
         ret += "\t" * level + self.expression.to_expression_string() + "\n"
+        if len(self.expression.variables) > 0:
+            for variable in self.expression.variables:
+                ret += "\t" * level + variable.to_print() + "\n"
         for branch in self.branches:
             ret += branch.print_tree(level + 1)
         return ret
