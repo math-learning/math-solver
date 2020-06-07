@@ -13,7 +13,8 @@ logger = Logger.getLogger()
 
 class IntegrateByPartsTheorem(Theorem):
     def __init__(self):
-        self.name = 'Integrar por partes definir U y V'
+        self.name = 'Integrar por partes definir U y V - \n' \
+                    'Recordar la regla Un Dia Vi Una Vaca De Uniforme'
         self.left = None
         self.right = None
         self.conditions = {}
@@ -69,7 +70,8 @@ class IntegrateByPartsTheorem(Theorem):
 
 class IntegrateByPartsApplyTheorem(Theorem):
     def __init__(self):
-        self.name = 'Integrar por partes aplicacion'
+        self.name = 'Integrar por partes aplicacion - \n' \
+                    'Recordar la regla Un Dia Vi Una Vaca De Uniforme'
         self.left = None
         self.right = None
         self.conditions = {}
