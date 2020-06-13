@@ -1,5 +1,5 @@
 build:
   docker:
-    web: Dockerfile
+    web: ./mathlearning/Dockerfile
 run:
   web: python ./mathlearning/manage.py runserver
