@@ -2,7 +2,12 @@
 
 Servidor Django
 
-El mismo se puede correr de dos maneras diferentes:
+## requisitos previos
+
+- Docker: docker.com
+- Docker compose: https://docs.docker.com/compose/install/
+- Python3: https://www.python.org/
+- virtualenv: https://virtualenv.pypa.io/en/latest/
 
 ## Correr usando Docker compose
 
@@ -27,8 +32,8 @@ correr el siguiente comando para activar el entorno virtual:
 
 luego correr el siguiente comando para instalar las dependencias:
 
-    $ pip3 install -r mathlearning/requirements.txt 
+    $ pip3 install -r requirements.txt 
 
 por ultimo para iniciar la aplicacion django correr:
 
-    $ python mathlearning/manage.py runserver 0.0.0.0:5000
+    $ python manage.py runserver 0.0.0.0:5000
