@@ -76,12 +76,12 @@ class SolutionTreeNode:
 
     def get_hints(self, current_expression) -> List[str]:
         current_expression_subtrees = self.get_sub_trees_with_root(current_expression)
-        hints = []
+        hints = set()
         for current_expression_subtree in current_expression_subtrees:
             for children in current_expression_subtree.branches:
-                hints.append(children.theorem_applied_name)
+                hints.add(children.theorem_applied_name)
 
-        return hints
+        return list(hints)
 
     def get_sub_trees_with_root(self, current_expression):
         if self.expression.is_equivalent_to(current_expression):
