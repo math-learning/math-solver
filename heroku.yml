@@ -2,4 +2,4 @@ build:
   docker:
     web: Dockerfile
 run:
-  web: gunicorn --env DJANGO_SETTINGS_MODULE=mathlearning.settings mathlearning.wsgi --workers=9 --bind=0.0.0.0:$PORT
+  web: gunicorn --env DJANGO_SETTINGS_MODULE=mathlearning.settings mathlearning.wsgi --workers=$WORKERS --bind=0.0.0.0:$PORT
