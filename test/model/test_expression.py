@@ -126,7 +126,10 @@ class TestExpression(unittest.TestCase):
     def test_integrate_solving_possibilities(self):
         expression = Expression('Integral(x,x) + Integral(x**2,x) - Integral(cos(x),x)', is_latex=False)
         result = expression.integrals_solving_possibilities()
-        self.assertEquals(len(result), 3)
+        self.assertEquals(len(result), 6)
         self.assertTrue(Expression('x**2/2 + Integral(x**2,x) - Integral(cos(x),x)', is_latex=False) in result)
         self.assertTrue(Expression('Integral(x,x) + x**3/3 - Integral(cos(x),x)', is_latex=False) in result)
         self.assertTrue(Expression('Integral(x,x) + Integral(x**2,x) - sin(x)', is_latex=False) in result)
+        self.assertTrue(Expression('x**2/2 + Integral(x**2,x) - Integral(cos(x),x) + c', is_latex=False) in result)
+        self.assertTrue(Expression('Integral(x,x) + x**3/3 - Integral(cos(x),x) + c', is_latex=False) in result)
+        self.assertTrue(Expression('Integral(x,x) + Integral(x**2,x) - sin(x) + c', is_latex=False) in result)
