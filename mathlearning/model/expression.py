@@ -132,9 +132,20 @@ class Expression:
 
         possibilities = []
         for integral in integrals:
+            applied_integral = integral.apply_integral()
+
+            # without integral constant
             integral_solved = self.get_copy()
-            integral_solved.replace(integral, integral.apply_integral())
+            integral_solved.replace(integral, applied_integral)
             possibilities.append(integral_solved)
+
+            # with integral constant
+            integral_solved = self.get_copy()
+            integral_solved.replace(integral, applied_integral)
+            c = sympy.symbols('c')
+            expression_with_constant = Expression(sympy.Add(integral_solved.sympy_expr, c))
+            possibilities.append(expression_with_constant)
+
         return possibilities
 
     def is_integral(self):
